@@ -119,7 +119,6 @@
       }
     }
   },
-  "defaultProject": "faithcommunity",
   "cli": {
     "analytics": false
   }
