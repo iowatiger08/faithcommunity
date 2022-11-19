@@ -1,0 +1,52 @@
+<div>
+  <mat-card>
+    <h2>Word and Sacrament</h2>
+    <mat-card>
+      <mat-card-title
+        >Worship online via
+        <a href="https://www.youtube.com/channel/UCm2fDVv75DXywKgr7ZSB_0g"
+          >YouTube</a
+        >
+      </mat-card-title>
+      <mat-card-content>
+       <!-- <iframe
+          width="250"
+          height="250"
+          src="https://www.youtube.com/embed/JNBUSxW1dDA"
+          title="Christmas Village, Fall village, Halloween Village montage 2021"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe> -->
+      </mat-card-content>
+      <mat-card-footer> </mat-card-footer>
+    </mat-card>
+  </mat-card>
+  <mat-divider></mat-divider>
+  <mat-card>
+    For where two or more gather in my name, I am there among them. Matthew
+    18:20 (NRSV)<br />
+    And he took bread, gave thanks, broke it and gave it to them saying, "This
+    is my body given for you; do this in remembrance of me." Luke 22:19 (NRSV)
+  </mat-card>
+  <mat-card>
+    Recent sermons and reflections:
+    <mat-card >
+    <ul class="list-group">
+      <li *ngFor="let post of posts " class="list-group-item">
+
+         <a href="{{ post.url }}" target="_blank"> {{ post.title }} </a>
+         on {{post.published}}
+    </li>
+    </ul>
+    </mat-card>
+    <a href="https://tonyswebstudios.blogspot.com/">More can be found here</a>
+  </mat-card>
+  <mat-divider></mat-divider>
+  <mat-card>
+    Faith Community Church follows the
+    <a href="https://lectionary.library.vanderbilt.edu/" target="_blank"
+      >Revised Common Lectionary</a
+    >
+  </mat-card>
+</div>
