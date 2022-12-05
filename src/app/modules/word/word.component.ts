@@ -3,7 +3,6 @@ import { BloggerItem } from './blogger-item';
 import { BloggerService } from './blogger.service';
 import { BloggerResponse } from './blogger-response';
 import { Subject } from 'rxjs';
-import { newArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-word',
@@ -34,7 +33,8 @@ export class WordComponent implements OnInit, OnDestroy {
           this.extractPosts(response);
         },
         (error) => {
-          console.error('Request failed with error' + error);
+          console.error('Request failed with error' );
+          console.log(error);
           this.errorMessage = error;
           this.loading = false;
         }
