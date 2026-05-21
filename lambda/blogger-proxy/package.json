@@ -1,0 +1,16 @@
+{
+  "name": "blogger-proxy-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function to proxy Blogger API requests using AWS Secrets Manager",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

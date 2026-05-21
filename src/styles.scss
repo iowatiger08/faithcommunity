@@ -1,4 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Modern card styles */
+mat-card {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 16px !important;
+  padding: 24px !important;
+}
+
+mat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Modern link styles */
+a {
+  color: #673ab7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #512da8;
+  text-decoration: underline;
+}
+
+/* Image size constraints */
+img {
+  max-width: 500px;
+  height: auto;
+  display: block;
+}
+
+mat-card img {
+  max-width: 500px;
+  height: auto;
+}

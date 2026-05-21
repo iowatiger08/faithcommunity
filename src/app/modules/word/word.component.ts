@@ -3,7 +3,6 @@ import { BloggerItem } from './blogger-item';
 import { BloggerService } from './blogger.service';
 import { BloggerResponse } from './blogger-response';
 import { Subject } from 'rxjs';
-import { newArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-word',

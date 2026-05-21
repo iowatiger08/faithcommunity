@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { OutreachComponent } from './outreach.component';
 
@@ -6,7 +6,7 @@ describe('OutreachComponent', () => {
   let component: OutreachComponent;
   let fixture: ComponentFixture<OutreachComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OutreachComponent ]
     })

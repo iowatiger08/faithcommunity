@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Blogger API Proxy Lambda with API Gateway
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    Architectures:
+      - x86_64
+
+Resources:
+  BloggerProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: blogger-proxy/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      MemorySize: 256
+      Timeout: 30
+      Environment:
+        Variables:
+          NODE_OPTIONS: '--enable-source-maps'
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource: 'arn:aws:secretsmanager:us-west-2:166782860262:secret:prod/blogger-3y8Pt2'
+      Events:
+        BloggerApi:
+          Type: Api
+          Properties:
+            Path: /blogger/posts
+            Method: get
+            RestApiId: !Ref BloggerApiGateway
+        BloggerApiOptions:
+          Type: Api
+          Properties:
+            Path: /blogger/posts
+            Method: options
+            RestApiId: !Ref BloggerApiGateway
+
+  BloggerApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'hopeandtruthministry.com'"  # Update this to your CloudFront/S3 domain in production
+      DefinitionBody:
+        openapi: 3.0.0
+        info:
+          title: Blogger Proxy API
+          version: 1.0.0
+        paths:
+          /blogger/posts:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BloggerProxyFunction.Arn}/invocations
+              responses:
+                '200':
+                  description: Success
+            options:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BloggerProxyFunction.Arn}/invocations
+              responses:
+                '200':
+                  description: Success
+
+Outputs:
+  BloggerApiUrl:
+    Description: "API Gateway endpoint URL for Blogger proxy"
+    Value: !Sub "https://${BloggerApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/blogger/posts"
+  BloggerProxyFunctionArn:
+    Description: "Blogger Proxy Lambda Function ARN"
+    Value: !GetAtt BloggerProxyFunction.Arn
