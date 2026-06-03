@@ -88,8 +88,8 @@ export default function About() {
             rel="noopener noreferrer"
           >
             Interfaith Alliance
-          </a>{" "}
-          and{" "}
+          </a>
+          ,{" "}
           <a
             className="text-accent underline"
             href="https://www.ctschicago.edu/"
@@ -97,6 +97,24 @@ export default function About() {
             rel="noopener noreferrer"
           >
             Chicago Theological Seminary
+          </a>
+          ,{" "}
+          <a
+            className="text-accent underline"
+            href="https://www.luthersem.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Luther Seminary
+          </a>
+          , and the{" "}
+          <a
+            className="text-accent underline"
+            href="https://cac.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Center for Action and Contemplation
           </a>
           .
         </li>
