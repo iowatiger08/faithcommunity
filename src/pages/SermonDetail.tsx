@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { getPostBySlug, formatDate } from "~/lib/content";
+import PageHead from "~/components/PageHead";
 
 export default function SermonDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -8,6 +9,11 @@ export default function SermonDetail() {
   if (!post) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-16">
+        <PageHead
+          title="Not found"
+          description="That sermon doesn't appear in the archive."
+          path="/sermons/"
+        />
         <h1 className="font-serif text-3xl mb-4">Not found</h1>
         <p>That sermon doesn&apos;t appear in the archive.</p>
         <Link to="/sermons" className="text-accent underline mt-4 inline-block">
@@ -17,8 +23,28 @@ export default function SermonDetail() {
     );
   }
 
+  const sectionSlug = post.section.replace("_", "-");
+  const path = `/${sectionSlug}/${post.slug}/`;
+  // For sermons, build a richer description: summary + lectionary/scripture context.
+  const meta = [
+    post.summary,
+    post.scripture_in_title.length > 0 &&
+      `Scripture: ${post.scripture_in_title.join(", ")}.`,
+    post.lectionary_code &&
+      `${post.lectionary_code.raw}${post.lectionary_year ? `, Year ${post.lectionary_year}` : ""}.`,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <article className="max-w-3xl mx-auto px-6 py-12">
+      <PageHead
+        title={post.title}
+        description={meta || post.title}
+        path={path}
+        type="article"
+        publishedTime={post.published_date}
+      />
       <header className="mb-8 pb-6 border-b border-ink/10">
         <Link to="/sermons" className="text-sm text-accent hover:underline">
           &larr; All sermons

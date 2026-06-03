@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { getSermons, formatDate } from "~/lib/content";
+import PageHead from "~/components/PageHead";
 
 export default function SermonsIndex() {
   const sermons = getSermons();
@@ -14,6 +15,11 @@ export default function SermonsIndex() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      <PageHead
+        title="Sermons"
+        description={`Sermons and reflections from Hope and Truth Ministry, drawn from the Revised Common Lectionary across ${years.length} years of preaching.`}
+        path="/sermons/"
+      />
       <h1 className="font-serif text-4xl mb-2">Sermons</h1>
       <p className="text-ink/70 mb-10">
         Recent and past sermons across the years.

@@ -1,6 +1,13 @@
+import PageHead from "~/components/PageHead";
+
 export default function About() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
+      <PageHead
+        title="About"
+        description="Hope and Truth Ministry is an open and affirming online ministry — a gathering place for the wandering, the doubting, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
+        path="/about/"
+      />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Hope &amp; Truth Ministry
       </p>

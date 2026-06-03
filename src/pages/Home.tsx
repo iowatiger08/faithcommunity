@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { getAllPosts, formatDate } from "~/lib/content";
+import PageHead from "~/components/PageHead";
 
 export default function Home() {
   const recent = getAllPosts().slice(0, 3);
 
   return (
     <>
+      <PageHead
+        title="Hope and Truth Ministry — a congregation of the whole internet"
+        description="A welcoming, open-and-affirming online ministry — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
+        path="/"
+        isHome
+      />
       {/* Welcome / invitation */}
       <section className="border-b border-ink/10">
         <div className="max-w-3xl mx-auto px-6 py-20 sm:py-28">
