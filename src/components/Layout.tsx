@@ -53,8 +53,8 @@ export default function Layout() {
             </div>
           </div>
           <p className="text-xs text-ink/50 mt-8">
-            &copy; {new Date().getFullYear()} Hope and Truth Ministry. The
-            archive spans 2010 to the present.
+            &copy; {new Date().getFullYear()} Hope and Truth Ministry. A
+            gathering of people here and now.
           </p>
         </div>
       </footer>
