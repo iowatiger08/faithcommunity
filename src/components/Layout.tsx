@@ -31,8 +31,8 @@ export default function Layout() {
             <div>
               <p className="font-medium text-ink/80 mb-2">Hope &amp; Truth Ministry</p>
               <p>
-                A congregation of the whole internet. Open and affirming;
-                wandering and welcomed.
+                A congregation of the whole. Open and affirming; wandering
+                and welcomed.
               </p>
             </div>
             <div>

@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <>
       <PageHead
-        title="Hope and Truth Ministry — a congregation of the whole internet"
-        description="A welcoming, open-and-affirming online ministry — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
+        title="Hope and Truth Ministry — a congregation of the whole"
+        description="A welcoming, open-and-affirming gathering — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
         path="/"
         isHome
       />
@@ -20,7 +20,7 @@ export default function Home() {
             Hope &amp; Truth Ministry
           </p>
           <h1 className="font-serif text-5xl sm:text-6xl leading-tight mb-6">
-            A congregation of the whole internet.
+            A congregation of the whole.
           </h1>
           <p className="text-xl text-ink/80 max-w-prose leading-relaxed mb-8">
             For the wandering, the doubting, the hurting, and the hopeful.
