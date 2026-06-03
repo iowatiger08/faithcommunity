@@ -67,7 +67,7 @@ export default function About() {
           good citizenship.
         </li>
         <li>
-          Participating in community outreach in central Iowa, including the{" "}
+          Volunteering with community outreach in central Iowa, including the{" "}
           <a
             className="text-accent underline"
             href="https://ubfmdesmoines.org/"
@@ -79,7 +79,7 @@ export default function About() {
           and area food pantries.
         </li>
         <li>
-          Walking alongside broader voices for progressive theology and
+          Volunteering with broader voices for progressive theology and
           interfaith cooperation, including{" "}
           <a
             className="text-accent underline"
