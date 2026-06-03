@@ -47,3 +47,15 @@ testem.log
 Thumbs.db
 /lambda/.aws-sam/*
 /lambda/blogger-proxy/node_modules/*
+
+# Vite + React (root app)
+node_modules
+/dist-ssg
+*.tsbuildinfo
+.env.local
+.env.*.local
+
+# Legacy Angular artifacts (kept under legacy/ for reference, not built here)
+/legacy/angular/node_modules
+/legacy/angular/dist
+/legacy/angular/.angular

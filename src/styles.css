@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings: "ss01", "ss02";
+  }
+  body {
+    @apply font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+/* Render Blogger sermon HTML inside a constrained prose container */
+@layer components {
+  .sermon-body {
+    @apply max-w-prose font-sans text-ink leading-relaxed;
+  }
+  .sermon-body p {
+    @apply mb-4;
+  }
+  .sermon-body h1, .sermon-body h2 {
+    @apply font-serif mt-8 mb-3 text-2xl;
+  }
+  .sermon-body h3 {
+    @apply font-serif mt-6 mb-2 text-xl;
+  }
+  .sermon-body a {
+    @apply text-accent underline underline-offset-2 hover:no-underline;
+  }
+  .sermon-body blockquote {
+    @apply border-l-4 border-accent/40 pl-4 my-4 italic;
+  }
+  .sermon-body img {
+    @apply my-4 rounded;
+  }
+}
