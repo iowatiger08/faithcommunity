@@ -91,8 +91,8 @@ export default function About() {
       </div>
 
       <div className="mt-16 pt-8 border-t border-ink/10">
-        <p className="text-ink/60 italic">
-          May the peace that passes understanding be with you on the road.
+        <p className="font-serif text-2xl text-ink/80">
+          Peace be with you.
         </p>
       </div>
     </div>
