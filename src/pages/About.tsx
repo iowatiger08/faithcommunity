@@ -66,6 +66,11 @@ export default function About() {
           Building coalitions with others who pursue justice, the Gospels, and
           good citizenship.
         </li>
+        <li>
+          Participating in community outreach in central Iowa, including
+          Urban Bicycle Food Ministry &mdash; Des Moines (UBFM-DSM) and area
+          food pantries.
+        </li>
       </ul>
 
       <h2 className="font-serif text-2xl mt-16 mb-4">How this ministry works</h2>

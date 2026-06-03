@@ -23,11 +23,7 @@ export default function Layout() {
 
       <footer className="border-t border-ink/10 mt-16 bg-paper">
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <p className="font-serif text-ink/70 mb-6 max-w-prose">
-            May the words of my mouth and our thoughts and meditations of all
-            of our hearts be acceptable to You, our rock and our redeemer.
-          </p>
-          <div className="grid sm:grid-cols-3 gap-6 text-sm text-ink/60 border-t border-ink/10 pt-6">
+          <div className="grid sm:grid-cols-3 gap-6 text-sm text-ink/60">
             <div>
               <p className="font-medium text-ink/80 mb-2">Hope &amp; Truth Ministry</p>
               <p>

@@ -21,8 +21,13 @@ export default function SermonsIndex() {
         path="/sermons/"
       />
       <h1 className="font-serif text-4xl mb-2">Sermons</h1>
-      <p className="text-ink/70 mb-10">
+      <p className="text-ink/70 mb-8">
         Recent and past sermons across the years.
+      </p>
+
+      <p className="font-serif text-lg text-accent/90 italic max-w-prose mb-12 pl-4 border-l-2 border-accent/30">
+        May the words of my mouth and our thoughts and meditations of all of
+        our hearts be acceptable to You, our rock and our redeemer.
       </p>
 
       {years.map((year) => (
