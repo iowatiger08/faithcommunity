@@ -67,9 +67,38 @@ export default function About() {
           good citizenship.
         </li>
         <li>
-          Participating in community outreach in central Iowa, including
-          Urban Bicycle Food Ministry &mdash; Des Moines (UBFM-DSM) and area
-          food pantries.
+          Participating in community outreach in central Iowa, including the{" "}
+          <a
+            className="text-accent underline"
+            href="https://ubfmdesmoines.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Urban Bicycle Food Ministry &mdash; Des Moines (UBFM-DSM)
+          </a>{" "}
+          and area food pantries.
+        </li>
+        <li>
+          Walking alongside broader voices for progressive theology and
+          interfaith cooperation, including{" "}
+          <a
+            className="text-accent underline"
+            href="https://interfaithalliance.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Interfaith Alliance
+          </a>{" "}
+          and{" "}
+          <a
+            className="text-accent underline"
+            href="https://www.ctschicago.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Chicago Theological Seminary
+          </a>
+          .
         </li>
       </ul>
 
