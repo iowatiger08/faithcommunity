@@ -1,8 +1,8 @@
-import { getSermons, getAllPosts, getThemeCounts } from "~/lib/content";
+import {  getAllPosts, getThemeCounts } from "~/lib/content";
 
 export default function About() {
   const all = getAllPosts();
-  const sermons = getSermons();
+
   const themes = getThemeCounts();
   const earliest = all
     .map((p) => p.published_date)
@@ -14,13 +14,12 @@ export default function About() {
       <h1 className="font-serif text-4xl mb-6">About</h1>
       <p className="text-ink/80 max-w-prose mb-4">
         Hope and Truth Ministry is a sermon and reflection archive rooted in
-        progressive mainline (UCC) theology. Posts here have been preached and
+        progressive mainline theology. Posts here have been preached and
         published since {earliest?.slice(0, 4)}, drawing on the Revised Common
         Lectionary.
       </p>
       <p className="text-ink/80 max-w-prose mb-8">
-        {sermons.length} sermons and {all.length - sermons.length} additional
-        worship resources are currently published, covering themes including{" "}
+        Many sermons are currently published, covering themes including{" "}
         {themes.slice(0, 5).map(([t]) => t).join(", ")}, and more.
       </p>
 

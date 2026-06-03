@@ -27,6 +27,25 @@ DEFAULT_POSTS = "../tigersndragons/.scratch/blogger/posts.json"
 DEFAULT_CLASSIFIED = "../tigersndragons/.scratch/blogger/classified.jsonl"
 DEFAULT_OUT = "data/published-content.json"
 
+# Posts whose title matches any of these patterns are excluded from publication,
+# even when the classifier marked them publish=yes. These tend to be congregation-
+# specific worship bulletins / service orders that don't belong on a ministry-wide
+# site. Patterns are case-insensitive substring matches.
+EXCLUDED_TITLE_PATTERNS = [
+    "st john united church of christ",
+    "st. john united church of christ",
+    "st john ucc",
+    "st. john ucc",
+]
+
+
+def is_excluded(post: dict) -> tuple[bool, str | None]:
+    title = (post.get("title") or "").lower()
+    for pat in EXCLUDED_TITLE_PATTERNS:
+        if pat in title:
+            return True, pat
+    return False, None
+
 
 def load_classifications(path: Path) -> dict[str, dict]:
     by_slug: dict[str, dict] = {}
@@ -47,8 +66,9 @@ def load_posts(path: Path) -> dict[str, dict]:
         return {p["slug"]: p for p in json.load(f)["posts"]}
 
 
-def build_published(posts: dict[str, dict], classifications: dict[str, dict]) -> list[dict]:
-    out = []
+def build_published(posts: dict[str, dict], classifications: dict[str, dict]) -> tuple[list[dict], list[tuple[str, str]]]:
+    out: list[dict] = []
+    excluded: list[tuple[str, str]] = []
     for slug, c in classifications.items():
         cls = c["classification"]
         if cls["publish_decision"] != "yes":
@@ -56,6 +76,10 @@ def build_published(posts: dict[str, dict], classifications: dict[str, dict]) ->
         post = posts.get(slug)
         if post is None:
             print(f"WARN: classified post {slug!r} not in posts.json", file=sys.stderr)
+            continue
+        is_excl, reason = is_excluded(post)
+        if is_excl:
+            excluded.append((post["title"], reason or ""))
             continue
         out.append({
             "slug": slug,
@@ -79,7 +103,7 @@ def build_published(posts: dict[str, dict], classifications: dict[str, dict]) ->
             "text_length": post.get("text_length", 0),
         })
     out.sort(key=lambda p: p["published_date"] or "", reverse=True)
-    return out
+    return out, excluded
 
 
 def main() -> int:
@@ -103,7 +127,7 @@ def main() -> int:
 
     posts = load_posts(posts_path)
     classifications = load_classifications(cls_path)
-    published = build_published(posts, classifications)
+    published, excluded = build_published(posts, classifications)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w") as f:
@@ -121,6 +145,10 @@ def main() -> int:
     print(f"Wrote {len(published)} published posts → {out_path.relative_to(repo_root)} ({size_mb:.2f} MB)")
     for s, n in sorted(by_section.items()):
         print(f"  {n:3d}  /{s}")
+    if excluded:
+        print(f"\nExcluded {len(excluded)} post(s) by title-pattern rule:")
+        for title, reason in excluded:
+            print(f"  - {title!r}  (matched: {reason!r})")
     return 0
 
 
