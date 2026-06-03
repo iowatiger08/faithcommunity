@@ -6,6 +6,30 @@ const BLOG_ID = '8000554665921912318';
 
 const secretsClient = new SecretsManagerClient({ region: 'us-west-2' });
 
+const ALLOWED_ORIGINS = new Set([
+  'https://hopeandtruthministry.com',
+  'https://www.hopeandtruthministry.com',
+  'https://tigersndragons.com',
+  'https://www.tigersndragons.com',
+  'http://localhost:4321', // Astro dev
+  'http://localhost:5173', // Vite dev
+  'http://localhost:4173', // Vite preview
+  'http://localhost:3000', // Next.js / generic
+]);
+
+function buildCorsHeaders(event) {
+  const requestOrigin =
+    event?.headers?.origin || event?.headers?.Origin || '';
+  const allowed = ALLOWED_ORIGINS.has(requestOrigin) ? requestOrigin : '';
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Vary': 'Origin',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET,OPTIONS',
+    'Content-Type': 'application/json',
+  };
+}
+
 /**
  * Lambda handler to proxy Blogger API requests
  * Retrieves API key from AWS Secrets Manager and fetches recent blog posts
@@ -13,13 +37,7 @@ const secretsClient = new SecretsManagerClient({ region: 'us-west-2' });
 export const handler = async (event) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
 
-  // CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': 'hopeandtruthministry.com', // Update this to your CloudFront/S3 domain in production
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET,OPTIONS',
-    'Content-Type': 'application/json'
-  };
+  const headers = buildCorsHeaders(event);
 
   // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS' || event.requestContext?.http?.method === 'OPTIONS') {
