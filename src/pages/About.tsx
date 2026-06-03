@@ -5,7 +5,7 @@ export default function About() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="About"
-        description="Hope and Truth Ministry is a congregation of people here and now — an open and affirming gathering for the wandering, the doubting, the questioning, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
+        description="Hope and Truth Ministry is a congregation of people here and now — an open and affirming ministry for the wandering, the doubting, the questioning, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
         path="/about/"
       />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
@@ -20,12 +20,13 @@ export default function About() {
           Are you in a wilderness? Looking for a path? You are welcome here.
         </p>
         <p>
-          This gathering is a congregation of people here and now &mdash; an
-          open and affirming community for the wandering, the doubting, the
-          questioning, the hurting, and the hopeful. For those whose church is
-          online. For those finding their way back. For those still seeking.
-          For those who want to think faithfully alongside others. Wherever
-          you are on the journey, there is space for you in this gathering.
+          Hope and Truth Ministry is an outreach to anyone who wants to try
+          &mdash; an open and affirming community of people here and now. For
+          the wandering, the doubting, the questioning, the hurting, and the
+          hopeful. For those whose church is online. For those finding their
+          way back. For those still seeking. For those who want to think
+          faithfully alongside others. Wherever you are on the journey, there
+          is space for you here.
         </p>
       </div>
 
@@ -67,7 +68,7 @@ export default function About() {
         </li>
       </ul>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">How this gathering works</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">How this ministry works</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
           Sermons and reflections are posted in keeping with the Revised Common

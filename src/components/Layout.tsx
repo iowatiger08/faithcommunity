@@ -40,7 +40,7 @@ export default function Layout() {
               <ul className="space-y-1">
                 <li><Link to="/sermons" className="hover:text-accent">Sermons</Link></li>
                 <li><Link to="/worship-resources" className="hover:text-accent">Worship resources</Link></li>
-                <li><Link to="/about" className="hover:text-accent">About this gathering</Link></li>
+                <li><Link to="/about" className="hover:text-accent">About this ministry</Link></li>
               </ul>
             </div>
             <div>
@@ -54,7 +54,7 @@ export default function Layout() {
           </div>
           <p className="text-xs text-ink/50 mt-8">
             &copy; {new Date().getFullYear()} Hope and Truth Ministry. A
-            gathering of people here and now.
+            ministry of people here and now.
           </p>
         </div>
       </footer>
