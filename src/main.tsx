@@ -6,6 +6,7 @@ import SermonsIndex from "./pages/SermonsIndex";
 import SermonDetail from "./pages/SermonDetail";
 import WorshipResourcesIndex from "./pages/WorshipResourcesIndex";
 import About from "./pages/About";
+import Subscribe from "./pages/Subscribe";
 import NotFound from "./pages/NotFound";
 import { getAllPosts } from "./lib/content";
 import "./styles.css";
@@ -35,6 +36,7 @@ const routes: RouteRecord[] = [
             .map((p) => `/worship-resources/${p.slug}`),
       },
       { path: "about", Component: About },
+      { path: "subscribe", Component: Subscribe },
       { path: "*", Component: NotFound },
     ],
   },

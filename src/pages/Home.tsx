@@ -1,64 +1,117 @@
 import { Link } from "react-router-dom";
-import { getSermons, getAllPosts, getThemeCounts, formatDate } from "~/lib/content";
+import { getAllPosts, formatDate } from "~/lib/content";
 
 export default function Home() {
-  const sermons = getSermons();
-  const recent = getAllPosts().slice(0, 5);
-  const topThemes = getThemeCounts().slice(0, 8);
+  const recent = getAllPosts().slice(0, 3);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
-      <section className="mb-16">
-        <h1 className="font-serif text-5xl mb-4 leading-tight">
-          Hope and Truth Ministry
-        </h1>
-        <p className="font-sans text-lg text-ink/80 max-w-prose">
-          Sermons and reflections rooted in the Revised Common Lectionary,
-          preached and posted since 2010. Currently {sermons.length} sermons in
-          the archive.
-        </p>
-      </section>
-
-      <section className="mb-16">
-        <div className="flex items-baseline justify-between mb-6">
-          <h2 className="font-serif text-2xl">Recent</h2>
-          <Link to="/sermons" className="text-sm text-accent hover:underline">
-            All sermons &rarr;
-          </Link>
-        </div>
-        <ul className="divide-y divide-ink/10">
-          {recent.map((p) => (
-            <li key={p.slug} className="py-4">
-              <Link to={`/${p.section.replace("_", "-")}/${p.slug}`}>
-                <p className="text-xs text-ink/60 uppercase tracking-wide">
-                  {formatDate(p.published_date)}
-                  {p.lectionary_code && ` · ${p.lectionary_code.raw}`}
-                </p>
-                <h3 className="font-serif text-xl mt-1 hover:text-accent">
-                  {p.title}
-                </h3>
-                <p className="text-sm text-ink/70 mt-1 max-w-prose">
-                  {p.summary}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-16">
-        <h2 className="font-serif text-2xl mb-4">Themes</h2>
-        <div className="flex flex-wrap gap-2">
-          {topThemes.map(([theme, n]) => (
-            <span
-              key={theme}
-              className="px-3 py-1 text-sm border border-ink/20 rounded-full"
+    <>
+      {/* Welcome / invitation */}
+      <section className="border-b border-ink/10">
+        <div className="max-w-3xl mx-auto px-6 py-20 sm:py-28">
+          <p className="text-sm uppercase tracking-widest text-accent mb-4">
+            Hope &amp; Truth Ministry
+          </p>
+          <h1 className="font-serif text-5xl sm:text-6xl leading-tight mb-6">
+            A congregation of the whole internet.
+          </h1>
+          <p className="text-xl text-ink/80 max-w-prose leading-relaxed mb-8">
+            For the wandering, the doubting, the hurting, and the hopeful.
+            For people without a congregation, and for people who have found
+            theirs but need another voice on the road. You are welcome here.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/subscribe"
+              className="px-5 py-3 bg-accent text-paper rounded font-medium hover:bg-accent/90"
             >
-              {theme} <span className="text-ink/50">({n})</span>
-            </span>
-          ))}
+              Join the gathering
+            </Link>
+            <Link
+              to="/about"
+              className="px-5 py-3 border border-ink/20 rounded font-medium hover:border-ink/40"
+            >
+              About this ministry
+            </Link>
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* Recent reflections — soft framing, not a list */}
+      <section className="border-b border-ink/10">
+        <div className="max-w-3xl mx-auto px-6 py-16">
+          <p className="text-sm uppercase tracking-widest text-ink/60 mb-3">
+            From the lectionary
+          </p>
+          <h2 className="font-serif text-3xl mb-3">
+            Recent reflections
+          </h2>
+          <p className="text-ink/70 mb-10 max-w-prose">
+            Sermons and reflections in keeping with the Revised Common
+            Lectionary. New writing arrives most weeks.
+          </p>
+          <ul className="space-y-8">
+            {recent.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  to={`/${p.section.replace("_", "-")}/${p.slug}`}
+                  className="block group"
+                >
+                  <p className="text-xs text-ink/60 uppercase tracking-wide">
+                    {formatDate(p.published_date)}
+                    {p.lectionary_code && ` · ${p.lectionary_code.raw}`}
+                  </p>
+                  <h3 className="font-serif text-2xl mt-2 leading-snug group-hover:text-accent">
+                    {p.title}
+                  </h3>
+                  <p className="text-ink/70 mt-2 max-w-prose">{p.summary}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 pt-6 border-t border-ink/10">
+            <Link to="/sermons" className="text-accent hover:underline">
+              Sit with the full archive &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Three doors */}
+      <section className="border-b border-ink/10">
+        <div className="max-w-3xl mx-auto px-6 py-16">
+          <h2 className="font-serif text-3xl mb-8">Three ways in</h2>
+          <div className="grid sm:grid-cols-3 gap-8">
+            <div>
+              <h3 className="font-serif text-xl mb-2">If you&apos;re doubting</h3>
+              <p className="text-sm text-ink/70 mb-3">
+                The questions you carry are welcome &mdash; even the hard ones.
+              </p>
+              <Link to="/sermons" className="text-sm text-accent hover:underline">
+                Begin here &rarr;
+              </Link>
+            </div>
+            <div>
+              <h3 className="font-serif text-xl mb-2">If you&apos;re hurting</h3>
+              <p className="text-sm text-ink/70 mb-3">
+                You don&apos;t have to be put together to come in.
+              </p>
+              <Link to="/sermons" className="text-sm text-accent hover:underline">
+                Begin here &rarr;
+              </Link>
+            </div>
+            <div>
+              <h3 className="font-serif text-xl mb-2">If you&apos;re seeking</h3>
+              <p className="text-sm text-ink/70 mb-3">
+                Wherever you are on the journey, there is space for you.
+              </p>
+              <Link to="/sermons" className="text-sm text-accent hover:underline">
+                Begin here &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

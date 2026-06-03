@@ -8,7 +8,8 @@ export default function WorshipResourcesIndex() {
       <h1 className="font-serif text-4xl mb-2">Worship Resources</h1>
       <p className="text-ink/70 mb-10 max-w-prose">
         Service orders, Lessons &amp; Carols, pastoral prayers, and other
-        liturgical materials &mdash; {items.length} in the archive.
+        liturgical materials &mdash; available for use, adaptation, and
+        gathering.
       </p>
       <ul className="divide-y divide-ink/10">
         {items.map((p) => (
