@@ -19,5 +19,8 @@ export default defineConfig({
   ssgOptions: {
     script: "async",
     formatting: "none",
+    // Emit nested directories: /sermons/foo/index.html instead of /sermons/foo.html
+    // so that /sermons/foo/ serves cleanly without a .html extension on S3.
+    dirStyle: "nested",
   },
 });
