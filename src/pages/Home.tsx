@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getAllPosts, formatDate } from "~/lib/content";
 import PageHead from "~/components/PageHead";
+import { VANDERBILT_RCL } from "~/components/SeasonBadge";
 
 export default function Home() {
   const recent = getAllPosts().slice(0, 3);
@@ -54,8 +55,16 @@ export default function Home() {
             Recent reflections
           </h2>
           <p className="text-ink/70 mb-10 max-w-prose">
-            Sermons and reflections in keeping with the Revised Common
-            Lectionary. New writing arrives most weeks.
+            Sermons and reflections in keeping with the{" "}
+            <a
+              href={VANDERBILT_RCL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Revised Common Lectionary
+            </a>
+            . New writing arrives most weeks.
           </p>
           <ul className="space-y-8">
             {recent.map((p) => (
@@ -94,7 +103,7 @@ export default function Home() {
               <p className="text-sm text-ink/70 mb-3">
                 The questions you carry are welcome &mdash; even the hard ones.
               </p>
-              <Link to="/sermons" className="text-sm text-accent hover:underline">
+              <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;
               </Link>
             </div>
@@ -103,7 +112,7 @@ export default function Home() {
               <p className="text-sm text-ink/70 mb-3">
                 You don&apos;t have to be put together to come in.
               </p>
-              <Link to="/sermons" className="text-sm text-accent hover:underline">
+              <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;
               </Link>
             </div>
@@ -112,7 +121,7 @@ export default function Home() {
               <p className="text-sm text-ink/70 mb-3">
                 Wherever you are on the journey, there is space for you.
               </p>
-              <Link to="/sermons" className="text-sm text-accent hover:underline">
+              <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;
               </Link>
             </div>

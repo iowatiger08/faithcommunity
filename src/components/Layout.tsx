@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import SeasonBadge from "./SeasonBadge";
 
 export default function Layout() {
   return (
@@ -8,12 +9,17 @@ export default function Layout() {
           <Link to="/" className="text-xl font-serif tracking-tight">
             Hope &amp; Truth Ministry
           </Link>
-          <nav className="flex gap-6 text-sm">
-            <Link to="/sermons" className="hover:text-accent">Sermons</Link>
-            <Link to="/worship-resources" className="hover:text-accent">Worship</Link>
-            <Link to="/about" className="hover:text-accent">About</Link>
-            <Link to="/subscribe" className="hover:text-accent">Subscribe</Link>
-          </nav>
+          <div className="flex items-center gap-x-6 gap-y-1 flex-wrap">
+            <nav className="flex gap-x-6 gap-y-1 text-sm flex-wrap">
+              <Link to="/sermons" className="hover:text-accent">Sermons</Link>
+              <Link to="/worship-resources" className="hover:text-accent">Worship</Link>
+              <Link to="/care" className="hover:text-accent">Care</Link>
+              <Link to="/about" className="hover:text-accent">About</Link>
+              <Link to="/give" className="hover:text-accent">Give</Link>
+              <Link to="/subscribe" className="hover:text-accent">Subscribe</Link>
+            </nav>
+            <SeasonBadge />
+          </div>
         </div>
       </header>
 
@@ -36,6 +42,7 @@ export default function Layout() {
               <ul className="space-y-1">
                 <li><Link to="/sermons" className="hover:text-accent">Sermons</Link></li>
                 <li><Link to="/worship-resources" className="hover:text-accent">Worship resources</Link></li>
+                <li><Link to="/care" className="hover:text-accent">Care &amp; support</Link></li>
                 <li><Link to="/about" className="hover:text-accent">About this ministry</Link></li>
               </ul>
             </div>
@@ -43,6 +50,7 @@ export default function Layout() {
               <p className="font-medium text-ink/80 mb-2">Stay in touch</p>
               <ul className="space-y-1">
                 <li><Link to="/subscribe" className="hover:text-accent">Subscribe by email</Link></li>
+                <li><Link to="/give" className="hover:text-accent">Give &amp; volunteer</Link></li>
                 <li className="text-ink/50">RSS feed &mdash; coming soon</li>
                 <li className="text-ink/50">Video reflections &mdash; coming soon</li>
               </ul>

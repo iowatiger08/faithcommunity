@@ -10,8 +10,11 @@ export default {
       },
       colors: {
         ink: "#1a1a1a",
-        paper: "#fbfaf6",
-        accent: "#7a3e3e",
+        // paper (page background) + accent shift with the liturgical season —
+        // see the [data-season] palettes in styles.css. Defined as space-separated
+        // RGB channels so Tailwind's /alpha modifiers (bg-accent/90 etc.) work.
+        paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+        accent: "rgb(var(--accent-rgb) / <alpha-value>)",
       },
       maxWidth: {
         prose: "65ch",

@@ -6,10 +6,21 @@ import SermonsIndex from "./pages/SermonsIndex";
 import SermonDetail from "./pages/SermonDetail";
 import WorshipResourcesIndex from "./pages/WorshipResourcesIndex";
 import About from "./pages/About";
+import Care from "./pages/Care";
+import Give from "./pages/Give";
 import Subscribe from "./pages/Subscribe";
 import NotFound from "./pages/NotFound";
 import { getAllPosts } from "./lib/content";
+import { currentSeason } from "./lib/liturgical";
 import "./styles.css";
+
+// Apply the liturgical theme as early as possible. Client-only — `document`
+// doesn't exist during SSG — and it sets an attribute outside React's tree, so
+// there's no hydration mismatch. Runs before hydration to keep first paint
+// on-season. The theme then naturally tracks the date on every visit.
+if (typeof document !== "undefined") {
+  document.documentElement.dataset.season = currentSeason().key;
+}
 
 const routes: RouteRecord[] = [
   {
@@ -36,6 +47,8 @@ const routes: RouteRecord[] = [
             .map((p) => `/worship-resources/${p.slug}`),
       },
       { path: "about", Component: About },
+      { path: "care", Component: Care },
+      { path: "give", Component: Give },
       { path: "subscribe", Component: Subscribe },
       { path: "*", Component: NotFound },
     ],

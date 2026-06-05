@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Liturgical theme. `--accent-rgb` (links, buttons, headings accents) and
+ * `--paper-rgb` (a faint seasonal page wash) switch with the current
+ * liturgical season. src/main.tsx sets `data-season` on <html> from today's
+ * date before hydration; the values are space-separated RGB channels so
+ * Tailwind alpha modifiers keep working. Defaults below are the year-round
+ * brick/paper used when no season is set.
+ */
+:root {
+  --accent-rgb: 122 62 62;   /* #7a3e3e brick */
+  --paper-rgb: 251 250 246;  /* #fbfaf6 warm paper */
+}
+[data-season="advent"]    { --accent-rgb: 94 75 139;  --paper-rgb: 246 244 250; } /* violet */
+[data-season="christmas"] { --accent-rgb: 47 93 140;  --paper-rgb: 238 244 250; } /* blue */
+[data-season="epiphany"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; } /* green */
+[data-season="lent"]      { --accent-rgb: 74 67 92;   --paper-rgb: 243 242 246; } /* somber purple */
+[data-season="easter"]    { --accent-rgb: 138 109 31; --paper-rgb: 250 246 233; } /* gold */
+[data-season="pentecost"] { --accent-rgb: 166 49 45;  --paper-rgb: 250 238 237; } /* red */
+[data-season="ordinary"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; } /* green */
+
 @layer base {
   html {
     font-feature-settings: "ss01", "ss02";
@@ -11,6 +31,10 @@
   }
   h1, h2, h3, h4 {
     @apply font-serif;
+  }
+  /* Ease the seasonal color change so a date rollover doesn't hard-cut. */
+  body, a, button {
+    transition: background-color 600ms ease, color 300ms ease, border-color 300ms ease;
   }
 }
 

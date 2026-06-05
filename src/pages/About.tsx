@@ -1,4 +1,5 @@
 import PageHead from "~/components/PageHead";
+import { VANDERBILT_RCL } from "~/components/SeasonBadge";
 
 export default function About() {
   return (
@@ -123,10 +124,18 @@ export default function About() {
       <h2 className="font-serif text-2xl mt-16 mb-4">How this ministry works</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Sermons and reflections are posted in keeping with the Revised Common
-          Lectionary, the three-year cycle that mainline Protestant
-          congregations use to read through the Scriptures together. A new
-          piece typically arrives weekly.
+          Sermons and reflections are posted in keeping with the{" "}
+          <a
+            href={VANDERBILT_RCL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent underline underline-offset-2 hover:no-underline"
+          >
+            Revised Common Lectionary
+          </a>
+          , the three-year cycle that mainline Protestant congregations use to
+          read through the Scriptures together. A new piece typically arrives
+          weekly.
         </p>
         <p>
           Browse the{" "}
