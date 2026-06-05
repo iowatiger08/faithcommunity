@@ -109,6 +109,25 @@ Google Takeout (blog export)
 - **Anthropic API key** (for classify): local in `tigersndragons/.env.local`
   (`ANTHROPIC_API_KEY`); will move to Secrets Manager for the Lambda.
 
+## Repo & branches
+
+- **`feature/vite-pivot`** — the active branch: this Vite/React site, deployed to
+  AWS. Pushed to `origin`; develop here and run `./scripts/deploy.sh`.
+- **`main`** — still the **legacy Angular** lineage (Angular 10–14 + an Azure
+  Static Web Apps workflow). Reconciliation deferred; **PR #3** is open as a
+  record of the rebuild. The planned end state is a "clean cutover" (force `main`
+  to the pivot branch) — the Angular history is preserved below, so nothing is
+  lost.
+- **`archive/angular`** — canonical **legacy Angular reference** (commit
+  `441dc1c`: the full Angular app at root + the Azure workflow). It's an
+  independent ref, so a future `main` cutover won't lose it. (`angular` and
+  `master` are older, smaller copies.)
+
+**Large-file gotcha (why the first push failed):** the Angular build cache
+(`legacy/angular/.angular/`) and `legacy/angular/node_modules/` had been
+committed (four files >150 MB), exceeding GitHub's 100 MB limit. They were
+purged from history and are gitignored — don't re-add them.
+
 ## Commands
 
 ```sh
