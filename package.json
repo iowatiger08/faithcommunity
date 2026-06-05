@@ -8,7 +8,8 @@
     "build": "vite-react-ssg build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "sync-content": "tsx scripts/sync-content.ts"
+    "sync-content": "tsx scripts/sync-content.ts",
+    "validate-extract": "tsx scripts/validate-extract.ts"
   },
   "dependencies": {
     "lucide-react": "^0.460.0",
