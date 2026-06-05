@@ -12,8 +12,9 @@
  * congregation-specific worship bulletins that don't belong on a
  * ministry-wide site.
  *
- * Default source paths assume the tigersndragons sibling project at
- * ../tigersndragons. Override with --posts, --classified, --out.
+ * Source files live in-repo under data/source/ so the build is self-contained
+ * (the corpus was migrated out of the now-deprecated tigersndragons sibling).
+ * Override with --posts, --classified, --out.
  *
  * Usage:
  *   npm run sync-content
@@ -24,8 +25,8 @@ import { readFileSync, writeFileSync, mkdirSync, statSync } from "node:fs";
 import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const DEFAULT_POSTS = "../tigersndragons/.scratch/blogger/posts.json";
-const DEFAULT_CLASSIFIED = "../tigersndragons/.scratch/blogger/classified.jsonl";
+const DEFAULT_POSTS = "data/source/posts.json";
+const DEFAULT_CLASSIFIED = "data/source/classified.jsonl";
 const DEFAULT_OUT = "data/published-content.json";
 
 const EXCLUDED_TITLE_PATTERNS = [
