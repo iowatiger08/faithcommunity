@@ -238,7 +238,7 @@ export default function Meditations() {
               they both fall into the water.</p>
             </blockquote>
             <p className="text-xs text-ink/40 mt-2 italic">
-              — Drawn from Zen wisdom, Proverbs, and Matthew (Gospel)
+              — Drawn from Zen wisdom; Proverbs 18; and Matthew 15:14
             </p>
           </div>
 
