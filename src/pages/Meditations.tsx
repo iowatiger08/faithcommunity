@@ -125,7 +125,7 @@ export default function Meditations() {
 
           {/* Meditation on the Tao */}
           <div>
-            <p className="text-xs uppercase tracking-widest text-ink/50 mb-3">Tao Te Ching</p>
+            <p className="text-xs uppercase tracking-widest text-ink/50 mb-3">Tao Te Ching &mdash; trans. Brian Browne Walker</p>
             <blockquote className="border-l-2 border-accent/30 pl-5 space-y-2 font-serif text-lg text-ink/80 italic leading-relaxed">
               <p>The wise person embraces the One and sets an example for all.</p>
               <p>Not putting on a show, he shines;<br />
