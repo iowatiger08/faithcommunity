@@ -14,6 +14,7 @@ const recovery: Resource[] = [
   { name: "Alcoholics Anonymous (AA)", href: "https://www.aa.org/", detail: "Find a meeting near you, in person or online, any day." },
   { name: "Al-Anon", href: "https://al-anon.org/", detail: "Support for the families and friends of problem drinkers." },
   { name: "Narcotics Anonymous (NA)", href: "https://www.na.org/", detail: "Recovery from drug addiction, one day at a time." },
+  { name: "Refuge Recovery", href: "https://refugerecovery.org/", detail: "A Buddhist-inspired, mindfulness-based recovery program — meetings in person and online." },
   { name: "SMART Recovery", href: "https://www.smartrecovery.org/", detail: "Science-based tools for changing addictive behavior." },
 ];
 
@@ -164,8 +165,8 @@ export default function Care() {
       <section className="mt-16">
         <h2 className="font-serif text-2xl mb-3">Here in central Iowa</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-4">
-          This ministry serves alongside neighbors close to home. If you need a
-          meal or a hand &mdash; or want to offer one &mdash; start here.
+          This ministry serves alongside neighbors close to home. If you want to
+          help serve our community &mdash; start here.
         </p>
         <ResourceList
           items={[
