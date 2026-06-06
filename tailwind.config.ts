@@ -15,6 +15,7 @@ export default {
         // RGB channels so Tailwind's /alpha modifiers (bg-accent/90 etc.) work.
         paper: "rgb(var(--paper-rgb) / <alpha-value>)",
         accent: "rgb(var(--accent-rgb) / <alpha-value>)",
+        bookend: "rgb(var(--bookend-rgb) / <alpha-value>)",
       },
       maxWidth: {
         prose: "65ch",

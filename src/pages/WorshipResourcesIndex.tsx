@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { getWorshipResources, formatDate } from "~/lib/content";
+import { MEDITATION_RESOURCE_SLUGS } from "~/pages/Meditations";
 import PageHead from "~/components/PageHead";
 
 export default function WorshipResourcesIndex() {
-  const items = getWorshipResources();
+  const items = getWorshipResources().filter(
+    (p) => !MEDITATION_RESOURCE_SLUGS.has(p.slug)
+  );
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       <PageHead

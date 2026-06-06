@@ -189,7 +189,7 @@ export default function Care() {
           </Link>{" "}
           are here too &mdash; and you&apos;re always welcome to{" "}
           <Link to="/subscribe" className="text-accent underline">
-            join the gathering
+            subscribe
           </Link>
           .
         </p>

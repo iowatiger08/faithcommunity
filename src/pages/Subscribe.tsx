@@ -18,11 +18,11 @@ export default function Subscribe() {
     <div className="max-w-2xl mx-auto px-6 py-20">
       <PageHead
         title="Subscribe"
-        description="Join the gathering — sermons, reflections, and worship resources delivered to your inbox, usually once a week tied to the Sunday lectionary. No tracking, no sales pitches."
+        description="Subscribe for free — sermons, reflections, and worship resources delivered to your inbox, usually once a week tied to the Sunday lectionary. No tracking, no sales pitches."
         path="/subscribe/"
       />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
-        Join the gathering
+        Stay connected
       </p>
       <h1 className="font-serif text-4xl mb-6 leading-tight">
         Sermons and reflections, delivered when they arrive.
