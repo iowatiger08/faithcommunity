@@ -8,7 +8,7 @@ import WorshipResourcesIndex from "./pages/WorshipResourcesIndex";
 import About from "./pages/About";
 import Care from "./pages/Care";
 import Give from "./pages/Give";
-import Subscribe from "./pages/Subscribe";
+import Contact from "./pages/Contact";
 import Publications from "./pages/Publications";
 import Ordination from "./pages/Ordination";
 import Meditations from "./pages/Meditations";
@@ -53,7 +53,7 @@ const routes: RouteRecord[] = [
       { path: "about", Component: About },
       { path: "care", Component: Care },
       { path: "give", Component: Give },
-      { path: "subscribe", Component: Subscribe },
+      { path: "contact", Component: Contact },
       { path: "publications", Component: Publications },
       { path: "ordination", Component: Ordination },
       { path: "meditations", Component: Meditations },

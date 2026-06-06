@@ -5,9 +5,10 @@ stack_name = "blogger-proxy-stack"
 resolve_s3 = true
 s3_prefix = "blogger-proxy-stack"
 region = "us-west-2"
-confirm_changeset = true
+confirm_changeset = false
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
+parameter_overrides = "HopeAndTruthHostedZoneId=Z1W12OVIJHI59G SenderDomain=hopeandtruthministry.com"
 
 [default.global.parameters]
 region = "us-west-2"
