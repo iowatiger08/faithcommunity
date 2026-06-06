@@ -9,7 +9,7 @@ import PageHead from "~/components/PageHead";
 //   PAYPAL_URL     — a PayPal.me link or hosted Donate-button URL,
 //                    e.g. "https://www.paypal.com/paypalme/HopeAndTruth"
 const VENMO_USERNAME = "";
-const PAYPAL_URL = "";
+const PAYPAL_URL = "https://paypal.me/tonyehansen1";
 
 const venmoUrl = VENMO_USERNAME ? `https://venmo.com/u/${VENMO_USERNAME}` : "";
 const givingLive = Boolean(venmoUrl || PAYPAL_URL);
@@ -76,8 +76,8 @@ export default function Give() {
             <p className="text-ink/80">
               We&apos;re setting up Venmo and PayPal so you can give securely in a
               tap. Check back shortly &mdash; or, in the meantime,{" "}
-              <Link to="/subscribe" className="text-accent underline">
-                subscribe
+              <Link to="/contact" className="text-accent underline">
+                contact us
               </Link>{" "}
               and we&apos;ll let you know when it&apos;s ready.
             </p>
@@ -193,8 +193,8 @@ export default function Give() {
               financial sustainability.
             </p>
             <p className="text-xs text-ink/40 mt-1">Coming soon &mdash;{" "}
-              <Link to="/subscribe" className="text-accent underline">
-                subscribe to be notified
+              <Link to="/contact" className="text-accent underline">
+                contact us to be notified
               </Link>
             </p>
           </li>
