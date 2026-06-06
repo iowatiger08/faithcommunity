@@ -19,7 +19,7 @@ export default function Give() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Give &amp; Volunteer"
-        description="Support a congregation of the whole. Offer a gift to sustain this ministry's outreach, or lend your hands as a volunteer alongside neighbors in central Iowa."
+        description="Support a ministry without walls. Offer a gift to sustain this ministry's outreach, or lend your hands as a volunteer alongside neighbors in central Iowa."
         path="/give/"
       />
 
@@ -77,9 +77,9 @@ export default function Give() {
               We&apos;re setting up Venmo and PayPal so you can give securely in a
               tap. Check back shortly &mdash; or, in the meantime,{" "}
               <Link to="/subscribe" className="text-accent underline">
-                join the gathering
+                subscribe
               </Link>{" "}
-              so we can let you know when it&apos;s ready.
+              and we&apos;ll let you know when it&apos;s ready.
             </p>
           </div>
         )}
@@ -121,6 +121,81 @@ export default function Give() {
                 2-1-1
               </a>
               .
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      {/* Stewardship Resources */}
+      <section className="mt-16">
+        <h2 className="font-serif text-2xl mb-3">Stewardship resources</h2>
+        <p className="text-ink/80 max-w-prose leading-relaxed mb-6">
+          Stewardship is more than a budget line &mdash; it is how a ministry
+          sustains its mission and honors the trust of its community. Whether
+          you lead a congregation, a small church, or an independent ministry,
+          these resources can help you build a healthy financial foundation and
+          cultivate a culture of generosity.
+        </p>
+
+        <ul className="space-y-5">
+          <li className="border-l-2 border-accent/30 pl-4">
+            <p className="font-medium text-ink/90">Stewardship guides &amp; campaign resources</p>
+            <p className="text-sm text-ink/70 mt-1 leading-relaxed">
+              Practical tools for annual pledge campaigns, capital initiatives,
+              and year-round generosity programs &mdash; coming from Hope and
+              Truth Ministry.
+            </p>
+            <p className="text-xs text-ink/40 mt-1">Coming soon</p>
+          </li>
+
+          <li className="border-l-2 border-accent/30 pl-4">
+            <p className="font-medium text-ink/90">
+              <a
+                href="https://www.ecfa.org/Content/Resource-Library"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline underline-offset-2 hover:no-underline"
+              >
+                ECFA Resource Library
+              </a>
+            </p>
+            <p className="text-sm text-ink/70 mt-1 leading-relaxed">
+              The Evangelical Council for Financial Accountability offers free
+              guides on church financial management, accountability, and donor
+              communication best practices.
+            </p>
+          </li>
+
+          <li className="border-l-2 border-accent/30 pl-4">
+            <p className="font-medium text-ink/90">
+              <a
+                href="https://www.generositypath.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline underline-offset-2 hover:no-underline"
+              >
+                Generosity Path
+              </a>
+            </p>
+            <p className="text-sm text-ink/70 mt-1 leading-relaxed">
+              Resources rooted in the theology and practice of generosity &mdash;
+              helping ministers and congregations move from transactions to
+              transformation in their giving culture.
+            </p>
+          </li>
+
+          <li className="border-l-2 border-accent/30 pl-4">
+            <p className="font-medium text-ink/90">Ministry financial consultation</p>
+            <p className="text-sm text-ink/70 mt-1 leading-relaxed">
+              Hope and Truth Ministry is developing a stewardship consultation
+              service for churches and independent ministries &mdash; covering
+              budgeting, giving systems, donor communication, and long-term
+              financial sustainability.
+            </p>
+            <p className="text-xs text-ink/40 mt-1">Coming soon &mdash;{" "}
+              <Link to="/subscribe" className="text-accent underline">
+                subscribe to be notified
+              </Link>
             </p>
           </li>
         </ul>

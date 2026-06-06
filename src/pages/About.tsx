@@ -6,14 +6,14 @@ export default function About() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="About"
-        description="Hope and Truth Ministry is a congregation of people here and now — an open and affirming ministry for the wandering, the doubting, the questioning, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
+        description="Hope and Truth Ministry is a ministry without walls — open and affirming, for the wandering, the doubting, the questioning, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
         path="/about/"
       />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Hope &amp; Truth Ministry
       </p>
       <h1 className="font-serif text-5xl mb-8 leading-tight">
-        A congregation of the whole.
+        A ministry without walls.
       </h1>
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">
@@ -21,13 +21,13 @@ export default function About() {
           Are you in a wilderness? Looking for a path? You are welcome here.
         </p>
         <p>
-          Hope and Truth Ministry is an outreach to anyone who wants to try
-          &mdash; an open and affirming community of people here and now. For
+          Hope and Truth Ministry is an interfaith outreach to anyone looking for
+          &mdash; an honest, welcoming, open and affirming ministry. For
           the wandering, the doubting, the questioning, the hurting, and the
           hopeful. For those whose church is online. For those finding their
           way back. For those still seeking. For those who want to think
           faithfully alongside others. Wherever you are on the journey, there
-          is space for you here.
+          is for you here.
         </p>
       </div>
 
@@ -44,7 +44,7 @@ export default function About() {
           equity and access, that honors how different people come to the
           Creator through different paths, that leaves judgment to the One
           who made us, and that takes seriously the call to love our
-          neighbors &mdash; all of them.
+          neighbors &mdash; as ourselves.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export default function About() {
       <ul className="space-y-3 text-ink/80 max-w-prose leading-relaxed list-disc pl-6">
         <li>Growing in love of the Holy Presence and of all our neighbors.</li>
         <li>
-          Providing a safe and sacred space for the many ways faith shows up in
+          Providing a safe and sacred space for the many ways faith manifests in
           our lives.
         </li>
         <li>
@@ -146,9 +146,9 @@ export default function About() {
           </a>
           , or{" "}
           <a className="text-accent underline" href="/subscribe">
-            join the gathering
+            subscribe
           </a>{" "}
-          and let new reflections arrive in your inbox.
+          to get new reflections in your inbox.
         </p>
       </div>
 

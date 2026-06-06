@@ -9,6 +9,10 @@ import About from "./pages/About";
 import Care from "./pages/Care";
 import Give from "./pages/Give";
 import Subscribe from "./pages/Subscribe";
+import Publications from "./pages/Publications";
+import Ordination from "./pages/Ordination";
+import Meditations from "./pages/Meditations";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import { getAllPosts } from "./lib/content";
 import { currentSeason } from "./lib/liturgical";
@@ -50,6 +54,10 @@ const routes: RouteRecord[] = [
       { path: "care", Component: Care },
       { path: "give", Component: Give },
       { path: "subscribe", Component: Subscribe },
+      { path: "publications", Component: Publications },
+      { path: "ordination", Component: Ordination },
+      { path: "meditations", Component: Meditations },
+      { path: "terms", Component: Terms },
       { path: "*", Component: NotFound },
     ],
   },

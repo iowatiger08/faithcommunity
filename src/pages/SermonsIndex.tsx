@@ -26,8 +26,8 @@ export default function SermonsIndex() {
       </p>
 
       <p className="font-serif text-lg text-accent/90 italic max-w-prose mb-12 pl-4 border-l-2 border-accent/30">
-        May the words of my mouth and our thoughts and meditations of all of
-        our hearts be acceptable to You, our rock and our redeemer.
+        May the words of my mouth, my thoughts and the meditations of all of
+        our hearts be acceptable to You, our rock and our redeemer. (adapted from Psalm 19)
       </p>
 
       {years.map((year) => (

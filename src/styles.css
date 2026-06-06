@@ -11,16 +11,17 @@
  * brick/paper used when no season is set.
  */
 :root {
-  --accent-rgb: 122 62 62;   /* #7a3e3e brick */
-  --paper-rgb: 251 250 246;  /* #fbfaf6 warm paper */
+  --accent-rgb: 122 62 62;    /* #7a3e3e brick */
+  --paper-rgb:  251 250 246;  /* #fbfaf6 warm paper */
+  --bookend-rgb: 218 213 205; /* neutral warm tan */
 }
-[data-season="advent"]    { --accent-rgb: 94 75 139;  --paper-rgb: 246 244 250; } /* violet */
-[data-season="christmas"] { --accent-rgb: 47 93 140;  --paper-rgb: 238 244 250; } /* blue */
-[data-season="epiphany"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; } /* green */
-[data-season="lent"]      { --accent-rgb: 74 67 92;   --paper-rgb: 243 242 246; } /* somber purple */
-[data-season="easter"]    { --accent-rgb: 138 109 31; --paper-rgb: 250 246 233; } /* gold */
-[data-season="pentecost"] { --accent-rgb: 166 49 45;  --paper-rgb: 250 238 237; } /* red */
-[data-season="ordinary"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; } /* green */
+[data-season="advent"]    { --accent-rgb: 94 75 139;  --paper-rgb: 246 244 250; --bookend-rgb: 200 194 222; } /* violet */
+[data-season="christmas"] { --accent-rgb: 47 93 140;  --paper-rgb: 238 244 250; --bookend-rgb: 190 212 235; } /* blue */
+[data-season="epiphany"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; --bookend-rgb: 196 220 194; } /* green */
+[data-season="lent"]      { --accent-rgb: 74 67 92;   --paper-rgb: 243 242 246; --bookend-rgb: 200 196 218; } /* somber purple */
+[data-season="easter"]    { --accent-rgb: 138 109 31; --paper-rgb: 250 246 233; --bookend-rgb: 220 208 170; } /* gold */
+[data-season="pentecost"] { --accent-rgb: 166 49 45;  --paper-rgb: 250 238 237; --bookend-rgb: 222 185 183; } /* red */
+[data-season="ordinary"]  { --accent-rgb: 74 110 71;  --paper-rgb: 241 246 240; --bookend-rgb: 196 220 194; } /* green */
 
 @layer base {
   html {
@@ -33,7 +34,7 @@
     @apply font-serif;
   }
   /* Ease the seasonal color change so a date rollover doesn't hard-cut. */
-  body, a, button {
+  html, body, a, button {
     transition: background-color 600ms ease, color 300ms ease, border-color 300ms ease;
   }
 }

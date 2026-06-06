@@ -3,7 +3,7 @@ import { Head } from "vite-react-ssg";
 const SITE_URL = "https://hopeandtruthministry.com";
 const SITE_NAME = "Hope and Truth Ministry";
 const DEFAULT_DESCRIPTION =
-  "A congregation of the whole — sermons, reflections, and worship resources for the wandering, the doubting, and the hopeful.";
+  "A ministry without walls — sermons, reflections, and worship resources for the wandering, the doubting, and the hopeful.";
 
 interface Props {
   /** Page-specific title. Auto-suffixed with " — Hope and Truth Ministry" unless `isHome`. */
