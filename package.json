@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "sync-content": "tsx scripts/sync-content.ts",
+    "import-posts": "tsx scripts/import-posts.ts",
     "validate-extract": "tsx scripts/validate-extract.ts",
     "test": "vitest run",
     "test:watch": "vitest"
