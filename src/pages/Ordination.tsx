@@ -13,7 +13,7 @@ export default function Ordination() {
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Ordination &amp; Ministry
       </p>
-      <h1 className="font-serif text-5xl mb-6 leading-tight">
+      <h1 className="font-serif text-4xl mb-6 leading-tight">
         Called to serve?
       </h1>
 

@@ -21,7 +21,7 @@ export default function About() {
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Hope &amp; Truth Ministry
       </p>
-      <h1 className="font-serif text-5xl mb-8 leading-tight">
+      <h1 className="font-serif text-4xl mb-8 leading-tight">
         A ministry without walls.
       </h1>
 
@@ -148,12 +148,12 @@ export default function About() {
         </li>
       </ul>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">Find your way in</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">What happens here</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
           Start wherever you are. The{" "}
-          <a className="text-accent underline" href="/sermons">sermons</a>{" "}
-          follow the rhythm of the{" "}
+          <a className="text-accent underline" href="/sermons">sermons and reflections</a>{" "}
+          follow the cadence of the{" "}
           <a
             href={VANDERBILT_RCL}
             target="_blank"
@@ -162,16 +162,16 @@ export default function About() {
           >
             Revised Common Lectionary
           </a>{" "}
-          &mdash; new writing arrives most weeks. The{" "}
+          &mdash; new writing arrives most weeks. These along with the{" "}
           <a className="text-accent underline" href="/meditations">
             meditations
           </a>{" "}
-          are there for those who want to be still. The{" "}
+          are there for contemplation and exploring the heart. The{" "}
           <a className="text-accent underline" href="/publications">
             Publications hub
           </a>{" "}
-          gathers inspiration, resources, and work ideation for those called
-          to build something. And the{" "}
+          helps to gather inspiration, resources, and work ideation for those called
+          to build with purpose. The{" "}
           <a className="text-accent underline" href="/contact">
             contact page
           </a>{" "}

@@ -37,8 +37,8 @@ export default function Meditations() {
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Contemplative Practice
       </p>
-      <h1 className="font-serif text-5xl mb-6 leading-tight">
-        Be still, and know.
+      <h1 className="font-serif text-4xl mb-6 leading-tight">
+        Be still and rest your anxious mind
       </h1>
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
@@ -55,7 +55,7 @@ export default function Meditations() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-4">Lectio Divina</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-6">
-          <em>Sacred reading</em> &mdash; an ancient Christian practice of
+          <em>Sacred reading</em> &mdash; a Christian practice of
           moving through a short scripture passage slowly, listening for what
           stirs rather than what instructs.
         </p>

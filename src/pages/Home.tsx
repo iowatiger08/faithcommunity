@@ -30,7 +30,7 @@ export default function Home() {
           <p className="text-sm uppercase tracking-widest text-accent mb-4">
             Hope &amp; Truth Ministry
           </p>
-          <h1 className="font-serif text-5xl sm:text-6xl leading-tight mb-8">
+          <h1 className="font-serif text-4xl sm:text-5xl leading-tight mb-8">
             A ministry without walls.
           </h1>
 
