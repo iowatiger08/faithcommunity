@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <PageHead
         title="Hope and Truth Ministry — a ministry without walls"
-        description="A welcoming, open-and-affirming ministry without walls — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
+        description="A welcoming, interfaith ministry without walls — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
         path="/"
         isHome
       />
