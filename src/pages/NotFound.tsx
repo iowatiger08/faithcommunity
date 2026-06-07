@@ -9,7 +9,7 @@ export default function NotFound() {
         description="The page you're looking for doesn't exist on this site."
         path="/404/"
       />
-      <h1 className="font-serif text-5xl mb-4">Not found</h1>
+      <h1 className="font-serif text-4xl mb-4">Not found</h1>
       <p className="text-ink/70 mb-6">
         The page you&apos;re looking for doesn&apos;t exist on this site.
       </p>

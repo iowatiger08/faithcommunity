@@ -71,7 +71,7 @@ export default function Care() {
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Care &amp; Support
       </p>
-      <h1 className="font-serif text-5xl mb-8 leading-tight">
+      <h1 className="font-serif text-4xl mb-8 leading-tight">
         You are not alone.
       </h1>
 

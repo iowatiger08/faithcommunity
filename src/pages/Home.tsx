@@ -30,9 +30,18 @@ export default function Home() {
           <p className="text-sm uppercase tracking-widest text-accent mb-4">
             Hope &amp; Truth Ministry
           </p>
-          <h1 className="font-serif text-5xl sm:text-6xl leading-tight mb-6">
+          <h1 className="font-serif text-4xl sm:text-5xl leading-tight mb-8">
             A ministry without walls.
           </h1>
+
+          <div className="flex justify-center mb-8">
+            <img
+              src="/images/interfaith-wheel.svg"
+              alt="Interfaith mandala — symbols of Christianity, Judaism, Islam, Hinduism, Buddhism, Sikhism, Taoism, and Bahá'í arranged in a circle of unity"
+              className="w-52 h-52 sm:w-64 sm:h-64"
+            />
+          </div>
+
           <p className="text-xl text-ink/80 max-w-prose leading-relaxed mb-8">
             For the wandering, the doubting, the hurting, and the hopeful.
             For people without a congregation, and for people who have found

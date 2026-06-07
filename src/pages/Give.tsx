@@ -26,7 +26,7 @@ export default function Give() {
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
         Give &amp; Volunteer
       </p>
-      <h1 className="font-serif text-5xl mb-8 leading-tight">
+      <h1 className="font-serif text-4xl mb-8 leading-tight">
         Help keep the lamp lit.
       </h1>
 
