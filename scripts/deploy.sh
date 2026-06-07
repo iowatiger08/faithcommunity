@@ -8,13 +8,20 @@
 #
 # Usage:
 #   ./scripts/deploy.sh                         # build + deploy with defaults
+#   ./scripts/deploy.sh --with-lambda           # also deploy the Lambda stack (SAM)
 #   SKIP_BUILD=1 ./scripts/deploy.sh            # deploy current dist/ without rebuild
 #   DRY_RUN=1 ./scripts/deploy.sh               # show what would happen, do nothing
 #   BUCKET=other-bucket DIST_IDS=ID1,ID2 ./scripts/deploy.sh
 #
 # Requirements: aws-cli v2 authenticated, npm, network.
+# For --with-lambda: sam CLI also required (brew install aws-sam-cli).
 
 set -euo pipefail
+
+DEPLOY_LAMBDA=0
+for arg in "$@"; do
+  [[ "$arg" == "--with-lambda" ]] && DEPLOY_LAMBDA=1
+done
 
 BUCKET="${BUCKET:-hopeandtruthministry.com}"
 # Two distributions front the same bucket: apex (E293YSKYXW91AL) and www
@@ -87,6 +94,12 @@ for dist in "${DIST_ARR[@]}"; do
     --output table
 done
 echo
+
+if [[ "$DEPLOY_LAMBDA" == "1" ]]; then
+  echo "=== deploying Lambda stack ==="
+  "$(dirname "$0")/deploy-lambda.sh"
+  echo
+fi
 
 echo "Deploy complete."
 echo "  Live URL:  https://hopeandtruthministry.com/"

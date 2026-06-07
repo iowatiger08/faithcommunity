@@ -1,6 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Blogger API Proxy Lambda with API Gateway
+Description: Hope & Truth Ministry — Lambda functions, API Gateway, SES, and Route 53 DNS
+
+Parameters:
+  HopeAndTruthHostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Default: Z1W12OVIJHI59G
+    Description: Route 53 hosted zone for hopeandtruthministry.com
+  SenderDomain:
+    Type: String
+    Default: hopeandtruthministry.com
+    Description: Domain used for SES sending identity and DKIM records
 
 Globals:
   Function:
@@ -10,6 +20,50 @@ Globals:
       - x86_64
 
 Resources:
+
+  # ── SES email identity + DKIM ─────────────────────────────────────────────
+  # Manages the sending identity for noreply@hopeandtruthministry.com.
+  # CloudFormation provisions DKIM keys and outputs the three CNAME tokens;
+  # the records below wire them into Route 53 automatically.
+  # To tear down: sam delete (removes identity + DKIM records together).
+  SesEmailIdentity:
+    Type: AWS::SES::EmailIdentity
+    Properties:
+      EmailIdentity: !Ref SenderDomain
+      DkimAttributes:
+        SigningEnabled: true
+
+  SesDkimRecord1:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HopeAndTruthHostedZoneId
+      Name: !Sub "${SesEmailIdentity.DkimDNSTokenName1}._domainkey.${SenderDomain}"
+      Type: CNAME
+      TTL: 300
+      ResourceRecords:
+        - !Sub "${SesEmailIdentity.DkimDNSTokenValue1}"
+
+  SesDkimRecord2:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HopeAndTruthHostedZoneId
+      Name: !Sub "${SesEmailIdentity.DkimDNSTokenName2}._domainkey.${SenderDomain}"
+      Type: CNAME
+      TTL: 300
+      ResourceRecords:
+        - !Sub "${SesEmailIdentity.DkimDNSTokenValue2}"
+
+  SesDkimRecord3:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HopeAndTruthHostedZoneId
+      Name: !Sub "${SesEmailIdentity.DkimDNSTokenName3}._domainkey.${SenderDomain}"
+      Type: CNAME
+      TTL: 300
+      ResourceRecords:
+        - !Sub "${SesEmailIdentity.DkimDNSTokenValue3}"
+
+  # ── Blogger proxy ─────────────────────────────────────────────────────────
   BloggerProxyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -48,7 +102,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,OPTIONS'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-        AllowOrigin: "'hopeandtruthministry.com'"  # Update this to your CloudFront/S3 domain in production
+        AllowOrigin: "'hopeandtruthministry.com'"
       DefinitionBody:
         openapi: 3.0.0
         info:
@@ -75,6 +129,61 @@ Resources:
                 '200':
                   description: Success
 
+  # ── Contact form ──────────────────────────────────────────────────────────
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: contact-form/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      MemorySize: 128
+      Timeout: 15
+      Environment:
+        Variables:
+          RECIPIENT_EMAIL: hopeandtruthministry@gmail.com
+          SENDER_EMAIL: !Sub "noreply@${SenderDomain}"
+          TOXICITY_THRESHOLD: "0.75"
+          RATE_LIMIT_PER_HOUR: "2"
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - ses:SendEmail
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - comprehend:DetectToxicContent
+            Resource: "*"
+      Events:
+        ContactPost:
+          Type: HttpApi
+          Properties:
+            Path: /contact
+            Method: post
+            ApiId: !Ref ContactHttpApi
+        ContactOptions:
+          Type: HttpApi
+          Properties:
+            Path: /contact
+            Method: options
+            ApiId: !Ref ContactHttpApi
+
+  ContactHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - "https://hopeandtruthministry.com"
+          - "https://www.hopeandtruthministry.com"
+          - "http://localhost:5173"
+          - "http://localhost:4173"
+        AllowHeaders:
+          - Content-Type
+        AllowMethods:
+          - POST
+          - OPTIONS
+        MaxAge: 300
+
 Outputs:
   BloggerApiUrl:
     Description: "API Gateway endpoint URL for Blogger proxy"
@@ -82,3 +191,9 @@ Outputs:
   BloggerProxyFunctionArn:
     Description: "Blogger Proxy Lambda Function ARN"
     Value: !GetAtt BloggerProxyFunction.Arn
+  ContactApiUrl:
+    Description: "Contact form API endpoint — set as VITE_CONTACT_API_URL in your build env"
+    Value: !Sub "https://${ContactHttpApi}.execute-api.${AWS::Region}.amazonaws.com/contact"
+  SesDomain:
+    Description: "SES verified sending domain"
+    Value: !Ref SenderDomain

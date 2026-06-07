@@ -18,7 +18,7 @@ export default function Layout() {
               <Link to="/care" className="hover:text-accent">Care</Link>
               <Link to="/about" className="hover:text-accent">About</Link>
               <Link to="/give" className="hover:text-accent">Give</Link>
-              <Link to="/subscribe" className="hover:text-accent">Subscribe</Link>
+              <Link to="/contact" className="hover:text-accent">Contact</Link>
             </nav>
             <SeasonBadge />
           </div>
@@ -55,7 +55,7 @@ export default function Layout() {
               <ul className="space-y-1">
                 <li><Link to="/ordination" className="hover:text-accent">Ordination</Link></li>
                 <li><Link to="/give" className="hover:text-accent">Stewardship resources</Link></li>
-                <li><Link to="/subscribe" className="hover:text-accent">Subscribe by email</Link></li>
+                <li><Link to="/contact" className="hover:text-accent">Contact us</Link></li>
                 <li><Link to="/give" className="hover:text-accent">Give &amp; volunteer</Link></li>
                 <li className="text-ink/50">Newsletters &mdash; coming soon</li>
               </ul>
