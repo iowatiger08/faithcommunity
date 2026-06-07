@@ -6,7 +6,7 @@ import PageHead from "~/components/PageHead";
 const INSPIRATION = [
   {
     title: "Sermons",
-    desc: "Hundreds of sermons drawn from the Revised Common Lectionary — a year's worth of scripture, season by season.",
+    desc: "Reflections and sermons drawn from the Revised Common Lectionary - season by season",
     href: "/sermons",
     live: true,
     cta: "Browse the archive",
@@ -20,7 +20,7 @@ const INSPIRATION = [
   },
   {
     title: "Worship Resources",
-    desc: "Service orders, Lessons & Carols, pastoral prayers — materials that carry the season into the room.",
+    desc: "Service orders — materials that carry the season into the community.",
     href: "/worship-resources",
     live: true,
     cta: "Browse resources",
@@ -173,7 +173,7 @@ export default function Publications() {
     <>
       <PageHead
         title="Publications"
-        description="Find inspiration, gather resources, and discover how to build your own ministry or nonprofit — sermons, liturgy, stewardship tools, and purpose-driven development guides from Hope and Truth Ministry."
+        description="Find inspiration, gather resources, and discover a path to build your own ministry or nonprofit — sermons, liturgy, stewardship tools, and purpose-driven development guides from Hope and Truth Ministry."
         path="/publications/"
       />
 
@@ -182,27 +182,29 @@ export default function Publications() {
         <p className="text-sm uppercase tracking-widest text-accent mb-4">
           Publications &amp; Resources
         </p>
-        <h1 className="font-serif text-5xl mb-5 leading-tight">
-          Find inspiration. Gather resources.<br className="hidden sm:block" /> Build something.
+        <h1 className="font-serif text-4xl mb-5 leading-snug">
+          <span className="block">Find inspiration.</span>
+          <span className="block pl-6">Gather resources.</span>
+          <span className="block pl-12">Discover paths.</span>
         </h1>
         <p className="text-lg text-ink/70 max-w-prose leading-relaxed">
-          Hope &amp; Truth Ministry is a place to seek, to learn, and to discover how
-          to build something of your own &mdash; a congregation, a nonprofit, an
-          organization that is unmistakably yours.
+          Hope &amp; Truth Ministry is a place to seek, to learn, and to discover a path
+          to build something of your own &mdash; a congregation or a nonprofit
+          organization delivering purpose and services to the community.
         </p>
       </div>
 
       {/* Track 1 — Inspiration */}
       <TrackBanner
         title="Inspiration"
-        pull="Before the sermon, before the service, before the words — there is silence. These materials help you find it."
+        pull="Before the sermon, before the service, before the words — there is contemplation. These materials help you find inspiration."
         items={INSPIRATION}
       />
 
       {/* Track 2 — Resources */}
       <TrackBanner
         title="Resources"
-        pull="Every ministry is built on what it gives away. These tools are here to be used, adapted, and passed forward."
+        pull="Ministry is built on what it provides. These tools are here to be used and adapted to build your purpose."
         items={RESOURCES}
         flip
       />
@@ -218,7 +220,7 @@ export default function Publications() {
       <div className="max-w-6xl mx-auto px-6 py-10">
         <p className="text-xs text-ink/50">
           Content on this site is &copy; Tony E Hansen / Hope and Truth Ministry.
-          Free to share with attribution.{" "}
+          Welcome to share per the {" "}
           <Link to="/terms" className="underline hover:text-ink/70">
             Terms of use &rarr;
           </Link>
