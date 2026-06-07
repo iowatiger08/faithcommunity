@@ -14,6 +14,16 @@ export default function Home() {
         path="/"
         isHome
       />
+      {/* Hero image */}
+      <div className="w-full overflow-hidden" style={{ maxHeight: "420px" }}>
+        <img
+          src="/images/palm-springs-canyon.jpg"
+          alt="Mountain canyon road in the Palm Springs area — light breaking through the hills"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "420px" }}
+        />
+      </div>
+
       {/* Welcome / invitation */}
       <section className="border-b border-ink/10">
         <div className="max-w-3xl mx-auto px-6 py-20 sm:py-28">
@@ -30,10 +40,10 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
-              to="/subscribe"
+              to="/contact"
               className="px-5 py-3 bg-accent text-paper rounded font-medium hover:bg-accent/90"
             >
-              Subscribe
+              Get in touch
             </Link>
             <Link
               to="/about"
