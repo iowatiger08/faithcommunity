@@ -67,15 +67,15 @@ export default function About() {
         </p>
         <p>
           Beyond the congregation, this ministry serves as a resource for
-          anyone called to build &mdash; a church, a nonprofit, a
+          anyone called to build &mdash; a church, a nonprofit, or a
           mission-driven organization of any kind. The resources here are
-          offered freely: inspiration to fuel the vision, tools to sustain
+          offered to help inspire the vision with tools to sustain
           the work, and guidance for those just beginning to plant something
           new.
         </p>
       </div>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">What we&apos;re for</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">Our guiding posts</h2>
       <ul className="space-y-3 text-ink/80 max-w-prose leading-relaxed list-disc pl-6">
         <li>Growing in love of the Holy Presence and of all our neighbors.</li>
         <li>
@@ -107,7 +107,7 @@ export default function About() {
           and area food pantries.
         </li>
         <li>
-          Volunteering with broader voices for progressive theology and
+          Connecting with broader voices for
           interfaith cooperation, including{" "}
           <a
             className="text-accent underline"
@@ -148,10 +148,12 @@ export default function About() {
         </li>
       </ul>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">How this ministry works</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">Find your way in</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Sermons and reflections are posted in keeping with the{" "}
+          Start wherever you are. The{" "}
+          <a className="text-accent underline" href="/sermons">sermons</a>{" "}
+          follow the rhythm of the{" "}
           <a
             href={VANDERBILT_RCL}
             target="_blank"
@@ -159,34 +161,28 @@ export default function About() {
             className="text-accent underline underline-offset-2 hover:no-underline"
           >
             Revised Common Lectionary
-          </a>
-          , the three-year cycle that mainline Protestant congregations use to
-          read through the Scriptures together. A new piece typically arrives
-          weekly.
-        </p>
-        <p>
-          The{" "}
+          </a>{" "}
+          &mdash; new writing arrives most weeks. The{" "}
+          <a className="text-accent underline" href="/meditations">
+            meditations
+          </a>{" "}
+          are there for those who want to be still. The{" "}
           <a className="text-accent underline" href="/publications">
             Publications hub
           </a>{" "}
-          gathers everything in one place &mdash; inspiration, practical
-          resources, and work ideation for those called to build. Browse the{" "}
-          <a className="text-accent underline" href="/sermons">sermons</a>,
-          sit with the{" "}
-          <a className="text-accent underline" href="/meditations">
-            meditations
-          </a>
-          , or{" "}
+          gathers inspiration, resources, and work ideation for those called
+          to build something. And the{" "}
           <a className="text-accent underline" href="/contact">
-            get in touch
+            contact page
           </a>{" "}
-          with a question, a prayer request, or an idea you&apos;re ready to explore.
+          is always open &mdash; for a question, a prayer request, or an
+          idea you are ready to explore.
         </p>
       </div>
 
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="font-serif text-2xl text-ink/80">
-          Peace be with you.
+          <i>Jesus came and stood among them and said, "Peace be with you." (John 20:19b)</i>
         </p>
       </div>
     </div>
