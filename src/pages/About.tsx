@@ -15,7 +15,7 @@ export default function About() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="About"
-        description="Hope and Truth Ministry is a ministry without walls — open and affirming, for the wandering, the doubting, the questioning, the hurting, and the hopeful. Wherever you are on the journey, there is space for you."
+        description="Hope and Truth Ministry is a spiritual home and a launchpad — a place to find inspiration, gather practical resources, and discover how to build your own ministry or nonprofit organization."
         path="/about/"
       />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
@@ -27,16 +27,17 @@ export default function About() {
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Are you in a wilderness? Looking for a path? You are welcome here.
+          Hope and Truth Ministry is a spiritual home and a launchpad. A place
+          to find inspiration, gather practical resources, and discover how to
+          build something of your own &mdash; a congregation, a nonprofit, an
+          organization rooted in your calling.
         </p>
         <p>
-          Hope and Truth Ministry is an interfaith outreach to anyone looking for
-          &mdash; an honest, welcoming, open and affirming ministry. For
-          the wandering, the doubting, the questioning, the hurting, and the
+          It is open and affirming, interfaith and without walls. For the
+          wandering, the doubting, the questioning, the hurting, and the
           hopeful. For those whose church is online. For those finding their
-          way back. For those still seeking. For those who want to think
-          faithfully alongside others. Wherever you are on the journey, there
-          is for you here.
+          way back. For those still seeking. And for those who are ready to
+          begin building.
         </p>
       </div>
 
@@ -54,6 +55,23 @@ export default function About() {
           Creator through different paths, that leaves judgment to the One
           who made us, and that takes seriously the call to love our
           neighbors &mdash; as ourselves.
+        </p>
+      </div>
+
+      <h2 className="font-serif text-2xl mt-16 mb-4">The mission</h2>
+      <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
+        <p>
+          Hope and Truth Ministry exists to provide a truly welcoming,
+          open and affirming community to all people seeking meaning, purpose,
+          and connection &mdash; no matter where they are on life&apos;s journey.
+        </p>
+        <p>
+          Beyond the congregation, this ministry serves as a resource for
+          anyone called to build &mdash; a church, a nonprofit, a
+          mission-driven organization of any kind. The resources here are
+          offered freely: inspiration to fuel the vision, tools to sustain
+          the work, and guidance for those just beginning to plant something
+          new.
         </p>
       </div>
 
@@ -147,17 +165,22 @@ export default function About() {
           weekly.
         </p>
         <p>
-          Browse the{" "}
+          The{" "}
+          <a className="text-accent underline" href="/publications">
+            Publications hub
+          </a>{" "}
+          gathers everything in one place &mdash; inspiration, practical
+          resources, and work ideation for those called to build. Browse the{" "}
           <a className="text-accent underline" href="/sermons">sermons</a>,
-          drop in on{" "}
-          <a className="text-accent underline" href="/worship-resources">
-            worship resources
+          sit with the{" "}
+          <a className="text-accent underline" href="/meditations">
+            meditations
           </a>
           , or{" "}
           <a className="text-accent underline" href="/contact">
             get in touch
           </a>{" "}
-          to get new reflections in your inbox.
+          with a question, a prayer request, or an idea you&apos;re ready to explore.
         </p>
       </div>
 
