@@ -33,7 +33,7 @@ export default function About() {
           organization rooted in your calling.
         </p>
         <p>
-          It is open and affirming, interfaith and without walls. For the
+          It is interfaith and without walls. For the
           wandering, the doubting, the questioning, the hurting, and the
           hopeful. For those whose church is online. For those finding their
           way back. For those still seeking. And for those who are ready to
@@ -62,8 +62,9 @@ export default function About() {
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
           Hope and Truth Ministry exists to provide a truly welcoming,
-          open and affirming community to all people seeking meaning, purpose,
+          open and interfaith community to all people seeking meaning, purpose,
           and connection &mdash; no matter where they are on life&apos;s journey.
+          We work to end all bigotry and racism while providing a safe space for contemplation.
         </p>
         <p>
           Beyond the congregation, this ministry serves as a resource for
