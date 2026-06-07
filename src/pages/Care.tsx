@@ -52,6 +52,15 @@ function ResourceList({ items }: { items: Resource[] }) {
 
 export default function Care() {
   return (
+    <>
+      <div className="w-full overflow-hidden" style={{ maxHeight: "380px" }}>
+        <img
+          src="/images/mountain-stream.jpg"
+          alt="A mountain stream winding through a canyon with autumn-colored trees"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "380px" }}
+        />
+      </div>
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="You are not alone"
@@ -189,12 +198,13 @@ export default function Care() {
             worship resources
           </Link>{" "}
           are here too &mdash; and you&apos;re always welcome to{" "}
-          <Link to="/subscribe" className="text-accent underline">
-            subscribe
+          <Link to="/contact" className="text-accent underline">
+            get in touch
           </Link>
           .
         </p>
       </div>
     </div>
+    </>
   );
 }

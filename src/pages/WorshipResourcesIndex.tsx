@@ -8,6 +8,15 @@ export default function WorshipResourcesIndex() {
     (p) => !MEDITATION_RESOURCE_SLUGS.has(p.slug)
   );
   return (
+    <>
+      <div className="w-full overflow-hidden" style={{ maxHeight: "380px" }}>
+        <img
+          src="/images/red-rock-desert.jpg"
+          alt="A sweeping red rock desert landscape with layered canyon formations"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "380px" }}
+        />
+      </div>
     <div className="max-w-5xl mx-auto px-6 py-12">
       <PageHead
         title="Worship Resources"
@@ -41,5 +50,6 @@ export default function WorshipResourcesIndex() {
         ))}
       </ul>
     </div>
+    </>
   );
 }

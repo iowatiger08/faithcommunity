@@ -3,6 +3,15 @@ import { VANDERBILT_RCL } from "~/components/SeasonBadge";
 
 export default function About() {
   return (
+    <>
+      <div className="w-full overflow-hidden" style={{ maxHeight: "380px" }}>
+        <img
+          src="/images/iowa-gravel-path.jpg"
+          alt="A gravel path winding through the Iowa countryside alongside yellow wildflowers"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "380px" }}
+        />
+      </div>
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="About"
@@ -145,8 +154,8 @@ export default function About() {
             worship resources
           </a>
           , or{" "}
-          <a className="text-accent underline" href="/subscribe">
-            subscribe
+          <a className="text-accent underline" href="/contact">
+            get in touch
           </a>{" "}
           to get new reflections in your inbox.
         </p>
@@ -158,5 +167,6 @@ export default function About() {
         </p>
       </div>
     </div>
+    </>
   );
 }

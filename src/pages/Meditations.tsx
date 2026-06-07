@@ -18,6 +18,15 @@ export default function Meditations() {
   );
 
   return (
+    <>
+      <div className="w-full overflow-hidden" style={{ maxHeight: "420px" }}>
+        <img
+          src="/images/slot-canyon-waterfall.jpg"
+          alt="A narrow desert slot canyon with smooth white walls, still water at the base, and a tree catching light above"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "420px" }}
+        />
+      </div>
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Contemplative Practice"
@@ -110,8 +119,18 @@ export default function Meditations() {
         </section>
       )}
 
+      {/* Singing bowl — visual pause before Eastern wisdom */}
+      <div className="mt-14 flex justify-center">
+        <img
+          src="/images/singing-bowl.jpg"
+          alt="A Tibetan singing bowl resting on a red cushion with its wooden mallet"
+          className="rounded"
+          style={{ maxHeight: "320px", width: "auto" }}
+        />
+      </div>
+
       {/* Zen & Taoist wisdom */}
-      <section className="mt-14">
+      <section className="mt-10">
         <h2 className="font-serif text-2xl mb-2">Zen &amp; Taoist wisdom</h2>
         <p className="text-ink/70 text-sm leading-relaxed mb-8 max-w-prose">
           These lessons and meditations are drawn from Zen, Taoist, and martial
@@ -320,8 +339,8 @@ export default function Meditations() {
           here as the ministry grows. Subscribe to receive them in your inbox
           alongside the weekly sermons and reflections.
         </p>
-        <Link to="/subscribe" className="inline-block px-5 py-3 bg-accent text-paper rounded font-medium hover:bg-accent/90">
-          Subscribe
+        <Link to="/contact" className="inline-block px-5 py-3 bg-accent text-paper rounded font-medium hover:bg-accent/90">
+          Get in touch
         </Link>
       </section>
 
@@ -339,5 +358,6 @@ export default function Meditations() {
         </p>
       </div>
     </div>
+    </>
   );
 }

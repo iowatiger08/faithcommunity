@@ -14,6 +14,15 @@ export default function SermonsIndex() {
   const years = [...byYear.keys()].sort().reverse();
 
   return (
+    <>
+      <div className="w-full overflow-hidden" style={{ maxHeight: "380px" }}>
+        <img
+          src="/images/arches-red-rock.jpg"
+          alt="Ancient red rock formations at Arches National Park with snow-capped mountains beyond"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: "380px" }}
+        />
+      </div>
     <div className="max-w-5xl mx-auto px-6 py-12">
       <PageHead
         title="Sermons"
@@ -60,5 +69,6 @@ export default function SermonsIndex() {
         </section>
       ))}
     </div>
+    </>
   );
 }
