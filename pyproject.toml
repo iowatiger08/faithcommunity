@@ -1,0 +1,18 @@
+[tool.ruff]
+include = ["scripts/*.py"]
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes (unused imports, undefined names)
+  "I",   # isort (import order)
+  "UP",  # pyupgrade (modernize syntax)
+  "B",   # flake8-bugbear (common bug patterns)
+]
+ignore = [
+  "E501",  # line too long — HTML templates make this impractical
+]
+
+[tool.ruff.format]
+quote-style = "double"

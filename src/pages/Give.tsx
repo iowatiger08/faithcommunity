@@ -8,8 +8,8 @@ import PageHead from "~/components/PageHead";
 //                    (links to https://venmo.com/u/HopeAndTruthMinistry)
 //   PAYPAL_URL     — a PayPal.me link or hosted Donate-button URL,
 //                    e.g. "https://www.paypal.com/paypalme/HopeAndTruth"
-const VENMO_USERNAME = "";
-const PAYPAL_URL = "https://paypal.me/tonyehansen1";
+const VENMO_USERNAME: string = "";
+const PAYPAL_URL: string = "https://paypal.me/tonyehansen1";
 
 const venmoUrl = VENMO_USERNAME ? `https://venmo.com/u/${VENMO_USERNAME}` : "";
 const givingLive = Boolean(venmoUrl || PAYPAL_URL);

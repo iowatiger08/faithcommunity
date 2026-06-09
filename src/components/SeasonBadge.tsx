@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { currentSeason, type CurrentSeason } from "~/lib/liturgical";
 
 /** Vanderbilt Divinity Library's RCL — the readings for the current season. */
@@ -10,10 +10,11 @@ export const VANDERBILT_RCL = "https://lectionary.library.vanderbilt.edu/";
  * mount to avoid an SSG/hydration mismatch. The dot uses the seasonal accent.
  */
 export default function SeasonBadge() {
-  const [season, setSeason] = useState<CurrentSeason | null>(null);
-  useEffect(() => {
-    setSeason(currentSeason());
-  }, []);
+  // Lazy initializer runs only on the client; returns null during SSG so
+  // the server-rendered output is stable regardless of build date.
+  const [season] = useState<CurrentSeason | null>(() =>
+    typeof window !== "undefined" ? currentSeason() : null,
+  );
 
   if (!season) return null;
 

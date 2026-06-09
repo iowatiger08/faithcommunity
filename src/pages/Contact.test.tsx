@@ -115,8 +115,9 @@ describe("Contact page", () => {
 
     await waitFor(() => expect(screen.getByText("Thank you.")).toBeTruthy());
 
-    const [, init] = mockFetch.mock.calls[0];
-    const body = JSON.parse((init as RequestInit).body as string);
+    const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+    interface ContactBody { email: string; category: string; message: string; website?: string }
+    const body = JSON.parse(init.body as string) as ContactBody;
     expect(body.email).toBe("me@example.com");
     expect(body.category).toBe("General Question");
     expect(body.message).toBe("Hello.");

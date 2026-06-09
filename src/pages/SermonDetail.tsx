@@ -4,7 +4,7 @@ import PageHead from "~/components/PageHead";
 
 export default function SermonDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const post = slug ? getPostBySlug(slug) : undefined;
+  const post = slug !== undefined ? getPostBySlug(slug) : undefined;
 
   if (!post) {
     return (

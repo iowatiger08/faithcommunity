@@ -91,7 +91,7 @@ export function getPostBySlug(slug: string): PublishedPost | undefined {
 }
 
 export function formatDate(iso: string | null): string {
-  if (!iso) return "";
+  if (iso === null || iso === "") return "";
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", {
     year: "numeric",
@@ -104,7 +104,7 @@ export function getThemeCounts(): Array<[string, number]> {
   const counts = new Map<string, number>();
   for (const p of allPosts) {
     for (const t of p.themes) {
-      counts.set(t, (counts.get(t) || 0) + 1);
+      counts.set(t, (counts.get(t) ?? 0) + 1);
     }
   }
   return [...counts.entries()].sort((a, b) => b[1] - a[1]);

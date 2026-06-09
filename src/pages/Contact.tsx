@@ -75,7 +75,7 @@ export default function Contact() {
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-5 max-w-md">
+        <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-5 max-w-md">
           {/* Honeypot — hidden from humans, bots fill it in */}
           <div style={{ display: "none" }} aria-hidden="true">
             <label>

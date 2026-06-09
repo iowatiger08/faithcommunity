@@ -7,7 +7,7 @@ export default function SermonsIndex() {
   // Group by year
   const byYear = new Map<string, typeof sermons>();
   for (const s of sermons) {
-    const y = (s.published_date || "unknown").slice(0, 4);
+    const y = (s.published_date ?? "unknown").slice(0, 4);
     if (!byYear.has(y)) byYear.set(y, []);
     byYear.get(y)!.push(s);
   }
