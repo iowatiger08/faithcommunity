@@ -59,3 +59,6 @@ node_modules
 /legacy/angular/node_modules
 /legacy/angular/dist
 /legacy/angular/.angular
+
+# Sensitive business documents
+Hope-and-Truth-Ministry-Business-Plan.docx
