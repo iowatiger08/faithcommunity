@@ -180,6 +180,11 @@ export default function Care() {
         <ResourceList
           items={[
             {
+              name: "Mind Spirit Center",
+              href: "https://mindspiritcenter.org/",
+              detail: "Counseling services in central Iowa, including support for clergy and faith communities navigating the particular pressures of ministry life.",
+            },
+            {
               name: "Urban Bicycle Food Ministry — Des Moines (UBFM-DSM)",
               href: "https://ubfmdesmoines.org/",
               detail: "Meals and care delivered to neighbors experiencing homelessness.",

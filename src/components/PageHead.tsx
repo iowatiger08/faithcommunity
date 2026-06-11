@@ -47,7 +47,7 @@ export default function PageHead({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={desc} />
       <meta property="og:url" content={url} />
-      {type === "article" && publishedTime !== undefined && (
+      {type === "article" && publishedTime != null && (
         <meta property="article:published_time" content={publishedTime} />
       )}
 
