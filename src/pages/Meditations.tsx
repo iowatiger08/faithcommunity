@@ -145,18 +145,44 @@ export default function Meditations() {
           returning: gently, without frustration, again and again. Each return
           is the practice itself.
         </p>
+        <h3 className="font-serif text-lg mb-3 mt-6 text-ink/80">Posture</h3>
+        <p className="text-ink/80 max-w-prose leading-relaxed mb-3 text-sm">
+          Posture is the foundation of the sitting. The body and the mind
+          support each other: when the body is grounded and upright, the
+          mind settles more naturally.
+        </p>
+        <div className="border-l-2 border-accent/30 pl-5 space-y-3 text-ink/70 text-sm leading-relaxed mb-6">
+          <p>
+            Sit cross-legged on a folded blanket or meditation cushion, or
+            in a chair with both feet flat on the floor. A cushion under
+            the hips helps keep the pelvis level and the lower back at ease.
+          </p>
+          <p>
+            Sit fully upright &mdash; not rigid, but tall and relaxed. Let the
+            vertebrae gently stack upon one another, each one resting on
+            the one below, rising naturally without forcing. The shoulders
+            settle back and down. The chin drops very slightly so the back
+            of the neck lengthens.
+          </p>
+          <p>
+            Rest the hands on the knees or loosely in the lap. This posture
+            can be held without strain for a full twenty-minute sitting.
+          </p>
+        </div>
+
+        <h3 className="font-serif text-lg mb-3 text-ink/80">The Practice</h3>
         <div className="border-l-2 border-accent/30 pl-5 space-y-3 text-ink/70 text-sm leading-relaxed">
-          <p>Find a comfortable seat. Close your eyes, or soften your gaze downward.</p>
-          <p>Bring your attention to the breath &mdash; not to control it, but simply to feel it: the rise and fall of the chest, the cool air at the nostrils, the pause between inhale and exhale.</p>
+          <p>Close your eyes gently, or soften your gaze toward the floor a few feet ahead.</p>
+          <p>Bring your full attention to the breath &mdash; not to control it, but simply to feel it: the rise and fall of the chest, the cool air at the nostrils, the pause between inhale and exhale.</p>
           <p>When a thought, sound, or sensation draws your attention away, notice it without judgment, and return to the breath.</p>
           <p>Sit for as long as feels right &mdash; even five minutes is a beginning. Twenty minutes is a complete sitting.</p>
         </div>
         <p className="text-ink/70 text-sm leading-relaxed mt-4 max-w-prose">
           For community mindfulness practice &mdash; using a bell or chime to
           open and close a shared sitting &mdash; see the{" "}
-          <a href="/congregational-sitting" className="text-accent underline">
-            Congregational Sitting Practice
-          </a>{" "}
+          <Link to="/community-sitting" className="text-accent underline">
+            Community Sitting Practice
+          </Link>{" "}
           guide in Publications.
         </p>
       </section>

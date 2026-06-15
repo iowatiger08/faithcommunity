@@ -118,8 +118,8 @@ export default function FourNobleTruths() {
             Meditations
           </Link>{" "}
           page. For community mindfulness practice, see the{" "}
-          <Link to="/congregational-sitting" className="text-accent underline">
-            Congregational Sitting Practice
+          <Link to="/community-sitting" className="text-accent underline">
+            Community Sitting Practice
           </Link>.
         </p>
         <p className="text-xs text-ink/50">

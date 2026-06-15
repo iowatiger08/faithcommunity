@@ -43,9 +43,9 @@ const INSPIRATION = [
 
 const RESOURCES = [
   {
-    title: "Congregational Sitting Practice",
+    title: "Community Sitting Practice",
     desc: "A community mindfulness format using a bell or chime — two silent sittings with a mindful reading between them. Open to all; donations invited but not required.",
-    href: "/congregational-sitting",
+    href: "/community-sitting",
     live: true,
     cta: "Read the guide",
   },
