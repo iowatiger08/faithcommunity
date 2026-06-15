@@ -27,8 +27,8 @@ export default function About() {
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry is a non-denominational spiritual home and a launchpad. A place
-          to find inspiration, gather practical resources, and discover how to
+          Hope and Truth Ministry is a non-denominational spiritual home. A place
+          to find inspiration, gather practical resources, and perhaps discover how to
           build something of your own &mdash; a congregation, a nonprofit, an
           organization rooted in your calling.
         </p>
@@ -44,7 +44,7 @@ export default function About() {
       <h2 className="font-serif text-2xl mt-16 mb-4">What we believe matters</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          That the Gospel meets us right where we are. That divine wisdom is
+          That the sacred texts meet us right where we are. That divine wisdom is
           wider than any one tradition. That the questions you carry are
           welcome &mdash; including the hard ones, including the ones we are
           still learning to hear together.
@@ -67,9 +67,9 @@ export default function About() {
           We work to end all bigotry and racism while providing a safe space for contemplation.
         </p>
         <p>
-          Beyond the congregation, this ministry serves as a resource for
-          those individuals called to build &mdash; a ministry, a nonprofit, or a
-          mission-driven organization of any kind. The resources here are
+          Beyond a congregation, this ministry serves as a resource for
+          those individuals who feel called to build &mdash; a ministry, a nonprofit, or a
+          mission-driven organization. The resources here are
           offered to help inspire the vision with tools to sustain
           the work, and guidance for those just beginning to plant something
           new.

@@ -71,7 +71,7 @@ export default function CommunitySitting() {
 
       {/* The Format */}
       <section className="mt-14">
-        <h2 className="font-serif text-2xl mb-8">The Format</h2>
+        <h2 className="font-serif text-2xl mb-8">A Format</h2>
 
         <ol className="space-y-10">
           <li className="flex gap-5">
@@ -84,7 +84,7 @@ export default function CommunitySitting() {
                 settle into their seats, find their posture, and close their eyes.
               </p>
               <p className="text-ink/75 leading-relaxed text-sm mt-3">
-                Sit together in stillness for <strong>20 minutes</strong>.
+                Sit together in stillness for <strong>20 minutes (ish)</strong>.
               </p>
             </div>
           </li>
@@ -92,7 +92,7 @@ export default function CommunitySitting() {
           <li className="flex gap-5">
             <span className="font-serif text-3xl text-accent/50 leading-none mt-0.5 shrink-0">II</span>
             <div>
-              <h3 className="font-serif text-xl mb-2">Mindful Reading</h3>
+              <h3 className="font-serif text-xl mb-2">Mindful Reading and Short Discussion </h3>
               <p className="text-ink/75 leading-relaxed text-sm">
                 After the first sitting, a brief reading is offered into the
                 space &mdash; a poem, a passage from wisdom literature, or a short
@@ -113,7 +113,7 @@ export default function CommunitySitting() {
               <p className="text-ink/75 leading-relaxed text-sm">
                 A second bell invites all to return to stillness. Settle
                 back into posture and sit together for another{" "}
-                <strong>20 minutes</strong>.
+                <strong>20 minutes (ish)</strong>.
               </p>
             </div>
           </li>
@@ -125,7 +125,7 @@ export default function CommunitySitting() {
               <p className="text-ink/75 leading-relaxed text-sm">
                 A final bell closes the practice. Allow a moment of stillness
                 before movement returns. Participants may take their time
-                returning to the room.
+                returning to the room and exiting.
               </p>
             </div>
           </li>
@@ -134,12 +134,11 @@ export default function CommunitySitting() {
 
       {/* Gifts */}
       <section className="mt-14">
-        <h2 className="font-serif text-2xl mb-4">Gifts &amp; Sharing</h2>
+        <h2 className="font-serif text-2xl mb-4">Gifts</h2>
         <p className="text-ink/75 leading-relaxed max-w-prose">
-          Donations are invited and welcomed, but never required. A bowl is
+          Donations are welcomed, but never required. A bowl can be
           quietly set out near the entrance or exit. Those who feel moved to
-          give may leave what they are able. Those who have need may take
-          quietly from what is shared. No one is watched; no one is asked.
+          give may leave what they are able. No one is watched; no one is asked.
           The bowl is simply there.
         </p>
       </section>
@@ -159,14 +158,15 @@ export default function CommunitySitting() {
             appropriate.
           </li>
           <li>
-            The space need not be elaborate. Mats or cushions on the floor
+            The space need not be elaborate but at least safe and comfortable. Mats or cushions on the floor
             work well. Chairs are equally welcome and should always be
             available for those who need them.
           </li>
           <li>
-            No instruction or explanation is required at the start beyond a
+            Some instruction or explanation may be given (especially for the newcomers) at the start along with a
             brief welcome and a description of the format. The bell does
-            the rest.
+            the rest. People may stay for the entire session or only a part. When a sitting begins, the room is to be quiet and preferably dark.
+            Late arrivals should be aware prior to entry that the room should be kept quiet. It is appropriate that shoes are removed and placed in a joining room.
           </li>
         </ul>
       </section>
