@@ -96,12 +96,13 @@ export default function CommunitySitting() {
               <p className="text-ink/75 leading-relaxed text-sm">
                 After the first sitting, a brief reading is offered into the
                 space &mdash; a poem, a passage from wisdom literature, or a short
-                reflection. No commentary or discussion follows. The words are
-                simply offered, then allowed to rest in the room.
+                reflection. A brief, open discussion may follow &mdash; reflections
+                on the reading or the sitting are welcome, though silence is
+                equally so.
               </p>
               <p className="text-ink/75 leading-relaxed text-sm mt-3">
-                This takes a <strong>few minutes</strong>. The silence that
-                follows the reading is itself part of the practice.
+                This interlude takes a <strong>few minutes</strong>. Keep it
+                unhurried; the second bell will gather everyone back.
               </p>
             </div>
           </li>
@@ -123,8 +124,7 @@ export default function CommunitySitting() {
             <div>
               <h3 className="font-serif text-xl mb-2">Closing Bell</h3>
               <p className="text-ink/75 leading-relaxed text-sm">
-                A final bell closes the practice. Allow a moment of stillness
-                before movement returns. Participants may take their time
+                A final bell closes the practice. Participants may take their time
                 returning to the room and exiting.
               </p>
             </div>
@@ -136,10 +136,11 @@ export default function CommunitySitting() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-4">Gifts</h2>
         <p className="text-ink/75 leading-relaxed max-w-prose">
-          Donations are welcomed, but never required. A bowl can be
-          quietly set out near the entrance or exit. Those who feel moved to
-          give may leave what they are able. No one is watched; no one is asked.
-          The bowl is simply there.
+          Gifting may be mentioned gently &mdash; a word at the welcome or a
+          note in the program &mdash; but it is not expected and should never
+          feel like an obligation. A bowl placed quietly near the exit is
+          enough. Those moved to give may do so; those who are not need
+          not. No one is watched; no one is asked.
         </p>
       </section>
 
@@ -158,8 +159,13 @@ export default function CommunitySitting() {
             appropriate.
           </li>
           <li>
-            The space need not be elaborate but at least safe and comfortable. Mats or cushions on the floor
-            work well. Chairs are equally welcome and should always be
+            The space need not be elaborate, but should be safe and
+            comfortable. When space allows, arrange participants in a
+            circle &mdash; this supports a sense of shared practice and
+            allows everyone to see the facilitator. In tighter spaces,
+            any arrangement where participants can easily see the
+            facilitator works well. Mats or cushions on the floor are
+            ideal; chairs are equally welcome and should always be
             available for those who need them.
           </li>
           <li>
