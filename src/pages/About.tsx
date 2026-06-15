@@ -27,13 +27,13 @@ export default function About() {
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry is a spiritual home and a launchpad. A place
+          Hope and Truth Ministry is a non-denominational spiritual home and a launchpad. A place
           to find inspiration, gather practical resources, and discover how to
           build something of your own &mdash; a congregation, a nonprofit, an
           organization rooted in your calling.
         </p>
         <p>
-          It is interfaith and without walls. For the
+          It is interfaith and without walls (online). For the
           wandering, the doubting, the questioning, the hurting, and the
           hopeful. For those whose church is online. For those finding their
           way back. For those still seeking. And for those who are ready to
@@ -62,13 +62,13 @@ export default function About() {
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
           Hope and Truth Ministry exists to provide a truly welcoming,
-          open and interfaith community to all people seeking meaning, purpose,
+          open and interfaith online community to all people seeking meaning, purpose,
           and connection &mdash; no matter where they are on life&apos;s journey.
           We work to end all bigotry and racism while providing a safe space for contemplation.
         </p>
         <p>
           Beyond the congregation, this ministry serves as a resource for
-          anyone called to build &mdash; a church, a nonprofit, or a
+          those individuals called to build &mdash; a ministry, a nonprofit, or a
           mission-driven organization of any kind. The resources here are
           offered to help inspire the vision with tools to sustain
           the work, and guidance for those just beginning to plant something
@@ -92,7 +92,7 @@ export default function About() {
           traditions.
         </li>
         <li>
-          Building coalitions with others who pursue justice, the Gospels, and
+          Building coalitions with others who pursue justice, and
           good citizenship.
         </li>
         <li>
