@@ -81,7 +81,7 @@ export default function Terms() {
                 <li>
                   Drop us a note to let us know where the work is being used.
                   You can reach us through the{" "}
-                  <Link to="/subscribe" className="text-accent underline">
+                  <Link to="/contact" className="text-accent underline">
                     contact page
                   </Link>
                   . No formal approval is required &mdash; we&apos;d simply
@@ -207,7 +207,7 @@ export default function Terms() {
             For permission requests, questions about attribution, or to let us
             know your congregation is using these materials, please reach out
             through the{" "}
-            <Link to="/subscribe" className="text-accent underline">
+            <Link to="/contact" className="text-accent underline">
               contact page
             </Link>
             . We aim to respond to all inquiries.

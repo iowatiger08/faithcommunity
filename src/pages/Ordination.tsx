@@ -92,8 +92,8 @@ export default function Ordination() {
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="text-ink/70 max-w-prose leading-relaxed text-sm">
           Questions about ministry and ordination? Reach us through the{" "}
-          <Link to="/subscribe" className="text-accent underline">
-            subscribe page
+          <Link to="/contact" className="text-accent underline">
+            contact page
           </Link>{" "}
           and we will be in touch.
         </p>
