@@ -12,6 +12,8 @@ import Contact from "./pages/Contact";
 import Publications from "./pages/Publications";
 import Ordination from "./pages/Ordination";
 import Meditations from "./pages/Meditations";
+import CongregationalSitting from "./pages/CongregationalSitting";
+import FourNobleTruths from "./pages/FourNobleTruths";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import { getAllPosts } from "./lib/content";
@@ -57,6 +59,8 @@ const routes: RouteRecord[] = [
       { path: "publications", Component: Publications },
       { path: "ordination", Component: Ordination },
       { path: "meditations", Component: Meditations },
+      { path: "congregational-sitting", Component: CongregationalSitting },
+      { path: "four-noble-truths", Component: FourNobleTruths },
       { path: "terms", Component: Terms },
       { path: "*", Component: NotFound },
     ],

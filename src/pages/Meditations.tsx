@@ -43,7 +43,7 @@ export default function Meditations() {
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Before the sermon, before the service, before the words &mdash; there
+          Before the sermon, before any service, before the words &mdash; there
           is silence. Contemplative practice is the discipline of returning to
           that silence: not as an escape from life, but as the ground beneath
           it. Here you will find practices, reflections, and teachers for the
@@ -128,6 +128,38 @@ export default function Meditations() {
           style={{ maxHeight: "320px", width: "auto" }}
         />
       </div>
+
+      {/* Mindfulness Meditation */}
+      <section className="mt-10">
+        <h2 className="font-serif text-2xl mb-4">Mindfulness Meditation</h2>
+        <p className="text-ink/80 max-w-prose leading-relaxed mb-4">
+          Mindfulness is the practice of paying full attention to the present
+          moment &mdash; to breath, sensation, thought, and feeling &mdash; without
+          judgment and without trying to change what is there. Rooted in Buddhist
+          tradition and embraced across contemplative paths, mindfulness asks
+          nothing more than that you notice what is already here.
+        </p>
+        <p className="text-ink/80 max-w-prose leading-relaxed mb-4">
+          It is not about emptying the mind or achieving a special state. The
+          mind will wander &mdash; that is its nature. The practice is in the
+          returning: gently, without frustration, again and again. Each return
+          is the practice itself.
+        </p>
+        <div className="border-l-2 border-accent/30 pl-5 space-y-3 text-ink/70 text-sm leading-relaxed">
+          <p>Find a comfortable seat. Close your eyes, or soften your gaze downward.</p>
+          <p>Bring your attention to the breath &mdash; not to control it, but simply to feel it: the rise and fall of the chest, the cool air at the nostrils, the pause between inhale and exhale.</p>
+          <p>When a thought, sound, or sensation draws your attention away, notice it without judgment, and return to the breath.</p>
+          <p>Sit for as long as feels right &mdash; even five minutes is a beginning. Twenty minutes is a complete sitting.</p>
+        </div>
+        <p className="text-ink/70 text-sm leading-relaxed mt-4 max-w-prose">
+          For community mindfulness practice &mdash; using a bell or chime to
+          open and close a shared sitting &mdash; see the{" "}
+          <a href="/congregational-sitting" className="text-accent underline">
+            Congregational Sitting Practice
+          </a>{" "}
+          guide in Publications.
+        </p>
+      </section>
 
       {/* Zen & Taoist wisdom */}
       <section className="mt-10">

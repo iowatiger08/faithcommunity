@@ -13,10 +13,17 @@ const INSPIRATION = [
   },
   {
     title: "Meditations & Contemplative Practice",
-    desc: "Lectio Divina, centering prayer, Zen and Taoist wisdom, Sufi insight — practices for the inner journey.",
+    desc: "Lectio Divina, centering prayer, mindfulness, Zen and Taoist wisdom, Sufi insight — practices for the inner journey.",
     href: "/meditations",
     live: true,
     cta: "Sit with the practices",
+  },
+  {
+    title: "The Four Noble Truths & Eightfold Path",
+    desc: "The foundational teachings of the Buddha — with reflections on their alignment with Judeo-Christian scripture.",
+    href: "/four-noble-truths",
+    live: true,
+    cta: "Read the teaching",
   },
   {
     title: "Worship Resources",
@@ -35,6 +42,13 @@ const INSPIRATION = [
 ];
 
 const RESOURCES = [
+  {
+    title: "Congregational Sitting Practice",
+    desc: "A community mindfulness format using a bell or chime — two silent sittings with a mindful reading between them. Open to all; donations invited but not required.",
+    href: "/congregational-sitting",
+    live: true,
+    cta: "Read the guide",
+  },
   {
     title: "Congregation Study Guides",
     desc: "Devotional materials, liturgical planning tools, and small-group resources for congregations of any size.",
