@@ -1,6 +1,82 @@
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 
+const PATH: {
+  division: string;
+  sanskrit: string;
+  elements: { name: string; details: string[] }[];
+}[] = [
+  {
+    division: "Wisdom",
+    sanskrit: "prajñā",
+    elements: [
+      {
+        name: "Right View",
+        details: ["Seeing the four truths"],
+      },
+      {
+        name: "Right Intention",
+        details: ["Desirelessness", "Friendliness", "Compassion"],
+      },
+    ],
+  },
+  {
+    division: "Conduct",
+    sanskrit: "śīla",
+    elements: [
+      {
+        name: "Right Speech",
+        details: [
+          "Refraining from false speech",
+          "Refraining from divisive speech",
+          "Refraining from hurtful speech",
+          "Refraining from idle chatter",
+        ],
+      },
+      {
+        name: "Right Action",
+        details: [
+          "Refraining from harming living beings",
+          "Refraining from taking what is not given",
+          "Refraining from sexual misconduct",
+        ],
+      },
+      {
+        name: "Right Livelihood",
+        details: ["Not based on wrong speech and action"],
+      },
+    ],
+  },
+  {
+    division: "Meditation",
+    sanskrit: "samādhi",
+    elements: [
+      {
+        name: "Right Effort",
+        details: [
+          "To prevent unarisen unwholesome states",
+          "To abandon arisen unwholesome states",
+          "To arouse unarisen wholesome states",
+          "To develop arisen wholesome states",
+        ],
+      },
+      {
+        name: "Right Mindfulness",
+        details: [
+          "Contemplation of body",
+          "Contemplation of feeling",
+          "Contemplation of mind",
+          "Contemplation of dharma",
+        ],
+      },
+      {
+        name: "Right Concentration",
+        details: ["Practice of the four dhyānas"],
+      },
+    ],
+  },
+];
+
 export default function FourNobleTruths() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
@@ -53,47 +129,38 @@ export default function FourNobleTruths() {
 
       {/* Eightfold Path */}
       <section className="mt-14">
-        <h2 className="font-serif text-2xl mb-3">The Eightfold Path</h2>
-        <p className="text-ink/60 text-sm mb-8 italic">in Three Basic Divisions</p>
+        <h2 className="font-serif text-2xl mb-2">The Noble Eightfold Path</h2>
+        <p className="text-ink/50 text-xs mb-10 italic">
+          After Gethin (1998, p. 81), Table 1
+        </p>
 
-        <div className="space-y-10">
+        <div className="space-y-12">
+          {PATH.map((division) => (
+            <div key={division.division}>
+              {/* Division header */}
+              <div className="flex items-baseline gap-3 mb-6 pb-2 border-b border-ink/10">
+                <h3 className="font-serif text-xl text-ink/90">{division.division}</h3>
+                <span className="text-sm italic text-ink/40">({division.sanskrit})</span>
+              </div>
 
-          <div>
-            <p className="text-xs uppercase tracking-widest text-ink/50 mb-4">Of Wisdom</p>
-            <ul className="space-y-4 pl-1">
-              {["Right View", "Right Thinking"].map((item) => (
-                <li key={item} className="flex gap-3 items-baseline">
-                  <span className="text-accent/60 shrink-0">&bull;</span>
-                  <span className="font-serif text-lg text-ink/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs uppercase tracking-widest text-ink/50 mb-4">Of Ethics</p>
-            <ul className="space-y-4 pl-1">
-              {["Right Action", "Right Speech", "Right Livelihood"].map((item) => (
-                <li key={item} className="flex gap-3 items-baseline">
-                  <span className="text-accent/60 shrink-0">&bull;</span>
-                  <span className="font-serif text-lg text-ink/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs uppercase tracking-widest text-ink/50 mb-4">Of Mental Discipline</p>
-            <ul className="space-y-4 pl-1">
-              {["Right Effort", "Right Mindfulness", "Right Concentration"].map((item) => (
-                <li key={item} className="flex gap-3 items-baseline">
-                  <span className="text-accent/60 shrink-0">&bull;</span>
-                  <span className="font-serif text-lg text-ink/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
+              {/* Elements */}
+              <div className="space-y-6">
+                {division.elements.map((el) => (
+                  <div key={el.name} className="grid sm:grid-cols-[10rem_1fr] gap-2 sm:gap-6">
+                    <p className="font-medium text-ink/80 text-sm pt-0.5">{el.name}</p>
+                    <ul className="space-y-1">
+                      {el.details.map((d) => (
+                        <li key={d} className="text-sm text-ink/65 leading-relaxed flex gap-2">
+                          <span className="text-accent/40 shrink-0 mt-1">&bull;</span>
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -102,12 +169,12 @@ export default function FourNobleTruths() {
         <h2 className="font-serif text-lg mb-5 text-ink/70">References</h2>
         <ul className="space-y-3 text-sm text-ink/65 leading-relaxed">
           <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
-            Gethin, R. (1998). <em>The foundations of Buddhism</em>. Oxford University Press.
+            Gethin, R. (1998). <em>The Foundations of Buddhism</em>. Oxford University Press.
           </li>
         </ul>
         <p className="text-xs text-ink/40 mt-4 italic">
           Teaching attributed to the historical Buddha (Siddh&#257;rtha Gautama,
-          c.&thinsp;563&ndash;483 BCE); scholarly framing after Gethin (1998).
+          c.&thinsp;563&ndash;483 BCE); scholarly framing and table after Gethin (1998).
         </p>
       </section>
 
