@@ -25,6 +25,19 @@ DAYS      = int(os.environ.get("DAYS", "30"))
 S3_BUCKET = os.environ.get("S3_BUCKET", "hopeandtruthministry.com")
 S3_KEY    = os.environ.get("S3_KEY", "_analytics/index.html")
 
+# Regex applied to the useragent column to exclude known bots, crawlers, and
+# monitoring tools. Most bots self-identify; this catches the vast majority.
+BOT_FILTER = (
+    "NOT regexp_like(useragent, '(?i)(bot|crawler|spider|slurp"
+    "|python-requests|python/|curl/|wget/|java/"
+    "|go-http-client|headlesschrome|facebookexternalhit"
+    "|twitterbot|linkedinbot|whatsapp|slackbot|discordbot"
+    "|telegrambot|gptbot|anthropic|claudebot|bytespider"
+    "|petalbot|yandexbot|baiduspider|duckduckbot"
+    "|pingdom|uptimerobot|ia_archiver|archive[.]org"
+    "|datadogsynthetics|gtmetrix)')"
+)
+
 # chart.min.js is bundled alongside this file in the Lambda zip
 _HERE = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(_HERE, "chart.min.js")) as f:
@@ -56,12 +69,16 @@ def run_query(sql):
     return [[col.get("VarCharValue", "") for col in row["Data"]] for row in rows]
 
 
-def build_html(pages, refs, daily, days=None, chartjs=None):
+def build_html(pages, refs, daily, days=None, chartjs=None,
+               engaged_pages=None, engaged_daily=None):
     days    = days    if days    is not None else DAYS
     chartjs = chartjs if chartjs is not None else CHARTJS
+    engaged_pages = engaged_pages or []
+    engaged_daily = engaged_daily or []
 
-    total_views = sum(int(r[1]) for r in daily if len(r) == 2)
-    unique_pages = len(pages)
+    total_views   = sum(int(r[1]) for r in daily if len(r) == 2)
+    unique_pages  = len(pages)
+    total_engaged = sum(int(r[1]) for r in engaged_daily if len(r) == 2)
 
     page_labels  = json.dumps([r[0] for r in pages if len(r) == 2])
     page_values  = json.dumps([int(r[1]) for r in pages if len(r) == 2])
@@ -69,6 +86,10 @@ def build_html(pages, refs, daily, days=None, chartjs=None):
     ref_values   = json.dumps([int(r[1]) for r in refs  if len(r) == 2])
     daily_labels = json.dumps([r[0] for r in daily if len(r) == 2])
     daily_values = json.dumps([int(r[1]) for r in daily if len(r) == 2])
+    eng_page_labels  = json.dumps([r[0] for r in engaged_pages if len(r) == 2])
+    eng_page_values  = json.dumps([int(r[1]) for r in engaged_pages if len(r) == 2])
+    eng_daily_labels = json.dumps([r[0] for r in engaged_daily if len(r) == 2])
+    eng_daily_values = json.dumps([int(r[1]) for r in engaged_daily if len(r) == 2])
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -85,6 +106,7 @@ def build_html(pages, refs, daily, days=None, chartjs=None):
            margin-right: 1rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,.1); }}
   .stat-num {{ font-size: 2rem; font-weight: 700; color: #4a7c59; }}
   .stat-lbl {{ font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: .05em; }}
+  .stat-note {{ font-size: 0.7rem; color: #aaa; margin-top: 0.25rem; }}
   .card {{ background: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
            box-shadow: 0 1px 3px rgba(0,0,0,.1); }}
   .card h2 {{ font-size: 1rem; margin-bottom: 1rem; color: #444; }}
@@ -93,11 +115,17 @@ def build_html(pages, refs, daily, days=None, chartjs=None):
 </head>
 <body>
 <h1>Hope &amp; Truth Ministry — Traffic</h1>
-<p class="sub">Last {days} days &nbsp;·&nbsp; Source: CloudFront logs via Athena</p>
+<p class="sub">Last {days} days &nbsp;·&nbsp; Source: CloudFront logs via Athena &nbsp;·&nbsp; Bots filtered</p>
 
 <div class="stat">
   <div class="stat-num">{total_views:,}</div>
-  <div class="stat-lbl">Total page views</div>
+  <div class="stat-lbl">Page requests</div>
+  <div class="stat-note">bots filtered by user-agent</div>
+</div>
+<div class="stat">
+  <div class="stat-num">{total_engaged:,}</div>
+  <div class="stat-lbl">Engaged views</div>
+  <div class="stat-note">human-confirmed (10 s or 20% scroll)</div>
 </div>
 <div class="stat">
   <div class="stat-num">{unique_pages}</div>
@@ -105,12 +133,20 @@ def build_html(pages, refs, daily, days=None, chartjs=None):
 </div>
 
 <div class="card">
-  <h2>Daily Page Views</h2>
+  <h2>Daily Page Requests (bots filtered)</h2>
   <canvas id="daily"></canvas>
 </div>
 <div class="card">
-  <h2>Top Pages</h2>
+  <h2>Daily Engaged Views</h2>
+  <canvas id="eng-daily"></canvas>
+</div>
+<div class="card">
+  <h2>Top Pages (by requests)</h2>
   <canvas id="pages"></canvas>
+</div>
+<div class="card">
+  <h2>Top Engaged Pages</h2>
+  <canvas id="eng-pages"></canvas>
 </div>
 <div class="card">
   <h2>Top Referrers</h2>
@@ -118,15 +154,27 @@ def build_html(pages, refs, daily, days=None, chartjs=None):
 </div>
 
 <script>
-const accent = '#4a7c59';
-const light  = 'rgba(74,124,89,.15)';
+const accent  = '#4a7c59';
+const light   = 'rgba(74,124,89,.15)';
+const warm    = '#7c6a4a';
+const warmLt  = 'rgba(124,106,74,.15)';
 
 new Chart(document.getElementById('daily'), {{
   type: 'line',
   data: {{
     labels: {daily_labels},
-    datasets: [{{ label: 'Views', data: {daily_values},
+    datasets: [{{ label: 'Requests', data: {daily_values},
       borderColor: accent, backgroundColor: light, fill: true, tension: 0.3, pointRadius: 3 }}]
+  }},
+  options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }}
+}});
+
+new Chart(document.getElementById('eng-daily'), {{
+  type: 'line',
+  data: {{
+    labels: {eng_daily_labels},
+    datasets: [{{ label: 'Engaged', data: {eng_daily_values},
+      borderColor: warm, backgroundColor: warmLt, fill: true, tension: 0.3, pointRadius: 3 }}]
   }},
   options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }}
 }});
@@ -135,7 +183,17 @@ new Chart(document.getElementById('pages'), {{
   type: 'bar',
   data: {{
     labels: {page_labels},
-    datasets: [{{ label: 'Views', data: {page_values}, backgroundColor: accent }}]
+    datasets: [{{ label: 'Requests', data: {page_values}, backgroundColor: accent }}]
+  }},
+  options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
+    scales: {{ x: {{ beginAtZero: true }} }} }}
+}});
+
+new Chart(document.getElementById('eng-pages'), {{
+  type: 'bar',
+  data: {{
+    labels: {eng_page_labels},
+    datasets: [{{ label: 'Engaged', data: {eng_page_values}, backgroundColor: warm }}]
   }},
   options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
     scales: {{ x: {{ beginAtZero: true }} }} }}
@@ -145,7 +203,7 @@ new Chart(document.getElementById('refs'), {{
   type: 'bar',
   data: {{
     labels: {ref_labels},
-    datasets: [{{ label: 'Visits', data: {ref_values}, backgroundColor: '#7c6a4a' }}]
+    datasets: [{{ label: 'Visits', data: {ref_values}, backgroundColor: warm }}]
   }},
   options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
     scales: {{ x: {{ beginAtZero: true }} }} }}
@@ -168,6 +226,8 @@ PAGES_SQL = f"""
     AND uri NOT LIKE '%.ico'
     AND uri NOT LIKE '%.map'
     AND uri NOT LIKE '/.vite/%'
+    AND uri != '/_beacon'
+    AND {BOT_FILTER}
     AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
   GROUP BY uri ORDER BY views DESC LIMIT 25
 """
@@ -178,6 +238,7 @@ REFS_SQL = f"""
   WHERE status = 200
     AND referrer != '-'
     AND referrer NOT LIKE '%hopeandtruthministry.com%'
+    AND {BOT_FILTER}
     AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
   GROUP BY referrer ORDER BY visits DESC LIMIT 20
 """
@@ -192,6 +253,33 @@ DAILY_SQL = f"""
     AND uri NOT LIKE '%.jpg'
     AND uri NOT LIKE '%.png'
     AND uri NOT LIKE '%.svg'
+    AND uri != '/_beacon'
+    AND {BOT_FILTER}
+    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
+  GROUP BY log_date ORDER BY log_date ASC
+"""
+
+# Beacon hits = confirmed human engagement (fired after 10 s dwell or 20% scroll).
+# The page path is passed as the `p` query-string parameter.
+ENGAGED_PAGES_SQL = f"""
+  SELECT
+    url_decode(regexp_extract(query_str, 'p=([^&]+)', 1)) AS page,
+    COUNT(*) AS engaged_views
+  FROM cloudfront_logs.access_logs
+  WHERE status = 200
+    AND method = 'GET'
+    AND uri = '/_beacon'
+    AND query_str LIKE 'p=%'
+    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
+  GROUP BY 1 ORDER BY 2 DESC LIMIT 25
+"""
+
+ENGAGED_DAILY_SQL = f"""
+  SELECT log_date, COUNT(*) AS engaged_views
+  FROM cloudfront_logs.access_logs
+  WHERE status = 200
+    AND method = 'GET'
+    AND uri = '/_beacon'
     AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
   GROUP BY log_date ORDER BY log_date ASC
 """
@@ -199,11 +287,15 @@ DAILY_SQL = f"""
 
 def handler(event, context):
     print("Querying Athena...")
-    pages = run_query(PAGES_SQL)
-    refs  = run_query(REFS_SQL)
-    daily = run_query(DAILY_SQL)
+    pages          = run_query(PAGES_SQL)
+    refs           = run_query(REFS_SQL)
+    daily          = run_query(DAILY_SQL)
+    engaged_pages  = run_query(ENGAGED_PAGES_SQL)
+    engaged_daily  = run_query(ENGAGED_DAILY_SQL)
 
-    html = build_html(pages, refs, daily)
+    html = build_html(pages, refs, daily,
+                      engaged_pages=engaged_pages,
+                      engaged_daily=engaged_daily)
 
     s3.put_object(
         Bucket=S3_BUCKET,

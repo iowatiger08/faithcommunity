@@ -1,7 +1,9 @@
 import { Link, Outlet } from "react-router-dom";
 import SeasonBadge from "./SeasonBadge";
+import { useEngagementBeacon } from "~/lib/beacon";
 
 export default function Layout() {
+  useEngagementBeacon();
   return (
     <div className="min-h-screen bg-bookend">
     <div className="max-w-4xl mx-auto bg-paper shadow-md min-h-screen flex flex-col">

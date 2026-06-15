@@ -3,9 +3,11 @@ from analytics_lambda import build_html, handler, run_query
 
 CHARTJS = "/* chart */"
 
-PAGES = [["/sermons/grace", "42"], ["/about", "18"]]
-REFS  = [["https://google.com", "10"], ["https://facebook.com", "5"]]
-DAILY = [["2026-05-01", "30"], ["2026-05-02", "25"], ["2026-05-03", "50"]]
+PAGES          = [["/sermons/grace", "42"], ["/about", "18"]]
+REFS           = [["https://google.com", "10"], ["https://facebook.com", "5"]]
+DAILY          = [["2026-05-01", "30"], ["2026-05-02", "25"], ["2026-05-03", "50"]]
+ENGAGED_PAGES  = [["/sermons/grace", "12"], ["/about", "7"]]
+ENGAGED_DAILY  = [["2026-05-01", "8"], ["2026-05-02", "6"], ["2026-05-03", "14"]]
 
 
 def html(**kwargs):
@@ -98,8 +100,23 @@ def test_run_query_raises_on_failed_query(mocker):
 
 # ── handler ───────────────────────────────────────────────────────────────────
 
+def test_engaged_views_stat_shown_in_html():
+    result = build_html(PAGES, REFS, DAILY, days=30, chartjs=CHARTJS,
+                        engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY)
+    assert "28" in result   # 8 + 6 + 14 engaged total
+    assert "human-confirmed" in result
+
+
+def test_engaged_page_labels_embedded_as_json():
+    result = build_html(PAGES, REFS, DAILY, days=30, chartjs=CHARTJS,
+                        engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY)
+    assert '["/sermons/grace", "/about"]' in result
+    assert "[12, 7]" in result
+
+
 def test_handler_uploads_html_and_returns_url(mocker):
-    mocker.patch("analytics_lambda.run_query", side_effect=[PAGES, REFS, DAILY])
+    mocker.patch("analytics_lambda.run_query",
+                 side_effect=[PAGES, REFS, DAILY, ENGAGED_PAGES, ENGAGED_DAILY])
     put = mocker.patch("analytics_lambda.s3.put_object")
 
     result = handler({}, None)
