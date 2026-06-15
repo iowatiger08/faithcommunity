@@ -84,7 +84,7 @@ export default function Meditations() {
           Developed from the Desert Fathers and formalized by Thomas Keating
           and Basil Pennington, centering prayer is a consent &mdash; a
           wordless turning toward the presence of God rather than an attempt
-          to reach it.
+          to reach it (Keating, 1986).
         </p>
         <div className="border-l-2 border-accent/30 pl-5 space-y-3 text-ink/70 text-sm leading-relaxed">
           <p>Choose a sacred word (one syllable works well &mdash; <em>love</em>, <em>peace</em>, <em>open</em>, <em>yes</em>) as a symbol of your consent to God&apos;s presence and action within you.</p>
@@ -186,7 +186,7 @@ export default function Meditations() {
               <p className="not-italic text-base">If one does not begin with the right attitude,<br />
               there is little hope for the right ending.</p>
             </blockquote>
-            <p className="text-xs text-ink/40 mt-2 italic pl-5">&mdash; trans. Brian Browne Walker</p>
+            <p className="text-xs text-ink/40 mt-2 italic pl-5">&mdash; Lao Tzu (Walker, Trans., 1995)</p>
           </div>
 
           {/* Be Water */}
@@ -200,7 +200,7 @@ export default function Meditations() {
               Now water can flow &mdash; or it can sink.<br />
               Be water, my friend.</p>
             </blockquote>
-            <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; Bruce Lee</p>
+            <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; Lee (1971)</p>
           </div>
 
           {/* The Cup */}
@@ -225,7 +225,7 @@ export default function Meditations() {
               you are full of your own opinions and speculations. If you do not
               first empty your cup, how can you taste my cup of tea?&rdquo;
             </p>
-            <p className="text-xs text-ink/40 mt-2 italic">As told in <em>Zen in the Martial Arts</em> by Joe Hyams</p>
+            <p className="text-xs text-ink/40 mt-2 italic">(Hyams, 1979)</p>
           </div>
 
           {/* Dying Teacher */}
@@ -333,7 +333,7 @@ export default function Meditations() {
           &ldquo;Out beyond ideas of wrongdoing and rightdoing, there is a
           field. I&apos;ll meet you there.&rdquo;
         </blockquote>
-        <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; Rumi</p>
+        <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; R&#363;m&#299; (Barks, Trans., 1995)</p>
       </section>
 
       {/* Teachers & resources */}
@@ -376,7 +376,32 @@ export default function Meditations() {
         </Link>
       </section>
 
-      <div className="mt-12 pt-8 border-t border-ink/10 space-y-3">
+      {/* References */}
+      <section className="mt-16 pt-8 border-t border-ink/10">
+        <h2 className="font-serif text-lg mb-5 text-ink/70">References</h2>
+        <ul className="space-y-3 text-sm text-ink/65 leading-relaxed">
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Barks, C. (Trans.). (1995). <em>The essential Rumi</em>. HarperSanFrancisco. (Original work by Jal&#257;l ad-D&#299;n R&#363;m&#299;, 13th century)
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Gethin, R. (1998). <em>The foundations of Buddhism</em>. Oxford University Press.
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Hyams, J. (1979). <em>Zen in the martial arts</em>. J. P. Tarcher.
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Keating, T. (1986). <em>Open mind, open heart: The contemplative dimension of the gospel</em>. Amity House.
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Lee, B. (Interviewee). (1971, December 9). <em>The Pierre Berton show</em> [Television interview]. CTV.
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Walker, B. B. (Trans.). (1995). <em>The Tao te ching of Lao tzu</em>. St. Martin&rsquo;s Griffin.
+          </li>
+        </ul>
+      </section>
+
+      <div className="mt-10 pt-6 border-t border-ink/10 space-y-3">
         <p className="text-ink/70 text-sm leading-relaxed max-w-prose">
           Looking for sermon and worship materials? Visit{" "}
           <Link to="/publications" className="text-accent underline">Publications</Link>.{" "}

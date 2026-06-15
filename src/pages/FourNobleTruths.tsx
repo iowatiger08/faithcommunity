@@ -22,9 +22,11 @@ export default function FourNobleTruths() {
         <p>
           The foundation of Buddhism are the Four Noble Truths and the
           Eightfold Path. These were taught by the Buddha (meaning
-          &ldquo;Enlightened One&rdquo;) thousands of years ago. If you consider
-          aspects of the Hebrew Bible and the Gospels, one may find some
-          striking alignment. See how similar these are to some
+          &ldquo;Enlightened One&rdquo;) thousands of years ago. As scholar
+          Rupert Gethin describes, these teachings form the doctrinal core
+          from which all Buddhist thought and practice flows (Gethin, 1998).
+          If you consider aspects of the Hebrew Bible and the Gospels, one
+          may find some striking alignment. See how similar these are to some
           Judeo-Christian scriptures.
         </p>
       </div>
@@ -95,7 +97,21 @@ export default function FourNobleTruths() {
         </div>
       </section>
 
-      <div className="mt-16 pt-8 border-t border-ink/10 space-y-3">
+      {/* References */}
+      <section className="mt-16 pt-8 border-t border-ink/10">
+        <h2 className="font-serif text-lg mb-5 text-ink/70">References</h2>
+        <ul className="space-y-3 text-sm text-ink/65 leading-relaxed">
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Gethin, R. (1998). <em>The foundations of Buddhism</em>. Oxford University Press.
+          </li>
+        </ul>
+        <p className="text-xs text-ink/40 mt-4 italic">
+          Teaching attributed to the historical Buddha (Siddh&#257;rtha Gautama,
+          c.&thinsp;563&ndash;483 BCE); scholarly framing after Gethin (1998).
+        </p>
+      </section>
+
+      <div className="mt-10 pt-6 border-t border-ink/10 space-y-3">
         <p className="text-ink/70 text-sm leading-relaxed max-w-prose">
           For more contemplative practices across traditions, visit the{" "}
           <Link to="/meditations" className="text-accent underline">
@@ -107,8 +123,7 @@ export default function FourNobleTruths() {
           </Link>.
         </p>
         <p className="text-xs text-ink/50">
-          Teaching attributed to the Buddha; presentation &copy; Tony E Hansen /
-          Hope and Truth Ministry.{" "}
+          Presentation &copy; Tony E Hansen / Hope and Truth Ministry.{" "}
           <Link to="/terms" className="underline hover:text-ink/70">
             Terms of use &rarr;
           </Link>
