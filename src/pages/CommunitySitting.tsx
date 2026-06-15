@@ -140,7 +140,7 @@ export default function CommunitySitting() {
           note in the program &mdash; but it is not expected and should never
           feel like an obligation. A bowl placed quietly near the exit is
           enough. Those moved to give may do so; those who are not need
-          not. No one is watched; no one is asked.
+          not.
         </p>
       </section>
 
