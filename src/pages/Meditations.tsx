@@ -360,6 +360,15 @@ export default function Meditations() {
           field. I&apos;ll meet you there.&rdquo;
         </blockquote>
         <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; R&#363;m&#299; (Barks, Trans., 1995)</p>
+
+        <p className="text-xs uppercase tracking-widest text-ink/50 mb-3 mt-10">Zen / Mindfulness</p>
+        <blockquote className="font-serif text-xl text-ink/80 italic leading-relaxed border-l-2 border-accent/30 pl-5">
+          <p>Breathing in, I calm my body.<br />
+          Breathing out, I smile.<br />
+          Dwelling in the present moment<br />
+          I know this is a wonderful moment.</p>
+        </blockquote>
+        <p className="text-sm text-ink/50 mt-2 pl-5">&mdash; Th&iacute;ch Nh&#7845;t H&#7841;nh, <em>Being Peace</em> (1987)</p>
       </section>
 
       {/* Teachers & resources */}
@@ -420,6 +429,9 @@ export default function Meditations() {
           </li>
           <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
             Lee, B. (Interviewee). (1971, December 9). <em>The Pierre Berton show</em> [Television interview]. CTV.
+          </li>
+          <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
+            Nh&#7845;t H&#7841;nh, T. (1987). <em>Being peace</em>. Parallax Press.
           </li>
           <li style={{ paddingLeft: "1.5em", textIndent: "-1.5em" }}>
             Walker, B. B. (Trans.). (1995). <em>The Tao te ching of Lao tzu</em>. St. Martin&rsquo;s Griffin.
