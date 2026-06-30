@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <PageHead
         title="Hope and Truth Ministry — a ministry without walls"
-        description="A welcoming, interfaith ministry without walls — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, for the wandering, the doubting, the hurting, and the hopeful."
+        description="An open, welcoming, interfaith ministry without walls — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, All are truly welcome here."
         path="/"
         isHome
       />
@@ -43,9 +43,9 @@ export default function Home() {
           </div>
 
           <p className="text-xl text-ink/80 max-w-prose leading-relaxed mb-8">
-            For the wandering, the doubting, the hurting, and the hopeful.
+            For the wondering, the doubting, the hurting, and the hopeful.
             For people without a congregation, and for people who have found
-            theirs but need another voice on the road. You are welcome here.
+            theirs but want another voice on the road. You are welcome here.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -120,7 +120,7 @@ export default function Home() {
             <div>
               <h3 className="font-serif text-xl mb-2">If you&apos;re doubting</h3>
               <p className="text-sm text-ink/70 mb-3">
-                The questions you carry are welcome &mdash; even the hard ones.
+                The questions you have are welcome &mdash; even the hard ones.
               </p>
               <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;

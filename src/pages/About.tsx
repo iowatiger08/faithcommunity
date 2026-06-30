@@ -27,30 +27,26 @@ export default function About() {
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry is a non-denominational spiritual home. A place
-          to find inspiration, gather practical resources, and perhaps discover how to
-          build something of your own &mdash; a congregation, a nonprofit, an
-          organization rooted in your calling.
+          Hope and Truth Ministry is a non-denominational spiritual respite. A place
+          to find inspiration, collect your thoughts, meditate and find the Spirit working.
         </p>
         <p>
           It is interfaith and without walls (online). For the
-          wandering, the doubting, the questioning, the hurting, and the
-          hopeful. For those whose church is online. For those finding their
-          way back. For those still seeking. And for those who are ready to
-          begin building.
+          wondering, the doubting, the questioning, the hurting, and the
+          hopeful. For those finding their way back. For those still seeking.
         </p>
       </div>
 
       <h2 className="font-serif text-2xl mt-16 mb-4">What we believe matters</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          That the sacred texts meet us right where we are. That divine wisdom is
+          That the sacred texts meet us where we are. That divine wisdom is
           wider than any one tradition. That the questions you carry are
-          welcome &mdash; including the hard ones, including the ones we are
-          still learning to hear together.
+          welcome &mdash; including the hard ones - knowing that you are not alone.
         </p>
         <p>
-          We are committed to a theology of <em>welcome</em>. One that affirms
+          We are committed to a progressive theology of <em>welcome</em> and <em>liberation</em>.
+          One that affirms
           equity and access, that honors how different people come to the
           Creator through different paths, that leaves judgment to the One
           who made us, and that takes seriously the call to love our
@@ -61,15 +57,15 @@ export default function About() {
       <h2 className="font-serif text-2xl mt-16 mb-4">The mission</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry exists to provide a truly welcoming,
-          open and interfaith online community to all people seeking meaning, purpose,
+          Hope and Truth Ministry is here to provide a truly welcoming,
+          open and interfaith online community to anyone seeking meaning, purpose,
           and connection &mdash; no matter where they are on life&apos;s journey.
           We work to end all bigotry and racism while providing a safe space for contemplation.
         </p>
         <p>
           Beyond a congregation, this ministry serves as a resource for
-          those individuals who feel called to build &mdash; a ministry, a nonprofit, or a
-          mission-driven organization. The resources here are
+          those individuals who feel called to &mdash; ministry or a
+          mission-driven organization.  Resources here are
           offered to help inspire the vision with tools to sustain
           the work, and guidance for those just beginning to plant something
           new.
@@ -78,7 +74,7 @@ export default function About() {
 
       <h2 className="font-serif text-2xl mt-16 mb-4">Our guiding posts</h2>
       <ul className="space-y-3 text-ink/80 max-w-prose leading-relaxed list-disc pl-6">
-        <li>Growing in love of the Holy Presence and of all our neighbors.</li>
+        <li>Growing in love of the Holy Presence and neighbors.</li>
         <li>
           Providing a safe and sacred space for the many ways faith manifests in
           our lives.
@@ -149,10 +145,10 @@ export default function About() {
         </li>
       </ul>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">What happens here</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">Find you are welcome here</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Start wherever you are. The{" "}
+          The{" "}
           <a className="text-accent underline" href="/sermons">sermons and reflections</a>{" "}
           follow the cadence of the{" "}
           <a
@@ -171,8 +167,7 @@ export default function About() {
           <a className="text-accent underline" href="/publications">
             Publications hub
           </a>{" "}
-          helps to gather inspiration, resources, and work ideation for those called
-          to build with purpose. The{" "}
+          helps to gather inspiration, resources, and work ideation for those who feel called to something more. The{" "}
           <a className="text-accent underline" href="/contact">
             contact page
           </a>{" "}
