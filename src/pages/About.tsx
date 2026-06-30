@@ -150,7 +150,7 @@ export default function About() {
         <p>
           The{" "}
           <a className="text-accent underline" href="/sermons">sermons and reflections</a>{" "}
-          follow the cadence of the{" "}
+          typically follow the{" "}
           <a
             href={VANDERBILT_RCL}
             target="_blank"
@@ -159,20 +159,19 @@ export default function About() {
           >
             Revised Common Lectionary
           </a>{" "}
-          &mdash; new writing arrives most weeks. These along with the{" "}
+          &mdash; a new piece arrives most weeks. These along with the{" "}
           <a className="text-accent underline" href="/meditations">
             meditations
           </a>{" "}
-          are there for contemplation and exploring the heart. The{" "}
+          are for contemplation and considerations. The{" "}
           <a className="text-accent underline" href="/publications">
             Publications hub
           </a>{" "}
-          helps to gather inspiration, resources, and work ideation for those who feel called to something more. The{" "}
+          helps to gather inspiration, resources, and ideation for those who feel called to something more. The{" "}
           <a className="text-accent underline" href="/contact">
             contact page
           </a>{" "}
-          is always open &mdash; for a question, a prayer request, or an
-          idea you are ready to explore.
+          is always open &mdash; for questions or prayer requests.
         </p>
       </div>
 

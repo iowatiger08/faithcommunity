@@ -170,7 +170,7 @@ export default function Meditations() {
           </p>
         </div>
 
-        <h3 className="font-serif text-lg mb-3 text-ink/80">The Practice</h3>
+        <h3 className="font-serif text-lg mb-3 text-ink/80">A Sitting</h3>
         <div className="border-l-2 border-accent/30 pl-5 space-y-3 text-ink/70 text-sm leading-relaxed">
           <p>Close your eyes gently, or soften your gaze toward the floor a few feet ahead.</p>
           <p>Bring your full attention to the breath &mdash; not to control it, but simply to feel it: the rise and fall of the chest, the cool air at the nostrils, the pause between inhale and exhale.</p>
@@ -185,6 +185,13 @@ export default function Meditations() {
           </Link>{" "}
           guide in Publications.
         </p>
+        <p className="text-ink/70 text-sm leading-relaxed mt-4 max-w-prose">
+          For community-based mindfulness support, see{" "}
+          <a href="https://refugerecovery.org/" target="_blank" rel="noopener noreferrer" className="text-accent underline">
+            Refuge Recovery
+          </a>
+          , which offers virtual and in-person sessions.
+        </p>
       </section>
 
       {/* Zen & Taoist wisdom */}
@@ -192,10 +199,10 @@ export default function Meditations() {
         <h2 className="font-serif text-2xl mb-2">Zen &amp; Taoist wisdom</h2>
         <p className="text-ink/70 text-sm leading-relaxed mb-8 max-w-prose">
           These lessons and meditations are drawn from Zen, Taoist, and martial
-          arts traditions. Open your heart to the lessons and push the limits of
-          your mind to understand them not only at face value, but for the
-          internal concepts &mdash; the relationships, the ideas, the
-          suggestions within.
+          arts traditions. Open your heart to the lessons and allow
+          your mind to expand these, not only at face value, but for the
+          internal concepts &mdash; the relationships, the ideas, &amp; the
+          suggestions.
         </p>
 
         <div className="space-y-10">

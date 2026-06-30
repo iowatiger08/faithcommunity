@@ -45,7 +45,7 @@ export default function Contact() {
     <div className="max-w-2xl mx-auto px-6 py-20">
       <PageHead
         title="Contact"
-        description="Send a prayer request, ask a question, or share a reflection. Every message is received with care."
+        description="Send a prayer request, ask a question, or share a reflection."
         path="/contact/"
       />
       <p className="text-sm uppercase tracking-widest text-accent mb-4">
@@ -58,7 +58,7 @@ export default function Contact() {
       <div className="space-y-4 text-lg text-ink/80 max-w-prose leading-relaxed mb-10">
         <p>
           Send a prayer request, ask a question, or share a reflection on
-          something you&apos;ve read here. Every message is received with care.
+          something you&apos;ve read here.
         </p>
       </div>
 

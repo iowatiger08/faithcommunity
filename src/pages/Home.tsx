@@ -115,7 +115,7 @@ export default function Home() {
       {/* Three doors */}
       <section className="border-b border-ink/10">
         <div className="max-w-3xl mx-auto px-6 py-16">
-          <h2 className="font-serif text-3xl mb-8">Three ways in</h2>
+          <h2 className="font-serif text-3xl mb-8">Three paths for you</h2>
           <div className="grid sm:grid-cols-3 gap-8">
             <div>
               <h3 className="font-serif text-xl mb-2">If you&apos;re doubting</h3>
@@ -129,7 +129,7 @@ export default function Home() {
             <div>
               <h3 className="font-serif text-xl mb-2">If you&apos;re hurting</h3>
               <p className="text-sm text-ink/70 mb-3">
-                You don&apos;t have to be put together to come in.
+                You don&apos;t have to do it alone.
               </p>
               <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;
@@ -138,7 +138,7 @@ export default function Home() {
             <div>
               <h3 className="font-serif text-xl mb-2">If you&apos;re seeking</h3>
               <p className="text-sm text-ink/70 mb-3">
-                Wherever you are on the journey, there is space for you.
+                Wherever you are on the journey, you are welcome here.
               </p>
               <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;

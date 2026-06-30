@@ -136,11 +136,11 @@ export default function CommunitySitting() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-4">Gifts</h2>
         <p className="text-ink/75 leading-relaxed max-w-prose">
-          Gifting may be mentioned gently &mdash; a word at the welcome or a
+          Gifting (dana) may be mentioned gently &mdash; a word at the welcome or a
           note in the program &mdash; but it is not expected and should never
-          feel like an obligation. A bowl placed quietly near the exit is
+          feel like an obligation. A bowl or box placed quietly near the exit is
           enough. Those moved to give may do so; those who are not need
-          not.
+          should not feel compelled.
         </p>
       </section>
 
@@ -155,24 +155,27 @@ export default function CommunitySitting() {
           </li>
           <li>
             Readings should be short &mdash; one to three minutes. Poetry,
-            adapted psalms, or wisdom passages from any tradition are
-            appropriate.
+            psalms, short prose or wisdom passages from any tradition are
+            appropriate. These ought to move people to contemplation -
+            perhaps deeper meditation practice.
           </li>
           <li>
             The space need not be elaborate, but should be safe and
-            comfortable. When space allows, arrange participants in a
-            circle &mdash; this supports a sense of shared practice and
-            allows everyone to see the facilitator. In tighter spaces,
-            any arrangement where participants can easily see the
-            facilitator works well. Mats or cushions on the floor are
+            comfortable. It is possible to arrange participants in a
+            circle &mdash; or in organic rows as this supports a sense of shared practice and
+            allows everyone to see the facilitator(s). Mats or cushions on the floor are
             ideal; chairs are equally welcome and should always be
             available for those who need them.
           </li>
           <li>
             Some instruction or explanation may be given (especially for the newcomers) at the start along with a
             brief welcome and a description of the format. The bell does
-            the rest. People may stay for the entire session or only a part. When a sitting begins, the room is to be quiet and preferably dark.
-            Late arrivals should be aware prior to entry that the room should be kept quiet. It is appropriate that shoes are removed and placed in a joining room.
+            the rest. People may stay for the entire session or only a part.
+            When a sitting begins, however, people should plan to stay for the whole sitting.
+            Then, the room is to be quiet and preferably dark.
+            Late arrivals should be aware prior to entry that the room should be kept quiet
+            and avoid disrupting people.
+            It is appropriate that shoes are removed and placed in a joining room.
           </li>
         </ul>
       </section>
