@@ -19,7 +19,7 @@ export default function Give() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Give &amp; Volunteer"
-        description="Support a ministry without walls. Offer a gift to sustain this ministry's outreach, or lend your hands as a volunteer alongside neighbors in central Iowa."
+        description="Support the ministry. Offer a gift to sustain this ministry's outreach, or lend your hands as a volunteer alongside neighbors in central Iowa."
         path="/give/"
       />
 

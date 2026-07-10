@@ -22,7 +22,7 @@ export default function About() {
         Hope &amp; Truth Ministry
       </p>
       <h1 className="font-serif text-4xl mb-8 leading-tight">
-        A ministry without walls.
+        Be hope, be love, live with truth.
       </h1>
 
       <div className="space-y-6 text-lg text-ink/80 max-w-prose leading-relaxed">

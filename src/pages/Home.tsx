@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <>
       <PageHead
-        title="Hope and Truth Ministry — a ministry without walls"
-        description="An open, welcoming, interfaith ministry without walls — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, All are truly welcome here."
+        title="Hope and Truth Ministry — Be hope, be love, live with truth."
+        description="An open, welcoming, interfaith ministry — sermons, reflections, and worship resources rooted in the Revised Common Lectionary, All are truly welcome here."
         path="/"
         isHome
       />
@@ -31,7 +31,7 @@ export default function Home() {
             Hope &amp; Truth Ministry
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl leading-tight mb-8">
-            A ministry without walls.
+            Be hope, be love, live with truth.
           </h1>
 
           <div className="flex justify-center mb-8">

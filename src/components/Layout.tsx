@@ -37,7 +37,7 @@ export default function Layout() {
             <div>
               <p className="font-medium text-ink/80 mb-2">Hope &amp; Truth Ministry</p>
               <p>
-                A ministry without walls. Interfaith and welcoming;
+                Be hope, be love, live with truth. Interfaith and welcoming;
                 for the wandering and the seeking.
               </p>
             </div>
