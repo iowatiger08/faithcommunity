@@ -28,7 +28,7 @@ export default function QueerResources() {
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry is welcoming and affirming. If you are LGBT+, queer,
+          Hope and Truth Ministry is welcoming and affirming. If you are LGBTQ+, queer,
           transgender, questioning, or somewhere still unfolding, you belong
           here &mdash; not despite who you are, but fully as who you are. There
           is no version of yourself you must leave at the door to be met with
@@ -37,8 +37,14 @@ export default function QueerResources() {
         <p>
           The page below gathers organizations, support, and reading for LGBTQ+
           people, their families, and anyone seeking a faith that makes room for
-          the whole of a person. As Paul writes in Galatians 3:28, in Christ the
-          old dividing lines fall away &mdash; we are all one.
+          the whole of a person. While some have used verses to clobber and
+          condemn people, there are also verses that invite us to live into our
+          being as children of God. As Paul writes in Galatians 3:28, in Christ
+          the old dividing lines fall away &mdash; we are all one; and in
+          1 Corinthians 12:27, Paul writes that we are all parts of the same
+          body. Others may have used scripture and religion to wrongly hurt,
+          but God made us just the beautiful way we are.{" "}
+          &ldquo;Love never ends&rdquo; (1 Corinthians 13:8).
         </p>
       </div>
 
@@ -77,8 +83,9 @@ export default function QueerResources() {
             valid.
           </p>
           <p>
-            First thing to realize, this is not a single one-and-done event. This happens over a lifetime.
-            Each time you meet people or go to a new place, you have choices.
+            The first thing to realize is that this is not a single,
+            one-and-done event. It happens over a lifetime. Each time you meet
+            new people or go to a new place, you have choices.
           </p>
           <p>
             Your safety and well-being come first. You choose when, how,
