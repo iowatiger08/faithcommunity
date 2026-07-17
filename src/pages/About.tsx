@@ -145,7 +145,7 @@ export default function About() {
         </li>
       </ul>
 
-      <h2 className="font-serif text-2xl mt-16 mb-4">Find you are welcome here</h2>
+      <h2 className="font-serif text-2xl mt-16 mb-4">You are welcome here</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
           The{" "}

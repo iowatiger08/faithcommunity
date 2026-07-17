@@ -18,6 +18,7 @@ export default function Layout() {
               <Link to="/meditations" className="hover:text-accent">Meditations</Link>
               <Link to="/ordination" className="hover:text-accent">Ordination</Link>
               <Link to="/care" className="hover:text-accent">Care</Link>
+              <Link to="/queer-resources" className="hover:text-accent">Queer Resources</Link>
               <Link to="/about" className="hover:text-accent">About</Link>
               <Link to="/give" className="hover:text-accent">Give</Link>
               <Link to="/contact" className="hover:text-accent">Contact</Link>
@@ -49,6 +50,7 @@ export default function Layout() {
                 <li><Link to="/worship-resources" className="hover:text-accent">Worship resources</Link></li>
                 <li><Link to="/meditations" className="hover:text-accent">Meditations</Link></li>
                 <li><Link to="/care" className="hover:text-accent">Care &amp; support</Link></li>
+                <li><Link to="/queer-resources" className="hover:text-accent">Queer resources</Link></li>
                 <li><Link to="/about" className="hover:text-accent">About this ministry</Link></li>
               </ul>
             </div>

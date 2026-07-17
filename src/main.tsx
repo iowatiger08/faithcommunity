@@ -7,6 +7,7 @@ import SermonDetail from "./pages/SermonDetail";
 import WorshipResourcesIndex from "./pages/WorshipResourcesIndex";
 import About from "./pages/About";
 import Care from "./pages/Care";
+import QueerResources from "./pages/QueerResources";
 import Give from "./pages/Give";
 import Contact from "./pages/Contact";
 import Publications from "./pages/Publications";
@@ -54,6 +55,7 @@ const routes: RouteRecord[] = [
       },
       { path: "about", Component: About },
       { path: "care", Component: Care },
+      { path: "queer-resources", Component: QueerResources },
       { path: "give", Component: Give },
       { path: "contact", Component: Contact },
       { path: "publications", Component: Publications },
