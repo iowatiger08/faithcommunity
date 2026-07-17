@@ -48,19 +48,19 @@ export default function QueerResources() {
         </h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            Queer or LGBTQ+ is a broad umbrella &mdash; lesbian, gay, bisexual,
+            Queer, or LGBTQ+, is an umbrella &mdash; lesbian, gay, bisexual,
             transgender, queer, and more &mdash; that describes the many ways
             people experience attraction, love, gender, and identity. These are
             not problems to be solved or phases to be outgrown; they are part of
             the ordinary, beautiful diversity of life.
           </p>
           <p>
-            Being LGBTQ+ and being a person of faith are not in conflict. A
-            growing community of churches, pastors, and theologians affirm that
-            queer people are made in the image of God and called, like everyone,
-            to lives of love and integrity. If you are just beginning to explore
-            what these words mean for you, take your time. There is no deadline
-            on self-understanding.
+            You can be fully yourself as an LGBTQ+ person and a person of
+            faith. A growing community of churches, pastors, and theologians
+            affirm that queer people are made in the image of God and called,
+            like everyone, to lives of love and integrity (Genesis 1:26-27a).
+            If you are just beginning to explore what these words mean for you,
+            take your time. Coming to terms with the self needs no hurry.
           </p>
         </div>
 
@@ -77,9 +77,13 @@ export default function QueerResources() {
             valid.
           </p>
           <p>
-            Your safety and well-being come first. You get to choose when, how,
-            and with whom you share your story, and it is okay to wait until you
-            are ready or until your circumstances allow. Wherever you are in that
+            First thing to realize, this is not a single one-and-done event. This happens over a lifetime.
+            Each time you meet people or go to a new place, you have choices.
+          </p>
+          <p>
+            Your safety and well-being come first. You choose when, how,
+            and with whom you share your story, because it is your story. It is okay to wait until you
+            are ready or until your circumstances feel safe. Wherever you are in that
             journey, you are not alone, and you are worthy of love and support at
             every step.
           </p>
@@ -127,7 +131,7 @@ export default function QueerResources() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-3">Community resources</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
-          Beyond the church, these organizations offer support, connection, and
+          Beyond church, these organizations offer support, connection, and
           advocacy for LGBTQ+ people and those who love them.
         </p>
         <ul className="space-y-6">
