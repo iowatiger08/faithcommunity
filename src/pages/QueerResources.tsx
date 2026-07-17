@@ -30,14 +30,13 @@ export default function QueerResources() {
         <p>
           Hope and Truth Ministry is welcoming and affirming. If you are LGBTQ+, queer,
           transgender, questioning, or somewhere still unfolding, you belong
-          here &mdash; not despite who you are, but fully as who you are. There
-          is no version of yourself you must leave at the door to be met with
-          love.
+          here &mdash; fully, with Spirit, as you are. You are a child of God.
+          God is love, and God calls you to be love (1 John 4:7-8).
         </p>
         <p>
-          The page below gathers organizations, support, and reading for LGBTQ+
-          people, their families, and anyone seeking a faith that makes room for
-          the whole of a person. While some have used verses to clobber and
+          These resources gather a few organizations for support, along with
+          readings for LGBTQ+ people, their families, and those seeking a
+          faith that makes room for you as a person. While some have used verses to clobber and
           condemn people, there are also verses that invite us to live into our
           being as children of God. As Paul writes in Galatians 3:28, in Christ
           the old dividing lines fall away &mdash; we are all one; and in
@@ -62,10 +61,10 @@ export default function QueerResources() {
           </p>
           <p>
             You can be fully yourself as an LGBTQ+ person and a person of
-            faith. A growing community of churches, pastors, and theologians
+            faith. A growing community of churches, pastors, and many more
             affirm that queer people are made in the image of God and called,
             like everyone, to lives of love and integrity (Genesis 1:26-27a).
-            If you are just beginning to explore what these words mean for you,
+            If you are just beginning to explore what that means for you,
             take your time. Coming to terms with the self needs no hurry.
           </p>
         </div>
@@ -78,12 +77,18 @@ export default function QueerResources() {
           <p>
             Coming out &mdash; sharing who you are with others &mdash; is
             deeply personal. There is no single right way and no schedule you
-            owe anyone. For some it is a joyful announcement; for others it is
-            quiet, gradual, and made only where it feels safe. All of these are
-            valid.
+            owe anyone. First you have to come to terms with yourself and be
+            honest. Then, for others, there is a process and there are
+            decisions. The path varies, but being true to yourself is what matters.
           </p>
           <p>
-            The first thing to realize is that this is not a single,
+            For some it is a joyful announcement; for some there are doubts;
+            for others it is quiet, gradual, and shared only where it feels
+            safe. Most times there is release from the shackles of silence and
+            fear. It is the first step to a new life of being true to yourself.
+          </p>
+          <p>
+            We quickly realize that this is not a single,
             one-and-done event. It happens over a lifetime. Each time you meet
             new people or go to a new place, you have choices.
           </p>
