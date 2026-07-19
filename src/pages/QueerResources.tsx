@@ -23,25 +23,25 @@ export default function QueerResources() {
         Welcome &amp; Belonging
       </p>
       <h1 className="font-serif text-4xl mb-6 leading-tight">
-        You are beloved, You are welcomed, You are love
+        Beloved, You are welcome, You are love
       </h1>
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
           Hope and Truth Ministry is welcoming and affirming. If you are LGBTQ+, queer,
-          transgender, questioning, or somewhere still unfolding, you belong
+          transgender, or questioning, you are welcome
           here &mdash; fully, with Spirit, as you are. You are a child of God.
           God is love, and God calls you to be love (1 John 4:7-8).
         </p>
         <p>
-          These resources gather a few organizations for support, along with
+          These resources share a few organizations for support, along with
           readings for LGBTQ+ people, their families, and those seeking a
           faith that makes room for you as a person. While some have used verses to clobber and
-          condemn people, there are also verses that invite us to live into our
+          condemn people, there are verses that invite us to live into our
           being as children of God. As Paul writes in Galatians 3:28, in Christ
           the old dividing lines fall away &mdash; we are all one; and in
           1 Corinthians 12:27, Paul writes that we are all parts of the same
-          body. Others may have used scripture and religion to wrongly hurt,
+          body. Others may have erroneously used scripture and religion to inflict pain,
           but God made us just the beautiful way we are.{" "}
           &ldquo;Love never ends&rdquo; (1 Corinthians 13:8).
         </p>
@@ -56,16 +56,17 @@ export default function QueerResources() {
             Queer, or LGBTQ+, is an umbrella &mdash; lesbian, gay, bisexual,
             transgender, queer, and more &mdash; that describes the many ways
             people experience attraction, love, gender, and identity. These are
-            not problems to be solved or phases to be outgrown; they are part of
-            the ordinary, beautiful diversity of life.
+            neither problems nor phases; they are part of
+            the natural, beautiful diversity of life.
           </p>
           <p>
-            You can be fully yourself as an LGBTQ+ person and a person of
-            faith. A growing community of churches, pastors, and many more
+            It is more than labels. It is who we are.
+            You can be yourself as an LGBTQ+ person and a person of
+            faith. A growing community of churches, ministers, and many more
             affirm that queer people are made in the image of God and called,
             like everyone, to lives of love and integrity (Genesis 1:26-27a).
-            If you are just beginning to explore what that means for you,
-            take your time. Coming to terms with the self needs no hurry.
+            If you are just beginning to wonder what that means for you,
+            take your time. Coming to terms with the self &mdash; that needs no hurry.
           </p>
         </div>
 
@@ -75,9 +76,9 @@ export default function QueerResources() {
         <h2 className="font-serif text-2xl mb-3">Coming out</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            Coming out &mdash; sharing who you are with others &mdash; is
+            Coming out &mdash; sharing who you are with others and with self &mdash; is
             deeply personal. There is no single right way and no schedule you
-            owe anyone. First you have to come to terms with yourself and be
+            need to declare. First you have to come to terms with yourself and be
             honest. Then, for others, there is a process and there are
             decisions. The path varies, but being true to yourself is what matters.
           </p>
