@@ -25,11 +25,6 @@ export default function Ordination() {
           ministry you are already living, there are trusted paths available
           right now.
         </p>
-        <p>
-          Hope and Truth Ministry is associated with the following ordaining
-          institutions. Both are free, widely recognized, and legal in all
-          50 states.
-        </p>
       </div>
 
       <section className="mt-12">
@@ -45,7 +40,7 @@ export default function Ordination() {
             </a>
             <p className="text-sm text-ink/70 mt-2 leading-relaxed">
               One of the oldest and most widely recognized online ordaining
-              institutions. Free ordination, legal in all 50 states. The ULC
+              institutions. Ordination is legal in all 50 states. The ULC
               has ordained millions of ministers since 1962 and offers
               additional credentials, ministerial supplies, and resources.
             </p>
@@ -62,40 +57,20 @@ export default function Ordination() {
             </a>
             <p className="text-sm text-ink/70 mt-2 leading-relaxed">
               A progressive online ordaining organization with an emphasis on
-              interfaith and non-denominational ministry. Free ordination with
+              interfaith and non-denominational ministry. Ordination with
               optional legal certificates and ministerial packages available.
             </p>
           </li>
         </ul>
       </section>
 
-      <section className="mt-16">
-        <h2 className="font-serif text-2xl mb-3">Already ordained?</h2>
-        <p className="text-ink/80 max-w-prose leading-relaxed">
-          You&apos;ll find sermon materials, worship resources, and liturgical
-          planning tools in our{" "}
-          <Link to="/publications" className="text-accent underline">
-            Publications section
-          </Link>
-          , stewardship resources for your ministry or congregation on the{" "}
-          <Link to="/give" className="text-accent underline">
-            Give page
-          </Link>
-          , and contemplative practice resources in{" "}
-          <Link to="/meditations" className="text-accent underline">
-            Meditations
-          </Link>
-          .
-        </p>
-      </section>
-
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="text-ink/70 max-w-prose leading-relaxed text-sm">
-          Questions about ministry and ordination? Reach us through the{" "}
+          Questions about ministry and ordination? {" "}
           <Link to="/contact" className="text-accent underline">
-            contact page
+            Contact us
           </Link>{" "}
-          and we will be in touch.
+          .
         </p>
       </div>
     </div>

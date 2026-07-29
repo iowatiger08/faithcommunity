@@ -16,7 +16,6 @@ export default function Layout() {
             <nav className="flex gap-x-6 gap-y-1 text-sm flex-wrap">
               <Link to="/publications" className="hover:text-accent">Publications</Link>
               <Link to="/meditations" className="hover:text-accent">Meditations</Link>
-              <Link to="/ordination" className="hover:text-accent">Ordination</Link>
               <Link to="/care" className="hover:text-accent">Care</Link>
               <Link to="/queer-resources" className="hover:text-accent">Queer Resources</Link>
               <Link to="/about" className="hover:text-accent">About</Link>
