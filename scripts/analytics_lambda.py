@@ -69,39 +69,77 @@ def run_query(sql):
     return [[col.get("VarCharValue", "") for col in row["Data"]] for row in rows]
 
 
-def build_html(pages, refs, daily, days=None, chartjs=None,
-               engaged_pages=None, engaged_daily=None):
-    days    = days    if days    is not None else DAYS
-    chartjs = chartjs if chartjs is not None else CHARTJS
+def _xy(rows):
+    """Split Athena rows into parallel label/value arrays, skipping malformed rows."""
+    good = [r for r in rows if len(r) == 2]
+    return {"labels": [r[0] for r in good], "values": [int(r[1]) for r in good]}
+
+
+def _window_payload(label, pages, refs, daily, engaged_pages, engaged_daily):
+    """Bundle one time window's metrics into a JSON-serialisable dict for the client."""
     engaged_pages = engaged_pages or []
     engaged_daily = engaged_daily or []
+    return {
+        "label":         label,
+        "totalViews":    sum(int(r[1]) for r in daily if len(r) == 2),
+        "totalEngaged":  sum(int(r[1]) for r in engaged_daily if len(r) == 2),
+        "uniquePages":   len(pages),
+        "daily":         _xy(daily),
+        "engDaily":      _xy(engaged_daily),
+        "pages":         _xy(pages),
+        "engPages":      _xy(engaged_pages),
+        "refs":          _xy(refs),
+    }
 
-    total_views   = sum(int(r[1]) for r in daily if len(r) == 2)
-    unique_pages  = len(pages)
-    total_engaged = sum(int(r[1]) for r in engaged_daily if len(r) == 2)
 
-    page_labels  = json.dumps([r[0] for r in pages if len(r) == 2])
-    page_values  = json.dumps([int(r[1]) for r in pages if len(r) == 2])
-    ref_labels   = json.dumps([r[0] for r in refs  if len(r) == 2])
-    ref_values   = json.dumps([int(r[1]) for r in refs  if len(r) == 2])
-    daily_labels = json.dumps([r[0] for r in daily if len(r) == 2])
-    daily_values = json.dumps([int(r[1]) for r in daily if len(r) == 2])
-    eng_page_labels  = json.dumps([r[0] for r in engaged_pages if len(r) == 2])
-    eng_page_values  = json.dumps([int(r[1]) for r in engaged_pages if len(r) == 2])
-    eng_daily_labels = json.dumps([r[0] for r in engaged_daily if len(r) == 2])
-    eng_daily_values = json.dumps([int(r[1]) for r in engaged_daily if len(r) == 2])
+def build_html(pages, refs, daily, days=None, chartjs=None,
+               engaged_pages=None, engaged_daily=None, alltime=None):
+    days    = days    if days    is not None else DAYS
+    chartjs = chartjs if chartjs is not None else CHARTJS
 
+    recent = _window_payload(f"Last {days} days", pages, refs, daily,
+                             engaged_pages, engaged_daily)
+
+    has_alltime = alltime is not None
+    if has_alltime:
+        allw = _window_payload("All time",
+                               alltime.get("pages", []),
+                               alltime.get("refs", []),
+                               alltime.get("daily", []),
+                               alltime.get("engaged_pages", []),
+                               alltime.get("engaged_daily", []))
+    else:
+        allw = _window_payload("All time", [], [], [], [], [])
+
+    periods_json = json.dumps({"recent": recent, "all": allw})
+
+    # Toggle is only meaningful when an all-time window was supplied.
+    toggle_html = (
+        f"""<div class="toggle">
+  <button data-period="recent" class="active">Last {days} days</button>
+  <button data-period="all">All time</button>
+</div>"""
+        if has_alltime else ""
+    )
+
+    r = recent  # default (server-rendered) view is the recent window
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hope &amp; Truth Analytics — last {days} days</title>
+<title>Hope &amp; Truth Analytics</title>
 <script>{chartjs}</script>
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ font-family: system-ui, sans-serif; background: #f5f4f0; color: #222; padding: 2rem; }}
   h1 {{ font-size: 1.5rem; margin-bottom: 0.25rem; }}
-  .sub {{ color: #666; font-size: 0.9rem; margin-bottom: 2rem; }}
+  .sub {{ color: #666; font-size: 0.9rem; margin-bottom: 1.25rem; }}
+  .toggle {{ display: inline-flex; margin-bottom: 2rem; border: 1px solid #d8d5cc;
+             border-radius: 8px; overflow: hidden; }}
+  .toggle button {{ font: inherit; font-size: 0.85rem; padding: 0.5rem 1.1rem; border: none;
+                    background: #fff; color: #666; cursor: pointer; }}
+  .toggle button + button {{ border-left: 1px solid #d8d5cc; }}
+  .toggle button.active {{ background: #4a7c59; color: #fff; }}
   .stat {{ display: inline-block; background: #fff; border-radius: 8px; padding: 1rem 1.5rem;
            margin-right: 1rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,.1); }}
   .stat-num {{ font-size: 2rem; font-weight: 700; color: #4a7c59; }}
@@ -115,20 +153,22 @@ def build_html(pages, refs, daily, days=None, chartjs=None,
 </head>
 <body>
 <h1>Hope &amp; Truth Ministry — Traffic</h1>
-<p class="sub">Last {days} days &nbsp;·&nbsp; Source: CloudFront logs via Athena &nbsp;·&nbsp; Bots filtered</p>
+<p class="sub"><span id="period-label">{r['label']}</span> &nbsp;·&nbsp; Source: CloudFront logs via Athena &nbsp;·&nbsp; Bots filtered</p>
+
+{toggle_html}
 
 <div class="stat">
-  <div class="stat-num">{total_views:,}</div>
+  <div class="stat-num" id="stat-views">{r['totalViews']:,}</div>
   <div class="stat-lbl">Page requests</div>
   <div class="stat-note">bots filtered by user-agent</div>
 </div>
 <div class="stat">
-  <div class="stat-num">{total_engaged:,}</div>
+  <div class="stat-num" id="stat-engaged">{r['totalEngaged']:,}</div>
   <div class="stat-lbl">Engaged views</div>
   <div class="stat-note">human-confirmed (10 s or 20% scroll)</div>
 </div>
 <div class="stat">
-  <div class="stat-num">{unique_pages}</div>
+  <div class="stat-num" id="stat-pages">{r['uniquePages']}</div>
   <div class="stat-lbl">Unique pages</div>
 </div>
 
@@ -154,66 +194,74 @@ def build_html(pages, refs, daily, days=None, chartjs=None,
 </div>
 
 <script>
+const PERIODS = {periods_json};
 const accent  = '#4a7c59';
 const light   = 'rgba(74,124,89,.15)';
 const warm    = '#7c6a4a';
 const warmLt  = 'rgba(124,106,74,.15)';
 
-new Chart(document.getElementById('daily'), {{
-  type: 'line',
-  data: {{
-    labels: {daily_labels},
-    datasets: [{{ label: 'Requests', data: {daily_values},
-      borderColor: accent, backgroundColor: light, fill: true, tension: 0.3, pointRadius: 3 }}]
-  }},
-  options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }}
-}});
+function lineCfg(d, color, bg, label) {{
+  return {{ type: 'line',
+    data: {{ labels: d.labels, datasets: [{{ label, data: d.values,
+      borderColor: color, backgroundColor: bg, fill: true, tension: 0.3, pointRadius: 3 }}] }},
+    options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }} }};
+}}
+function barCfg(d, color, label) {{
+  return {{ type: 'bar',
+    data: {{ labels: d.labels, datasets: [{{ label, data: d.values, backgroundColor: color }}] }},
+    options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
+      scales: {{ x: {{ beginAtZero: true }} }} }} }};
+}}
 
-new Chart(document.getElementById('eng-daily'), {{
-  type: 'line',
-  data: {{
-    labels: {eng_daily_labels},
-    datasets: [{{ label: 'Engaged', data: {eng_daily_values},
-      borderColor: warm, backgroundColor: warmLt, fill: true, tension: 0.3, pointRadius: 3 }}]
-  }},
-  options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }}
-}});
+const p0 = PERIODS.recent;
+const charts = {{
+  daily:    new Chart(document.getElementById('daily'),     lineCfg(p0.daily,    accent, light,  'Requests')),
+  engDaily: new Chart(document.getElementById('eng-daily'), lineCfg(p0.engDaily, warm,   warmLt, 'Engaged')),
+  pages:    new Chart(document.getElementById('pages'),     barCfg(p0.pages,     accent, 'Requests')),
+  engPages: new Chart(document.getElementById('eng-pages'), barCfg(p0.engPages,  warm,   'Engaged')),
+  refs:     new Chart(document.getElementById('refs'),      barCfg(p0.refs,      warm,   'Visits')),
+}};
 
-new Chart(document.getElementById('pages'), {{
-  type: 'bar',
-  data: {{
-    labels: {page_labels},
-    datasets: [{{ label: 'Requests', data: {page_values}, backgroundColor: accent }}]
-  }},
-  options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
-    scales: {{ x: {{ beginAtZero: true }} }} }}
-}});
+function apply(chart, d) {{
+  chart.data.labels = d.labels;
+  chart.data.datasets[0].data = d.values;
+  chart.update();
+}}
 
-new Chart(document.getElementById('eng-pages'), {{
-  type: 'bar',
-  data: {{
-    labels: {eng_page_labels},
-    datasets: [{{ label: 'Engaged', data: {eng_page_values}, backgroundColor: warm }}]
-  }},
-  options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
-    scales: {{ x: {{ beginAtZero: true }} }} }}
-}});
+function showPeriod(key) {{
+  const p = PERIODS[key];
+  if (!p) return;
+  document.getElementById('stat-views').textContent   = p.totalViews.toLocaleString();
+  document.getElementById('stat-engaged').textContent = p.totalEngaged.toLocaleString();
+  document.getElementById('stat-pages').textContent   = p.uniquePages;
+  document.getElementById('period-label').textContent = p.label;
+  apply(charts.daily,    p.daily);
+  apply(charts.engDaily, p.engDaily);
+  apply(charts.pages,    p.pages);
+  apply(charts.engPages, p.engPages);
+  apply(charts.refs,     p.refs);
+  document.querySelectorAll('.toggle button').forEach(function(b) {{
+    b.classList.toggle('active', b.dataset.period === key);
+  }});
+}}
 
-new Chart(document.getElementById('refs'), {{
-  type: 'bar',
-  data: {{
-    labels: {ref_labels},
-    datasets: [{{ label: 'Visits', data: {ref_values}, backgroundColor: warm }}]
-  }},
-  options: {{ indexAxis: 'y', plugins: {{ legend: {{ display: false }} }},
-    scales: {{ x: {{ beginAtZero: true }} }} }}
+document.querySelectorAll('.toggle button').forEach(function(b) {{
+  b.addEventListener('click', function() {{ showPeriod(b.dataset.period); }});
 }});
 </script>
 </body>
 </html>"""
 
 
-PAGES_SQL = f"""
+def _window_clause(days):
+    """SQL fragment limiting rows to the last `days` days, or '' for all time."""
+    if days is None:
+        return ""
+    return f"    AND log_date >= DATE_ADD('day', -{days}, CURRENT_DATE)\n"
+
+
+def pages_sql(days):
+    return f"""
   SELECT uri, COUNT(*) AS views
   FROM cloudfront_logs.access_logs
   WHERE status = 200
@@ -228,22 +276,24 @@ PAGES_SQL = f"""
     AND uri NOT LIKE '/.vite/%'
     AND uri != '/_beacon'
     AND {BOT_FILTER}
-    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
-  GROUP BY uri ORDER BY views DESC LIMIT 25
+{_window_clause(days)}  GROUP BY uri ORDER BY views DESC LIMIT 25
 """
 
-REFS_SQL = f"""
+
+def refs_sql(days):
+    return f"""
   SELECT referrer, COUNT(*) AS visits
   FROM cloudfront_logs.access_logs
   WHERE status = 200
     AND referrer != '-'
     AND referrer NOT LIKE '%hopeandtruthministry.com%'
     AND {BOT_FILTER}
-    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
-  GROUP BY referrer ORDER BY visits DESC LIMIT 20
+{_window_clause(days)}  GROUP BY referrer ORDER BY visits DESC LIMIT 20
 """
 
-DAILY_SQL = f"""
+
+def daily_sql(days):
+    return f"""
   SELECT log_date, COUNT(*) AS views
   FROM cloudfront_logs.access_logs
   WHERE status = 200
@@ -255,13 +305,14 @@ DAILY_SQL = f"""
     AND uri NOT LIKE '%.svg'
     AND uri != '/_beacon'
     AND {BOT_FILTER}
-    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
-  GROUP BY log_date ORDER BY log_date ASC
+{_window_clause(days)}  GROUP BY log_date ORDER BY log_date ASC
 """
+
 
 # Beacon hits = confirmed human engagement (fired after 10 s dwell or 20% scroll).
 # The page path is passed as the `p` query-string parameter.
-ENGAGED_PAGES_SQL = f"""
+def engaged_pages_sql(days):
+    return f"""
   SELECT
     url_decode(regexp_extract(query_str, 'p=([^&]+)', 1)) AS page,
     COUNT(*) AS engaged_views
@@ -270,32 +321,42 @@ ENGAGED_PAGES_SQL = f"""
     AND method = 'GET'
     AND uri = '/_beacon'
     AND query_str LIKE 'p=%'
-    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
-  GROUP BY 1 ORDER BY 2 DESC LIMIT 25
+{_window_clause(days)}  GROUP BY 1 ORDER BY 2 DESC LIMIT 25
 """
 
-ENGAGED_DAILY_SQL = f"""
+
+def engaged_daily_sql(days):
+    return f"""
   SELECT log_date, COUNT(*) AS engaged_views
   FROM cloudfront_logs.access_logs
   WHERE status = 200
     AND method = 'GET'
     AND uri = '/_beacon'
-    AND log_date >= DATE_ADD('day', -{DAYS}, CURRENT_DATE)
-  GROUP BY log_date ORDER BY log_date ASC
+{_window_clause(days)}  GROUP BY log_date ORDER BY log_date ASC
 """
+
+
+def query_window(days):
+    """Run all five metric queries for a single time window."""
+    return {
+        "pages":         run_query(pages_sql(days)),
+        "refs":          run_query(refs_sql(days)),
+        "daily":         run_query(daily_sql(days)),
+        "engaged_pages": run_query(engaged_pages_sql(days)),
+        "engaged_daily": run_query(engaged_daily_sql(days)),
+        "days":          days,
+    }
 
 
 def handler(event, context):
     print("Querying Athena...")
-    pages          = run_query(PAGES_SQL)
-    refs           = run_query(REFS_SQL)
-    daily          = run_query(DAILY_SQL)
-    engaged_pages  = run_query(ENGAGED_PAGES_SQL)
-    engaged_daily  = run_query(ENGAGED_DAILY_SQL)
+    recent  = query_window(DAYS)   # last N days
+    alltime = query_window(None)   # all time
 
-    html = build_html(pages, refs, daily,
-                      engaged_pages=engaged_pages,
-                      engaged_daily=engaged_daily)
+    html = build_html(recent["pages"], recent["refs"], recent["daily"],
+                      engaged_pages=recent["engaged_pages"],
+                      engaged_daily=recent["engaged_daily"],
+                      alltime=alltime)
 
     s3.put_object(
         Bucket=S3_BUCKET,

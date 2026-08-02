@@ -9,6 +9,22 @@ DAILY          = [["2026-05-01", "30"], ["2026-05-02", "25"], ["2026-05-03", "50
 ENGAGED_PAGES  = [["/sermons/grace", "12"], ["/about", "7"]]
 ENGAGED_DAILY  = [["2026-05-01", "8"], ["2026-05-02", "6"], ["2026-05-03", "14"]]
 
+# All-time datasets — larger totals, more pages than the 30-day window.
+ALL_PAGES          = [["/sermons/grace", "900"], ["/about", "300"], ["/sermons/hope", "150"]]
+ALL_REFS           = [["https://google.com", "400"], ["https://bing.com", "80"]]
+ALL_DAILY          = [["2025-01-01", "100"], ["2026-05-03", "500"]]
+ALL_ENGAGED_PAGES  = [["/sermons/grace", "250"], ["/about", "90"]]
+ALL_ENGAGED_DAILY  = [["2025-01-01", "40"], ["2026-05-03", "160"]]
+
+ALLTIME = {
+    "pages": ALL_PAGES,
+    "refs": ALL_REFS,
+    "daily": ALL_DAILY,
+    "engaged_pages": ALL_ENGAGED_PAGES,
+    "engaged_daily": ALL_ENGAGED_DAILY,
+    "days": None,
+}
+
 
 def html(**kwargs):
     return build_html(PAGES, REFS, DAILY, days=30, chartjs=CHARTJS, **kwargs)
@@ -114,9 +130,46 @@ def test_engaged_page_labels_embedded_as_json():
     assert "[12, 7]" in result
 
 
+# ── all-time toggle ───────────────────────────────────────────────────────────
+
+def test_period_toggle_offers_both_windows():
+    result = html(engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY,
+                  alltime=ALLTIME)
+    assert "Last 30 days" in result
+    assert "All time" in result
+    assert 'data-period="recent"' in result
+    assert 'data-period="all"' in result
+
+
+def test_default_stats_are_the_recent_window():
+    # Rendered stat numbers reflect the 30-day window, not all-time.
+    result = html(engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY,
+                  alltime=ALLTIME)
+    assert '"totalViews": 105' in result   # recent daily 30+25+50
+    assert '"totalViews": 600' in result   # all-time daily 100+500 embedded for toggle
+
+
+def test_alltime_data_embedded_for_toggle():
+    result = html(engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY,
+                  alltime=ALLTIME)
+    # all-time labels/values available to the client-side toggle
+    assert '["/sermons/grace", "/about", "/sermons/hope"]' in result
+    assert "[900, 300, 150]" in result
+    assert '"uniquePages": 3' in result    # all-time page count
+
+
+def test_toggle_omitted_when_no_alltime_supplied():
+    result = html(engaged_pages=ENGAGED_PAGES, engaged_daily=ENGAGED_DAILY)
+    assert 'data-period="all"' not in result
+
+
 def test_handler_uploads_html_and_returns_url(mocker):
+    # Handler queries each metric twice: once for the 30-day window, once for
+    # all time (10 queries total, recent first).
     mocker.patch("analytics_lambda.run_query",
-                 side_effect=[PAGES, REFS, DAILY, ENGAGED_PAGES, ENGAGED_DAILY])
+                 side_effect=[PAGES, REFS, DAILY, ENGAGED_PAGES, ENGAGED_DAILY,
+                              ALL_PAGES, ALL_REFS, ALL_DAILY,
+                              ALL_ENGAGED_PAGES, ALL_ENGAGED_DAILY])
     put = mocker.patch("analytics_lambda.s3.put_object")
 
     result = handler({}, None)
@@ -132,3 +185,5 @@ def test_handler_uploads_html_and_returns_url(mocker):
     assert call_kwargs["ContentType"] == "text/html"
     assert b"<!DOCTYPE html>" in call_kwargs["Body"]
     assert b"/sermons/grace" in call_kwargs["Body"]
+    assert b"All time" in call_kwargs["Body"]        # toggle rendered
+    assert b"/sermons/hope" in call_kwargs["Body"]   # all-time-only page present
