@@ -8,6 +8,15 @@ const RECIPIENT = process.env.RECIPIENT_EMAIL || 'hopeandtruthministry@gmail.com
 const SENDER = process.env.SENDER_EMAIL || 'noreply@hopeandtruthministry.com';
 const TOXICITY_THRESHOLD = parseFloat(process.env.TOXICITY_THRESHOLD || '0.75');
 const RATE_LIMIT = parseInt(process.env.RATE_LIMIT_PER_HOUR || '2', 10);
+// Link "score": strong signals (scheme/www/bbcode/anchor) weigh 2, bare domains 1.
+// A single site mention (score 1) is allowed; any real link or 2+ domains is not.
+const MAX_LINK_SCORE = parseInt(process.env.MAX_LINK_SCORE || '1', 10);
+const MAX_MESSAGE_LENGTH = parseInt(process.env.MAX_MESSAGE_LENGTH || '5000', 10);
+const MAX_EMAIL_LENGTH = 254; // RFC 5321 maximum
+
+// Reject anything that isn't a single, whitespace-free address. The \s class
+// excludes newlines/tabs, so this also blocks CRLF injection into SES fields.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // In-memory rate limit — per Lambda instance, sufficient for low-traffic ministry use
 const ipRequests = new Map();
@@ -38,6 +47,44 @@ function checkRateLimit(ip) {
   timestamps.push(now);
   ipRequests.set(ip, timestamps);
   return true;
+}
+
+// Mentions of our own site and email addresses left as contact info are not
+// promotional link spam, so strip them before scoring to avoid discarding
+// genuine messages.
+const OWN_DOMAIN_RE = /\b(?:www\.)?hopeandtruthministry\.com\b/gi;
+const EMAIL_ADDR_RE = /\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/gi;
+
+// Most contact spam is promotional links. Genuine prayer requests almost never
+// contain URLs, so a link-heavy message is a strong spam signal.
+function linkScore(text) {
+  const cleaned = text.replace(OWN_DOMAIN_RE, ' ').replace(EMAIL_ADDR_RE, ' ');
+  const strong = (cleaned.match(/https?:\/\/|www\.|\[url|<a\s+href/gi) || []).length;
+  const bare = (
+    cleaned.match(
+      /\b[a-z0-9-]+\.(?:com|net|org|io|co|ru|cn|xyz|top|info|online|biz|shop|club|site|link|live|store)\b/gi
+    ) || []
+  ).length;
+  return strong * 2 + bare;
+}
+
+// Clearly commercial phrases that do not appear in genuine ministry messages.
+// Kept deliberately narrow to avoid flagging real prayer topics (debt, addiction…).
+const SPAM_PHRASES = [
+  /back\s?links?/i,
+  /seo\s+(?:services?|expert|ranking|company|agency)/i,
+  /(?:buy|cheap)\s+(?:viagra|cialis)/i,
+  /\bviagra\b/i,
+  /\bcialis\b/i,
+  /\bcasino\b/i,
+  /crypto\s?(?:currency|wallet|investment)/i,
+  /binary\s+options?/i,
+  /\bescort(?:s|\s+service)\b/i,
+];
+
+function looksLikeSpam(message) {
+  if (linkScore(message) > MAX_LINK_SCORE) return true;
+  return SPAM_PHRASES.some((re) => re.test(message));
 }
 
 async function isToxic(text) {
@@ -82,6 +129,15 @@ export const handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
+  // Origin enforcement — reject a cross-site browser POST (Origin present but not
+  // in the allowlist). A *missing* Origin is allowed through: some privacy tools
+  // strip it from same-site requests, and the header is trivially spoofable
+  // anyway, so this is a first filter, not the last line of defense.
+  const origin = event.headers?.origin || event.headers?.Origin || '';
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return { statusCode: 403, headers, body: JSON.stringify({ error: 'Forbidden' }) };
+  }
+
   let body;
   try {
     body = JSON.parse(event.body || '{}');
@@ -96,8 +152,13 @@ export const handler = async (event) => {
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   }
 
-  // Basic validation
-  if (!email?.includes('@') || !VALID_CATEGORIES.has(category) || !message?.trim()) {
+  // Basic validation — length caps prevent oversized-payload amplification, and
+  // EMAIL_RE rejects the newlines/whitespace that would otherwise reach SES.
+  if (
+    typeof email !== 'string' || email.length > MAX_EMAIL_LENGTH || !EMAIL_RE.test(email) ||
+    !VALID_CATEGORIES.has(category) ||
+    typeof message !== 'string' || !message.trim() || message.length > MAX_MESSAGE_LENGTH
+  ) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid input' }) };
   }
 
@@ -108,6 +169,12 @@ export const handler = async (event) => {
     'unknown';
   if (!checkRateLimit(ip)) {
     console.log(`Rate limit exceeded for ${ip}`);
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+  }
+
+  // Content spam heuristics (links + commercial phrases) — silent discard
+  if (looksLikeSpam(message)) {
+    console.log(`Spam content from ${ip}, discarding`);
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   }
 

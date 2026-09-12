@@ -3,7 +3,7 @@
  * AWS SDK clients are mocked so tests run without credentials.
  * Focus: honeypot, rate limiting, category validation, CORS.
  */
-import { vi, describe, it, expect } from "vitest";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 
 vi.mock("@aws-sdk/client-comprehend", () => ({
   ComprehendClient: class {
@@ -14,12 +14,19 @@ vi.mock("@aws-sdk/client-comprehend", () => ({
   DetectToxicContentCommand: class {},
 }));
 
+// Shared SES send spy so tests can assert whether an email was actually sent.
+const { sesSend } = vi.hoisted(() => ({ sesSend: vi.fn() }));
 vi.mock("@aws-sdk/client-ses", () => ({
   SESClient: class {
-    send = vi.fn().mockResolvedValue({});
+    send = sesSend;
   },
   SendEmailCommand: class {},
 }));
+
+beforeEach(() => {
+  sesSend.mockReset();
+  sesSend.mockResolvedValue({});
+});
 
 import { handler } from "./index.mjs";
 
@@ -89,6 +96,22 @@ describe("input validation", () => {
     expect(res.statusCode).toBe(400);
   });
 
+  it("rejects an oversized message with 400 and does not send", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "a".repeat(5001) })
+    );
+    expect(res.statusCode).toBe(400);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("rejects an email containing a newline (CRLF injection) with 400", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, email: "a@b.com\nBcc: victim@example.com" })
+    );
+    expect(res.statusCode).toBe(400);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
   it("accepts all four valid categories", async () => {
     for (const category of [
       "Prayer Request",
@@ -140,5 +163,106 @@ describe("valid submission", () => {
     const res = await handler(makeEvent(validBody));
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res.body).ok).toBe(true);
+  });
+
+  it("actually sends the email for a clean message", async () => {
+    await handler(makeEvent(validBody));
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("origin enforcement", () => {
+  it("allows a POST with no Origin header (privacy tools strip it)", async () => {
+    const event = makeEvent(validBody);
+    delete event.headers.origin;
+    const res = await handler(event);
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects a POST from a disallowed origin", async () => {
+    const event = { ...makeEvent(validBody), headers: { origin: "https://evil.com" } };
+    const res = await handler(event);
+    expect(res.statusCode).toBe(403);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("still allows OPTIONS preflight without a valid origin", async () => {
+    const event = makeEvent({}, freshIp(), "OPTIONS");
+    delete event.headers.origin;
+    const res = await handler(event);
+    expect(res.statusCode).toBe(200);
+  });
+});
+
+describe("link/URL spam filtering", () => {
+  it("silently discards a message containing an http URL", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "Boost your ranking: https://cheap-seo.example" })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body).ok).toBe(true);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("silently discards a message with a www. link", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "visit www.spam.example now" })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("silently discards a message with multiple bare domains", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "deals at foo.com and bar.net today" })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("allows a genuine message that mentions a single site by name", async () => {
+    const res = await handler(
+      makeEvent({
+        ...validBody,
+        message: "I loved the reflection I read on hopeandtruthministry.com — thank you.",
+      })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows a normal prayer request with no links", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "Please pray for my mother's health." })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows a message listing two contact email addresses", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "You can reach me at jane@work.com or jane@home.net." })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows a mention of our own www site", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "I read this on www.hopeandtruthministry.com — thank you." })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("spam phrase filtering", () => {
+  it("silently discards messages with clearly commercial spam phrases", async () => {
+    const res = await handler(
+      makeEvent({ ...validBody, message: "We offer cheap backlinks and SEO services." })
+    );
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).not.toHaveBeenCalled();
   });
 });

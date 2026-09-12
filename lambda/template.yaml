@@ -15,7 +15,7 @@ Parameters:
 Globals:
   Function:
     Timeout: 30
-    Runtime: nodejs18.x
+    Runtime: nodejs24.x
     Architectures:
       - x86_64
 
@@ -67,11 +67,14 @@ Resources:
   BloggerProxyFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub "${AWS::StackName}-blogger-proxy"
       CodeUri: blogger-proxy/
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs24.x
       MemorySize: 256
       Timeout: 30
+      LoggingConfig:
+        LogGroup: !Ref BloggerProxyLogGroup
       Environment:
         Variables:
           NODE_OPTIONS: '--enable-source-maps'
@@ -94,6 +97,12 @@ Resources:
             Path: /blogger/posts
             Method: options
             RestApiId: !Ref BloggerApiGateway
+
+  BloggerProxyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-blogger-proxy"
+      RetentionInDays: 14
 
   BloggerApiGateway:
     Type: AWS::Serverless::Api
@@ -133,11 +142,14 @@ Resources:
   ContactFormFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub "${AWS::StackName}-contact-form"
       CodeUri: contact-form/
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs24.x
       MemorySize: 128
       Timeout: 15
+      LoggingConfig:
+        LogGroup: !Ref ContactFormLogGroup
       Environment:
         Variables:
           RECIPIENT_EMAIL: hopeandtruthministry@gmail.com
@@ -167,6 +179,12 @@ Resources:
             Path: /contact
             Method: options
             ApiId: !Ref ContactHttpApi
+
+  ContactFormLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-contact-form"
+      RetentionInDays: 14
 
   ContactHttpApi:
     Type: AWS::Serverless::HttpApi
