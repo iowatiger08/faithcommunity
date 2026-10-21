@@ -38,7 +38,7 @@ export default function Layout() {
               <p className="font-medium text-ink/80 mb-2">Hope &amp; Truth Ministry</p>
               <p>
                 Be hope, be love, live with truth. Interfaith and welcoming;
-                for the wandering and the seeking.
+                for all God&apos;s children.
               </p>
             </div>
             <div>
@@ -56,8 +56,12 @@ export default function Layout() {
             <div>
               <p className="font-medium text-ink/80 mb-2">Ministry</p>
               <ul className="space-y-1">
+                {/* TEMPORARILY HIDDEN — ordination and stewardship are being
+                    reworked. The pages still resolve for anyone holding the
+                    URL; only the links are withdrawn. Restore when ready.
                 <li><Link to="/ordination" className="hover:text-accent">Ordination</Link></li>
                 <li><Link to="/give" className="hover:text-accent">Stewardship resources</Link></li>
+                */}
                 <li><Link to="/contact" className="hover:text-accent">Contact us</Link></li>
                 <li><Link to="/give" className="hover:text-accent">Give &amp; volunteer</Link></li>
                 <li className="text-ink/50">Newsletters &mdash; coming soon</li>

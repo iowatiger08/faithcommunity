@@ -77,7 +77,7 @@ afterEach(() => {
 describe("the public part of the page", () => {
   it("shows the research without needing a code", () => {
     renderForum();
-    expect(screen.getByText(/what the research says/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /what the research says/i })).toBeTruthy();
     expect(screen.getByText("8.4×")).toBeTruthy();
     expect(screen.getByText(/34% in Iowa/)).toBeTruthy();
   });
@@ -93,7 +93,7 @@ describe("the public part of the page", () => {
 
   it("shows the HRC figures on faith communities, the ones aimed at a church", () => {
     renderForum();
-    expect(screen.getByText(/what young people say about church/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /what young people say about church/i })).toBeTruthy();
     // Religion reported as unfriendly, guilt and shame on coming out, how few
     // are out to their congregation, and how few have supportive faith leaders.
     expect(screen.getByText("63.1%")).toBeTruthy();
@@ -125,7 +125,7 @@ describe("the public part of the page", () => {
 
   it("covers work, not just youth", () => {
     renderForum();
-    expect(screen.getByText(/^At work$/)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /^At work$/ })).toBeTruthy();
     expect(screen.getByText("47%")).toBeTruthy();
     expect(screen.getByText("39% vs. 12%")).toBeTruthy();
     expect(screen.getAllByText(/Williams Institute/).length).toBeGreaterThan(2);
@@ -143,7 +143,7 @@ describe("the public part of the page", () => {
 
   it("covers growing older, where most of the congregation actually is", () => {
     renderForum();
-    expect(screen.getByText(/^Growing older$/)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /^Growing older$/ })).toBeTruthy();
     expect(screen.getByText(/3 million/)).toBeTruthy();
     expect(screen.getByText(/2× and 4×/)).toBeTruthy();
     expect(screen.getByText("82%")).toBeTruthy();
@@ -152,7 +152,7 @@ describe("the public part of the page", () => {
 
   it("covers marriage acceptance, including that it can move backwards", () => {
     renderForum();
-    expect(screen.getByText(/^Marriage$/)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /^Marriage$/ })).toBeTruthy();
     expect(screen.getByText("65%")).toBeTruthy();
     expect(screen.getByText("87% / 67% / 37%")).toBeTruthy();
     expect(screen.getAllByText(/Gallup/).length).toBeGreaterThan(2);
@@ -168,6 +168,26 @@ describe("the public part of the page", () => {
   it("puts crisis resources on the page alongside the risk figures", () => {
     renderForum();
     expect(screen.getByText(/Call or text 988/)).toBeTruthy();
+  });
+
+  it("offers a jump list, and every section can be returned from", () => {
+    const { container } = renderForum();
+    const nav = container.querySelector('nav[aria-label="On this page"]');
+    expect(nav).toBeTruthy();
+
+    // Every anchor in the jump list must point at a section that exists.
+    const targets = Array.from(nav!.querySelectorAll("a")).map((a) =>
+      (a.getAttribute("href") ?? "").replace("#", "")
+    );
+    expect(targets.length).toBeGreaterThan(8);
+    expect(targets.every((id) => id.length > 0)).toBe(true);
+    for (const id of targets) {
+      expect(container.querySelector(`section#${id}`), `no section #${id}`).toBeTruthy();
+    }
+
+    // ...and every one of those sections offers a way back.
+    expect(container.querySelectorAll('a[href="#top"]').length).toBe(targets.length);
+    expect(container.querySelector("#top")).toBeTruthy();
   });
 
   it("says plainly that the page is still a work in progress", () => {

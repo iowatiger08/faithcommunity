@@ -56,6 +56,16 @@ const routes: RouteRecord[] = [
             .filter((p) => p.section === "worship_resources")
             .map((p) => `/worship-resources/${p.slug}`),
       },
+      {
+        // Reflections had no route, so published ones generated no page at all.
+        // Reuses SermonDetail, which renders any post.
+        path: "reflections/:slug",
+        Component: SermonDetail,
+        getStaticPaths: () =>
+          getAllPosts()
+            .filter((p) => p.section === "reflections")
+            .map((p) => `/reflections/${p.slug}`),
+      },
       { path: "about", Component: About },
       { path: "care", Component: Care },
       { path: "queer-resources", Component: QueerResources },

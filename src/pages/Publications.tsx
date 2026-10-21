@@ -27,7 +27,7 @@ const INSPIRATION = [
   },
   {
     title: "Worship Resources",
-    desc: "Service orders — materials that carry the season into the community.",
+    desc: "Service Materials.",
     href: "/worship-resources",
     live: true,
     cta: "Browse resources",
@@ -41,6 +41,8 @@ const INSPIRATION = [
   },
 ];
 
+/* TEMPORARILY HIDDEN — used only by the Resources track, which is
+   commented out below while ministry resources are reworked.
 const RESOURCES = [
   {
     title: "Community Sitting Practice",
@@ -75,7 +77,10 @@ const RESOURCES = [
     live: false,
   },
 ];
+*/
 
+/* TEMPORARILY HIDDEN — used only by the Work Ideation track, which is
+   commented out below while ministry/nonprofit building is reworked.
 const IDEATION = [
   {
     title: "Seeding a Ministry or Nonprofit",
@@ -103,6 +108,7 @@ const IDEATION = [
     cta: "Explore ordination",
   },
 ];
+*/
 
 // ── Shared ───────────────────────────────────────────────────────────────────
 
@@ -202,9 +208,8 @@ export default function Publications() {
           <span className="block pl-12">Discover paths.</span>
         </h1>
         <p className="text-lg text-ink/70 max-w-prose leading-relaxed">
-          Hope &amp; Truth Ministry is a place to seek, to learn, and to discover a path
-          to build something of your own &mdash; a congregation or a nonprofit
-          organization delivering purpose and services to the community.
+          Hope &amp; Truth Ministry is a place to seek, to learn, and to find
+          your way.
         </p>
       </div>
 
@@ -215,20 +220,26 @@ export default function Publications() {
         items={INSPIRATION}
       />
 
-      {/* Track 2 — Resources */}
+      {/* TEMPORARILY HIDDEN — ministry resources are being reworked.
+          Restore this track when ready.
+      Track 2 — Resources
       <TrackBanner
         title="Resources"
         pull="Ministry is built on what it provides. These tools are here to be used and adapted to build your purpose."
         items={RESOURCES}
         flip
       />
+      */}
 
-      {/* Track 3 — Work Ideation */}
+      {/* TEMPORARILY HIDDEN — ministry/nonprofit building is being
+          reworked. Restore this track when ready.
+      Track 3 — Work Ideation
       <TrackBanner
         title="Work Ideation"
-        pull='"The journey of a thousand miles begins with a single step." — Lao Tzu'
+        pull="The journey of a thousand miles begins with a single step." — Lao Tzu
         items={IDEATION}
       />
+      */}
 
       {/* Footer note */}
       <div className="max-w-6xl mx-auto px-6 py-10">

@@ -41,8 +41,8 @@ export default function QueerResources() {
           being as children of God. As Paul writes in Galatians 3:28, in Christ
           the old dividing lines fall away &mdash; we are all one; and in
           1 Corinthians 12:27, Paul writes that we are all parts of the same
-          body. Others may have erroneously used scripture and religion to inflict pain,
-          but God made us just the beautiful way we are.{" "}
+          body. Some have erroneously used scripture and religion to inflict pain and harm,
+          but God made us just beautiful the way we are.{" "}
           &ldquo;Love never ends&rdquo; (1 Corinthians 13:8).
         </p>
       </div>
@@ -54,14 +54,14 @@ export default function QueerResources() {
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
             Queer, or LGBTQ+, is an umbrella &mdash; lesbian, gay, bisexual,
-            transgender, queer, and more &mdash; that describes the many ways
-            people experience attraction, love, gender, and identity. These are
-            neither problems nor phases; they are part of
-            the natural, beautiful diversity of life.
+            transgender, questioning (queer), and more &mdash; that describes the many ways
+            people experience attraction, love, gender, and identity.
+            Each one of the &quot;letters&quot; represent also a spectrum in of themselves.
+            These are part of the natural, beautiful diversity of life.
           </p>
           <p>
             It is more than labels. It is who we are.
-            You can be yourself as an LGBTQ+ person and a person of
+            If you identify as queer, you can be yourself and a person of
             faith. A growing community of churches, ministers, and many more
             affirm that queer people are made in the image of God and called,
             like everyone, to lives of love and integrity (Genesis 1:26-27a).
@@ -76,27 +76,27 @@ export default function QueerResources() {
         <h2 className="font-serif text-2xl mb-3">Coming out</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            Coming out &mdash; sharing who you are with others and with self &mdash; is
-            deeply personal. There is no single right way and no schedule you
-            need to declare. First you have to come to terms with yourself and be
-            honest. Then, for others, there is a process and there are
-            decisions. The path varies, but being true to yourself is what matters.
+            For a queer person, coming out &mdash; is sharing who you are with others and with self &mdash;
+            This is deeply personal. There is no single right way and no schedule one
+            needs to declare. First we have to come to terms with the self and be
+            honest. Then, for people around us, there is a process and there are
+            decisions. The path varies, but being true to the self is what matters.
           </p>
           <p>
             For some it is a joyful announcement; for some there are doubts;
             for others it is quiet, gradual, and shared only where it feels
-            safe. Most times there is release from the shackles of silence and
-            fear. It is the first step to a new life of being true to yourself.
+            safe. Most times, there is release from the shackles of silence and
+            fear. It is the first step to a new life of being true to the self.
           </p>
           <p>
             We quickly realize that this is not a single,
-            one-and-done event. It happens over a lifetime. Each time you meet
-            new people or go to a new place, you have choices.
+            one-and-done event. It happens over a lifetime. Each time one meets
+            new people or goes to a new place, there are choices.
           </p>
           <p>
-            Your safety and well-being come first. You choose when, how,
-            and with whom you share your story, because it is your story. It is okay to wait until you
-            are ready or until your circumstances feel safe. Wherever you are in that
+            Safety and well-being come first. We choose when, how,
+            and with whom to share our story, because it is from you. It is okay to wait until we
+            are ready or until circumstances feel safe. if you are questioning, wherever you are in that
             journey, you are not alone, and you are worthy of love and support at
             every step.
           </p>
@@ -136,6 +136,21 @@ export default function QueerResources() {
               The United Church of Christ&apos;s ministry for the full inclusion
               of LGBTQ+ people. Maintains a directory of Open and Affirming
               congregations and resources for churches on the welcoming journey.
+            </p>
+          </li>
+
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://www.episcopalchurch.org/who-we-are/ministries/gender-justice/lgbtq-in-the-church/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              The Episcopal Church
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              The Episcopal Church offers support and inclusion for
+              LGBTQ+ people. One can find resources and directory of affirming Episcopal parishes.
             </p>
           </li>
         </ul>
@@ -242,6 +257,33 @@ export default function QueerResources() {
 
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-8">Further reading</h2>
+
+        <ul className="space-y-6 mb-10">
+          <li className="border border-ink/10 rounded-lg p-6">
+            <Link
+              to="/reflections/it-was-1995"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Coming Out Day Reflection
+            </Link>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              A 1995 National Coming Out Day rally at the University of Iowa, and
+              the slow work of refusing other people&apos;s definitions.
+            </p>
+          </li>
+          <li className="border border-ink/10 rounded-lg p-6">
+            <Link
+              to="/reflections/pride-of-bullied"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Pride of the Bullied
+            </Link>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              On what being bullied leaves behind, and the dignity of having come
+              through it.
+            </p>
+          </li>
+        </ul>
         <ul className="space-y-6">
           <li className="border border-ink/10 rounded-lg p-6">
             <p className="font-serif text-xl">

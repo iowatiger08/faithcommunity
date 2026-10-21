@@ -46,6 +46,7 @@ export default function Home() {
             For the wondering, the doubting, the hurting, and the hopeful.
             For people without a congregation, and for people who have found
             theirs but want another voice on the road. You are welcome here.
+            We are all part of God&apos;s diverse and beautiful family.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -83,7 +84,7 @@ export default function Home() {
             >
               Revised Common Lectionary
             </a>
-            . New writing arrives most weeks.
+            . Check weekly for new material.
           </p>
           <ul className="space-y-8">
             {recent.map((p) => (
@@ -138,7 +139,7 @@ export default function Home() {
             <div>
               <h3 className="font-serif text-xl mb-2">If you&apos;re seeking</h3>
               <p className="text-sm text-ink/70 mb-3">
-                Wherever you are on the journey, you are welcome here.
+                Wherever you are on your journey, you are welcome here.
               </p>
               <Link to="/care" className="text-sm text-accent hover:underline">
                 Begin here &rarr;

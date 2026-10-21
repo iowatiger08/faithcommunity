@@ -369,6 +369,55 @@ const marriage: Stat[] = [
   },
 ];
 
+// Section anchors, in page order. Used for the jump list at the top and to
+// give every section an id to return to.
+const SECTIONS: Array<{ id: string; label: string }> = [
+  { id: "ask", label: "Ask a question" },
+  { id: "research", label: "What the research says" },
+  { id: "acceptance", label: "What acceptance does" },
+  { id: "rejection", label: "What rejection does" },
+  { id: "reality", label: "Reality is" },
+  { id: "coming-out", label: "Coming out" },
+  { id: "work", label: "At work" },
+  { id: "older", label: "Growing older" },
+  { id: "church", label: "What young people say about church" },
+  { id: "faith", label: "Faith importance?" },
+  { id: "marriage", label: "Marriage" },
+  { id: "elca", label: "ELCA stance" },
+  { id: "reading", label: "Reading and resources" },
+];
+
+function JumpList() {
+  return (
+    <nav aria-label="On this page" className="mt-10 border-t border-ink/10 pt-6">
+      <p className="text-xs uppercase tracking-widest text-ink/50 mb-3">
+        On this page
+      </p>
+      <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        {SECTIONS.map((sec) => (
+          <li key={sec.id}>
+            <a href={`#${sec.id}`} className={linkClass}>
+              {sec.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+/** Anchors back to the jump list rather than the raw top of the document, so
+ *  the reader lands somewhere they can navigate from. */
+function BackToTop() {
+  return (
+    <p className="mt-6 text-xs">
+      <a href="#top" className="text-ink/50 hover:text-accent">
+        &uarr; Return to top
+      </a>
+    </p>
+  );
+}
+
 function StatList({ items }: { items: Stat[] }) {
   return (
     <ul className="space-y-6 mt-6">
@@ -563,7 +612,7 @@ export default function Forum() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
+    <div id="top" className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Forum Questions"
         description={
@@ -602,8 +651,13 @@ export default function Forum() {
         works now, and anything you send is already saved.
       </p>
 
+      <JumpList />
+
       {/* ── Ask a question ──────────────────────────────────────────────────────── */}
-      <section className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
+      <section
+        id="ask"
+        className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6"
+      >
         <h2 className="font-serif text-2xl mb-2">Ask a question</h2>
 
         {closed ? (
@@ -795,10 +849,11 @@ export default function Forum() {
             </button>
           </form>
         )}
+        <BackToTop />
       </section>
 
       {/* ── Statistics ──────────────────────────────────────────────────────────── */}
-      <section className="mt-16">
+      <section id="research" className="mt-16">
         <h2 className="font-serif text-2xl mb-3">What the research says</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
@@ -816,21 +871,25 @@ export default function Forum() {
             it is safe to be known in a care home.
           </p>
         </div>
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="acceptance" className="mt-14">
         <h3 className="font-serif text-xl">What acceptance does</h3>
         <StatList items={acceptance} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="rejection" className="mt-14">
         <h3 className="font-serif text-xl">What rejection does</h3>
         <StatList items={rejection} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="reality" className="mt-14">
         <h3 className="font-serif text-xl">Reality is</h3>
         <StatList items={scale} />
+        <BackToTop />
       </section>
 
       {/* Crisis resources sit in the same part of the page as the risk figures,
@@ -862,12 +921,13 @@ export default function Forum() {
         </p>
       </section>
 
-      <section className="mt-14">
+      <section id="coming-out" className="mt-14">
         <h3 className="font-serif text-xl">Coming out</h3>
         <StatList items={comingOut} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="work" className="mt-14">
         <h3 className="font-serif text-xl">At work</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
@@ -879,20 +939,21 @@ export default function Forum() {
             figure below was gathered after that ruling.
           </p>
           <p>
-            In Iowa the ground moved the other way more recently. In February
-            2025 the state removed gender identity from the Iowa Civil Rights
+            In Iowa, efforts have reverse acceptance gains recently. In February
+            2025, the state removed gender identity from the Iowa Civil Rights
             Act, effective that July &mdash; the first state in the country to
             repeal a protection of that kind rather than simply never having had
             one. Sexual orientation remains protected under Iowa law, and the
-            federal employment protection still stands. But for transgender
+            federal employment protection still stands. For transgender
             Iowans, the state-level protections covering housing, wages, and
             public accommodations are gone.
           </p>
         </div>
         <StatList items={work} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="older" className="mt-14">
         <h3 className="font-serif text-xl">Growing older</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
@@ -902,9 +963,10 @@ export default function Forum() {
           </p>
         </div>
         <StatList items={older} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="church" className="mt-14">
         <h3 className="font-serif text-xl">What young people say about church</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
@@ -918,21 +980,24 @@ export default function Forum() {
           </p>
         </div>
         <StatList items={church} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
-        <h3 className="font-serif text-xl">Faith, and the people who hold both</h3>
+      <section id="faith" className="mt-14">
+        <h3 className="font-serif text-xl">Faith importance?</h3>
         <StatList items={faith} />
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="marriage" className="mt-14">
         <h3 className="font-serif text-xl">Marriage</h3>
         <StatList items={marriage} />
+        <BackToTop />
       </section>
 
       {/* ── Lutheran context ────────────────────────────────────────────────────── */}
-      <section className="mt-16">
-        <h2 className="font-serif text-2xl mb-3">Where the ELCA stands</h2>
+      <section id="elca" className="mt-16">
+        <h2 className="font-serif text-2xl mb-3">ELCA stance</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
             The wider church has been having this conversation for years. In 2009 the
@@ -953,18 +1018,34 @@ export default function Forum() {
             this has been the Reconciling in Christ program.
           </p>
         </div>
+        <BackToTop />
       </section>
 
-      <section className="mt-16">
+      <section id="reading" className="mt-16">
         <h2 className="font-serif text-2xl mb-3">Where to find more</h2>
+        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mb-8">
+          <p>
+            Two pieces written from experience rather than research, if they are
+            of use:{" "}
+            <Link to="/reflections/it-was-1995" className={linkClass}>
+              Coming Out Day Reflection
+            </Link>{" "}
+            recounts a 1995 rally at the University of Iowa, and{" "}
+            <Link to="/reflections/pride-of-bullied" className={linkClass}>
+              Pride of the Bullied
+            </Link>{" "}
+            is about what being bullied leaves behind.
+          </p>
+        </div>
         <ResourceList items={local} />
         <p className="text-sm text-ink/70 mt-6">
-          Affirming organizations, books, and further reading are gathered on the{" "}
+          Affirming organizations, books, and further reading are included on the{" "}
           <Link to="/queer-resources" className={linkClass}>
             queer resources page
           </Link>
           .
         </p>
+        <BackToTop />
       </section>
 
       <div className="mt-16 pt-8 border-t border-ink/10">

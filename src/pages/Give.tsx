@@ -126,7 +126,9 @@ export default function Give() {
         </ul>
       </section>
 
-      {/* Stewardship Resources */}
+      {/* TEMPORARILY HIDDEN — stewardship resources are being reworked.
+          Restore this whole section when ready.
+      Stewardship Resources
       <section className="mt-16">
         <h2 className="font-serif text-2xl mb-3">Stewardship resources</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-6">
@@ -200,6 +202,7 @@ export default function Give() {
           </li>
         </ul>
       </section>
+      */}
 
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="text-ink/70 max-w-prose leading-relaxed">

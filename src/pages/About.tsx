@@ -31,9 +31,10 @@ export default function About() {
           to find inspiration, collect your thoughts, meditate and find the Spirit working.
         </p>
         <p>
-          It is interfaith and without walls (online). For the
-          wondering, the doubting, the questioning, the hurting, and the
-          hopeful. For those finding their way back. For those still seeking.
+          It is interfaith and without walls (online). It is for all
+          God&apos;s beautiful and diverse children &mdash; the wondering, the
+          doubting, the questioning, the hurting, and the hopeful. For those
+          finding their way back, and for those still seeking.
         </p>
       </div>
 
@@ -57,11 +58,13 @@ export default function About() {
       <h2 className="font-serif text-2xl mt-16 mb-4">The mission</h2>
       <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
         <p>
-          Hope and Truth Ministry is here to provide a truly welcoming,
-          open and interfaith online community to anyone seeking meaning, purpose,
-          and connection &mdash; no matter where they are on life&apos;s journey.
+          Hope and Truth Ministry provides a truly welcoming,
+          open and interfaith online community to those seeking meaning, purpose,
+          and connection &mdash; no matter where we are on life&apos;s journey.
           We work to end all bigotry and racism while providing a safe space for contemplation.
         </p>
+        {/* TEMPORARILY HIDDEN — ministry-building / ordination / stewardship
+            content is being reworked. Restore when ready.
         <p>
           Beyond a congregation, this ministry serves as a resource for
           those individuals who feel called to &mdash; ministry or a
@@ -70,6 +73,7 @@ export default function About() {
           the work, and guidance for those just beginning to plant something
           new.
         </p>
+        */}
       </div>
 
       <h2 className="font-serif text-2xl mt-16 mb-4">Our guiding posts</h2>
