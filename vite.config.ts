@@ -13,7 +13,12 @@ export default defineConfig({
     port: 5173,
   },
   build: {
-    sourcemap: true,
+    // No source maps in the production bundle. A published .map carries the
+    // full original source, comments and all, to anyone who fetches it — which
+    // for this site meant the admin auth module, its allow-listed identity and
+    // the names of the other sites that share the account. `npm run dev` and
+    // `vite build --sourcemap` still produce them when actually debugging.
+    sourcemap: false,
   },
   // vite-react-ssg picks up routes from src/main.tsx
   ssgOptions: {

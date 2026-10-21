@@ -69,6 +69,7 @@ run "${aws_cmd[@]}" s3 sync "$DIST_DIR/" "s3://$BUCKET/" \
   --delete \
   --exclude "*.html" \
   --exclude "*.html.gz" \
+  --exclude "*.map" \
   --cache-control "public, max-age=31536000, immutable"
 echo
 

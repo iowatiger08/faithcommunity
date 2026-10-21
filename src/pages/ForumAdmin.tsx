@@ -89,15 +89,18 @@ function QuestionCard({ q }: { q: Question }) {
 /**
  * Read-only view of submitted forum questions. Unlisted and noindex.
  *
- * The gate is Cognito, the same sign-in used by webtop and the Deutsch app:
- * email and password go straight to Cognito by SRP, and the ID token that
- * comes back is sent to the listing API, which verifies it and checks that the
- * identity is the owner's. The password is never held in state after sign-in
- * and never reaches this site's API.
+ * The gate is Cognito: email and password go straight to Cognito by SRP, and
+ * the ID token that comes back is sent to the listing API, which verifies it
+ * and checks that the identity is the owner's. The password is never held in
+ * state after sign-in and never reaches this site's API.
  *
  * Cognito's SDK does cache the session in localStorage, so the phone at church
  * stays signed in — hence the sign-out button, which is the way to end a
  * session that can read every disclosure in the table.
+ *
+ * The form itself says nothing about which identity provider is behind it,
+ * which account to use, or what else shares that account. Anyone can reach
+ * this path; a signed-out visitor should learn nothing from it.
  */
 export default function ForumAdmin() {
   const [email, setEmail] = useState("");
@@ -229,10 +232,6 @@ export default function ForumAdmin() {
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
-          <p className="text-xs text-ink/50">
-            The same account as webtop and the Deutsch app. This browser stays
-            signed in on this device until you sign out.
-          </p>
         </form>
       ) : (
         <>

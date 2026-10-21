@@ -209,10 +209,16 @@ describe("the session", () => {
     expect(screen.queryByText(/How do I support my daughter/)).toBeNull();
   });
 
-  it("says that the session is remembered on this device", async () => {
-    renderAdmin();
+  it("tells an unauthenticated visitor nothing about the account or other systems", async () => {
+    const { container } = renderAdmin();
     await waitFor(() => expect(screen.getByLabelText(/email/i)).toBeTruthy());
-    expect(screen.getByText(/stays signed in on this device/i)).toBeTruthy();
+    // The sign-in form is reachable by anyone who finds the path. It must not
+    // name the identity provider, the account, or the other sites that share
+    // it — that is a map for someone probing the rest of the estate.
+    const text = container.textContent;
+    for (const leak of [/webtop/i, /deutsch/i, /cognito/i, /iowatiger/i, /tigersndragons/i, /signed in on this device/i]) {
+      expect(text, `leaked: ${String(leak)}`).not.toMatch(leak);
+    }
   });
 });
 
