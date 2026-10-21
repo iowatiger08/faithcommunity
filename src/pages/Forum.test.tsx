@@ -448,3 +448,13 @@ describe("after the cutoff", () => {
     expect(screen.getByLabelText(/access code/i)).toBeTruthy();
   });
 });
+
+describe("the reflections", () => {
+  it("credits Tony as the author of both pieces", () => {
+    renderForum();
+    expect(screen.getByRole("link", { name: /Coming Out Day Reflection/ })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Pride of the Bullied/ })).toBeTruthy();
+    // Readers should not have to open a piece to find out who wrote it.
+    expect(screen.getAllByText(/By Tony E Hansen/)).toHaveLength(2);
+  });
+});

@@ -86,6 +86,15 @@ export function getWorshipResources(): PublishedPost[] {
   return getPostsInSection("worship_resources");
 }
 
+// The two pieces published for the coming-out forum. Both the forum page and
+// the queer resources page list them, so the tag lives with the content rather
+// than being spelled out twice in JSX.
+export function getComingOutReflections(): PublishedPost[] {
+  return getPostsInSection("reflections").filter((p) =>
+    p.notes.includes("published-for-coming-out-forum")
+  );
+}
+
 export function getPostBySlug(slug: string): PublishedPost | undefined {
   return bySlug.get(slug);
 }

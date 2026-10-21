@@ -5,6 +5,7 @@ import {
   getWorshipResources,
   getPostBySlug,
   getPostsInSection,
+  getComingOutReflections,
   formatDate,
   getThemeCounts,
 } from "./content";
@@ -52,6 +53,23 @@ describe("getPostsInSection", () => {
     expect(sermons.length + worship.length).toBeLessThanOrEqual(getAllPosts().length);
     for (const p of worship) {
       expect(p.section).toBe("worship_resources");
+    }
+  });
+});
+
+describe("getComingOutReflections", () => {
+  it("returns only the reflections written for the coming-out forum", () => {
+    const reflections = getComingOutReflections();
+    expect(reflections.map((r) => r.slug)).toEqual([
+      "it-was-1995",
+      "pride-of-bullied",
+    ]);
+  });
+
+  it("carries the byline and teaser the pages render", () => {
+    for (const r of getComingOutReflections()) {
+      expect(r.author).toBe("Tony E Hansen");
+      expect(r.summary.length).toBeGreaterThan(0);
     }
   });
 });

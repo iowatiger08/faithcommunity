@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
+import ReflectionList from "~/components/ReflectionList";
 
 const API_BASE = import.meta.env.VITE_FORUM_API_BASE;
 
@@ -1025,16 +1026,11 @@ export default function Forum() {
         <h2 className="font-serif text-2xl mb-3">Where to find more</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mb-8">
           <p>
-            Two reflection pieces written from experience rather than research:{" "}
-            <Link to="/reflections/it-was-1995" className={linkClass}>
-              Coming Out Day Reflection
-            </Link>{" "}
-            recounts a 1995 rally at college, and{" "}
-            <Link to="/reflections/pride-of-bullied" className={linkClass}>
-              Pride of the Bullied
-            </Link>{" "}
-            is about empowering people who have been bullied.
+            Two reflection pieces written from Tony&apos;s personal experience:
           </p>
+        </div>
+        <div className="mb-10">
+          <ReflectionList />
         </div>
         <ResourceList items={local} />
         <p className="text-sm text-ink/70 mt-6">

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
+import ReflectionList from "~/components/ReflectionList";
 
 export default function QueerResources() {
   return (
@@ -159,7 +160,7 @@ export default function QueerResources() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-3">Community resources</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
-          Beyond church, these organizations offer support, connection, and
+          Beyond churches, these organizations offer support, connection, and
           advocacy for LGBTQ+ people and those who love them.
         </p>
         <ul className="space-y-6">
@@ -258,32 +259,9 @@ export default function QueerResources() {
       <section className="mt-14">
         <h2 className="font-serif text-2xl mb-8">Further reading</h2>
 
-        <ul className="space-y-6 mb-10">
-          <li className="border border-ink/10 rounded-lg p-6">
-            <Link
-              to="/reflections/it-was-1995"
-              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
-            >
-              Coming Out Day Reflection
-            </Link>
-            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
-              A 1995 National Coming Out Day rally at the University of Iowa, and
-              the slow work of refusing other people&apos;s definitions.
-            </p>
-          </li>
-          <li className="border border-ink/10 rounded-lg p-6">
-            <Link
-              to="/reflections/pride-of-bullied"
-              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
-            >
-              Pride of the Bullied
-            </Link>
-            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
-              On what being bullied leaves behind, and the dignity of having come
-              through it.
-            </p>
-          </li>
-        </ul>
+        <div className="mb-10">
+          <ReflectionList />
+        </div>
         <ul className="space-y-6">
           <li className="border border-ink/10 rounded-lg p-6">
             <p className="font-serif text-xl">
