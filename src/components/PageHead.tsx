@@ -18,6 +18,13 @@ interface Props {
   publishedTime?: string | null;
   /** Whether this is the home page (skip site-name suffix in title). */
   isHome?: boolean;
+  /**
+   * Keep this page out of search results. For unlisted pages (e.g. the forum
+   * Q&A intake and its admin view). Note we deliberately do NOT add a
+   * robots.txt for these — a `Disallow:` line would advertise the very paths
+   * we want left alone, and robots.txt is the first thing a scanner fetches.
+   */
+  noindex?: boolean;
 }
 
 export default function PageHead({
@@ -27,6 +34,7 @@ export default function PageHead({
   type = "website",
   publishedTime,
   isHome = false,
+  noindex = false,
 }: Props) {
   const fullTitle = isHome ? title : `${title} — ${SITE_NAME}`;
   const url = `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
@@ -40,6 +48,7 @@ export default function PageHead({
       <title>{fullTitle}</title>
       <meta name="description" content={desc} />
       <link rel="canonical" href={url} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Open Graph (Facebook, LinkedIn, iMessage, Slack, etc.) */}
       <meta property="og:type" content={type} />

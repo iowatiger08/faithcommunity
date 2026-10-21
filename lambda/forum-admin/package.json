@@ -1,0 +1,17 @@
+{
+  "name": "forum-admin-lambda",
+  "version": "1.0.0",
+  "description": "Forum Q&A admin listing — read-only Query over submitted questions",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Run from the repo root: npx vitest run lambda\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

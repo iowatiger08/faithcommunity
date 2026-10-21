@@ -12,6 +12,38 @@ Parameters:
     Default: hopeandtruthministry.com
     Description: Domain used for SES sending identity and DKIM records
 
+  # ── Forum Q&A parameters ──────────────────────────────────────────────────
+  # The three secrets below have NO Default on purpose, so a deploy cannot
+  # silently ship a blank code (both handlers fail closed on an empty value,
+  # but an accidental blank should be caught at deploy time, not at runtime).
+  # They are supplied from the untracked lambda/forum-params.env — never from
+  # samconfig.toml or .env, both of which are tracked in git.
+  #
+  # NoEcho keeps these out of describe-stacks output. It does NOT encrypt them:
+  # they remain plaintext Lambda environment variables, readable by anyone with
+  # lambda:GetFunctionConfiguration. Moving them to Secrets Manager (the
+  # blogger-proxy already does this) is a post-event follow-up.
+  ForumMemberCode:
+    Type: String
+    NoEcho: true
+    Description: Shared access code announced to the congregation (submit-only)
+  ForumAdminCode:
+    Type: String
+    NoEcho: true
+    Description: Admin code that reads EVERY submission — long, random, unrelated to the member code
+  ForumTokenSecret:
+    Type: String
+    NoEcho: true
+    Description: HMAC secret used to sign short-lived submission tokens
+  ForumId:
+    Type: String
+    Default: windsor-heights-2026-10
+    Description: Partition key value — one value per forum event
+  ForumClosesAt:
+    Type: String
+    Default: '2026-10-25T17:00:00Z'
+    Description: Submissions close at this instant (noon CDT on 2026-10-25)
+
 Globals:
   Function:
     Timeout: 30
@@ -186,9 +218,163 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-contact-form"
       RetentionInDays: 14
 
+  # ── Forum Q&A (Windsor Heights, 2026-10-25) ────────────────────────────────
+  # Single-partition table: one forum, dozens of items. The constant partition
+  # key is what lets the admin role read with Query (newest-first, for free)
+  # and never need dynamodb:Scan, which on a table of sensitive personal
+  # disclosures is a strictly broader capability than this feature needs.
+  #
+  # Deliberately absent, all for the same reason — these items are people's
+  # disclosures about their sexuality and faith, and extra copies outlive the
+  # retention promise made to them:
+  #   * no TimeToLiveSpecification — retention is manual and deliberate
+  #     (scripts/forum-questions.ts --delete-all), per the owner's decision
+  #   * no PointInTimeRecovery — backups would survive that deletion
+  #   * no DeletionProtection — scripts/teardown.sh should be able to remove it
+  #   * no customer-managed KMS key — the default AWS-owned key encrypts at
+  #     rest, and a CMK adds cost and an IAM grant for no gain here
+  ForumQuestionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${AWS::StackName}-forum-questions"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: forumId
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: forumId
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+
+  # Write-only: this is the internet-facing path, and it cannot read a single
+  # submission. That split is the point of having two functions.
+  ForumIntakeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-forum-intake"
+      CodeUri: forum-intake/
+      Handler: index.handler
+      Runtime: nodejs24.x
+      MemorySize: 256
+      Timeout: 15
+      LoggingConfig:
+        LogGroup: !Ref ForumIntakeLogGroup
+      Environment:
+        Variables:
+          FORUM_MEMBER_CODE: !Ref ForumMemberCode
+          FORUM_TOKEN_SECRET: !Ref ForumTokenSecret
+          FORUM_ID: !Ref ForumId
+          FORUM_CLOSES_AT: !Ref ForumClosesAt
+          FORUM_TABLE: !Ref ForumQuestionsTable
+          RECIPIENT_EMAIL: hopeandtruthministry@gmail.com
+          SENDER_EMAIL: !Sub "noreply@${SenderDomain}"
+          SITE_URL: !Sub "https://${SenderDomain}"
+          # Content-free notifications by default, so the only copy of a
+          # disclosure stays in the table rather than living forever in an
+          # inbox. Flip to "true" only deliberately.
+          EMAIL_INCLUDE_CONTENT: "false"
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource: !GetAtt ForumQuestionsTable.Arn
+          - Effect: Allow
+            Action:
+              - ses:SendEmail
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - comprehend:DetectToxicContent
+            Resource: "*"
+      Events:
+        ForumVerifyPost:
+          Type: HttpApi
+          Properties:
+            Path: /forum/verify
+            Method: post
+            ApiId: !Ref ContactHttpApi
+        ForumVerifyOptions:
+          Type: HttpApi
+          Properties:
+            Path: /forum/verify
+            Method: options
+            ApiId: !Ref ContactHttpApi
+        ForumQuestionPost:
+          Type: HttpApi
+          Properties:
+            Path: /forum/question
+            Method: post
+            ApiId: !Ref ContactHttpApi
+        ForumQuestionOptions:
+          Type: HttpApi
+          Properties:
+            Path: /forum/question
+            Method: options
+            ApiId: !Ref ContactHttpApi
+
+  ForumIntakeLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-forum-intake"
+      RetentionInDays: 14
+
+  # Read-only: Query and nothing else. No PutItem, and no Scan.
+  ForumAdminFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-forum-admin"
+      CodeUri: forum-admin/
+      Handler: index.handler
+      Runtime: nodejs24.x
+      MemorySize: 256
+      Timeout: 15
+      LoggingConfig:
+        LogGroup: !Ref ForumAdminLogGroup
+      Environment:
+        Variables:
+          FORUM_ADMIN_CODE: !Ref ForumAdminCode
+          FORUM_ID: !Ref ForumId
+          FORUM_TABLE: !Ref ForumQuestionsTable
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:Query
+            Resource: !GetAtt ForumQuestionsTable.Arn
+      Events:
+        ForumAdminPost:
+          Type: HttpApi
+          Properties:
+            Path: /forum/admin/questions
+            Method: post
+            ApiId: !Ref ContactHttpApi
+        ForumAdminOptions:
+          Type: HttpApi
+          Properties:
+            Path: /forum/admin/questions
+            Method: options
+            ApiId: !Ref ContactHttpApi
+
+  ForumAdminLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-forum-admin"
+      RetentionInDays: 14
+
   ContactHttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
+      # Caps the SES/DynamoDB/Comprehend bill if anyone hammers these routes.
+      # This applies to /contact as well as /forum/*; 10 rps is orders of
+      # magnitude above this site's real traffic, so it engages only under
+      # attack.
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 10
+        ThrottlingBurstLimit: 20
       CorsConfiguration:
         AllowOrigins:
           - "https://hopeandtruthministry.com"
@@ -212,6 +398,12 @@ Outputs:
   ContactApiUrl:
     Description: "Contact form API endpoint — set as VITE_CONTACT_API_URL in your build env"
     Value: !Sub "https://${ContactHttpApi}.execute-api.${AWS::Region}.amazonaws.com/contact"
+  ForumApiBase:
+    Description: "Forum Q&A API base — set as VITE_FORUM_API_BASE in your build env"
+    Value: !Sub "https://${ContactHttpApi}.execute-api.${AWS::Region}.amazonaws.com/forum"
+  ForumQuestionsTableName:
+    Description: "DynamoDB table holding submitted forum questions"
+    Value: !Ref ForumQuestionsTable
   SesDomain:
     Description: "SES verified sending domain"
     Value: !Ref SenderDomain

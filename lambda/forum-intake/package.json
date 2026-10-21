@@ -1,0 +1,19 @@
+{
+  "name": "forum-intake-lambda",
+  "version": "1.0.0",
+  "description": "Forum Q&A intake — access-code gate, token mint, question storage and notification",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Run from the repo root: npx vitest run lambda\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-comprehend": "^3.0.0",
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/client-ses": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

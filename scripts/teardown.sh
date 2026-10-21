@@ -6,6 +6,11 @@
 #   - SES email identity + DKIM Route 53 records
 #   - Contact form Lambda + HTTP API Gateway
 #   - Blogger proxy Lambda + REST API Gateway
+#   - Forum Q&A intake + admin Lambdas
+#   - The forum questions DynamoDB table AND EVERY QUESTION IN IT. The table
+#     has no deletion protection and no point-in-time recovery, both on
+#     purpose: these are confidential personal disclosures and should be
+#     genuinely deletable. Read them first (npm run forum-questions).
 #   - IAM roles created by the stack
 #
 # Does NOT delete:
@@ -26,6 +31,9 @@ echo "=== teardown: $STACK_NAME ==="
 echo
 echo "This will permanently delete the Lambda stack and all resources it owns."
 echo "S3, CloudFront, and Route 53 hosted zones are NOT affected."
+echo
+echo "This INCLUDES the forum questions table and every question submitted to"
+echo "it. There is no backup. Read them first with: npm run forum-questions"
 echo
 read -rp "Type the stack name to confirm deletion: " confirm
 

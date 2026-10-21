@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "sync-content": "tsx scripts/sync-content.ts",
     "import-posts": "tsx scripts/import-posts.ts",
+    "forum-questions": "tsx scripts/forum-questions.ts",
     "validate-extract": "tsx scripts/validate-extract.ts",
     "test": "vitest run && python3 -m pytest scripts/ -q",
     "test:watch": "vitest",

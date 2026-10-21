@@ -52,8 +52,14 @@ Thumbs.db
 node_modules
 /dist-ssg
 *.tsbuildinfo
+.env
 .env.local
 .env.*.local
+
+# Forum Q&A deploy secrets — member code, admin code, HMAC secret.
+# Never commit: samconfig.toml and .env are both tracked, so this is the only
+# safe home for them. See lambda/forum-params.env.example.
+/lambda/forum-params.env
 
 # Legacy Angular artifacts (kept under legacy/ for reference, not built here)
 /legacy/angular/node_modules
