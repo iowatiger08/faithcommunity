@@ -634,12 +634,12 @@ export default function Forum() {
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          On Sunday, October 25, we are setting aside time to talk about
+          On Sunday, October 25, we are taking time to talk about
           coming out. This page is where you can send a question ahead of time.
         </p>
         <p>
           No question is too small or too blunt. If you would rather not put your
-          name to it, that is not required.
+          name to it, I do not require that.
         </p>
       </div>
 
