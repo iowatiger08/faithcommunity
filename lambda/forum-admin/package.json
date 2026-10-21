@@ -1,7 +1,7 @@
 {
   "name": "forum-admin-lambda",
   "version": "1.0.0",
-  "description": "Forum Q&A admin listing — read-only Query over submitted questions",
+  "description": "Forum Q&A admin listing \u2014 read-only Query, gated on a Cognito ID token",
   "type": "module",
   "main": "index.mjs",
   "scripts": {
@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.0.0",
-    "@aws-sdk/lib-dynamodb": "^3.0.0"
+    "@aws-sdk/lib-dynamodb": "^3.0.0",
+    "aws-jwt-verify": "^4.0.1"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
+import { signIn, signOut, getIdToken, currentAllowedUser } from "~/lib/auth";
 
 const API_BASE = import.meta.env.VITE_FORUM_API_BASE;
 
@@ -88,42 +89,94 @@ function QuestionCard({ q }: { q: Question }) {
 /**
  * Read-only view of submitted forum questions. Unlisted and noindex.
  *
- * The admin code is held in React state only and never written to
- * localStorage or sessionStorage: it reads every disclosure in the table, and
- * saving a few keystrokes is not worth persisting that.
+ * The gate is Cognito, the same sign-in used by webtop and the Deutsch app:
+ * email and password go straight to Cognito by SRP, and the ID token that
+ * comes back is sent to the listing API, which verifies it and checks that the
+ * identity is the owner's. The password is never held in state after sign-in
+ * and never reaches this site's API.
+ *
+ * Cognito's SDK does cache the session in localStorage, so the phone at church
+ * stays signed in — hence the sign-out button, which is the way to end a
+ * session that can read every disclosure in the table.
  */
 export default function ForumAdmin() {
-  const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [held, setHeld] = useState<Question[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function load(e: FormEvent) {
-    e.preventDefault();
+  /** Fetch the listing with the cached ID token. Returns to the form on 401. */
+  const load = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
+      const token = await getIdToken();
+      if (token === null) {
+        setAuthed(false);
+        setError("Your session has expired. Sign in again.");
+        return;
+      }
       const res = await fetch(`${API_BASE}/admin/questions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: "{}",
       });
       const data = (await res.json().catch(() => ({}))) as ListResponse;
       if (res.ok && data.ok === true) {
         setQuestions(data.questions ?? []);
         setHeld(data.held ?? []);
         setAuthed(true);
-        setCode("");
       } else {
-        setError(data.error ?? "That code didn't work.");
+        // 401 (token no longer passes) and 403 (wrong account) both mean this
+        // session is no good, so end it. Any other status leaves it alone, so a
+        // server hiccup doesn't force a re-login.
+        if (res.status === 401 || res.status === 403) {
+          signOut();
+          setAuthed(false);
+        }
+        setError(data.error ?? "Couldn't load the questions.");
       }
     } catch {
       setError("Something went wrong reaching the server. Please try again.");
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // Resume a session cached by Cognito rather than asking again on every visit.
+  useEffect(() => {
+    void (async () => {
+      if (await currentAllowedUser()) await load();
+    })();
+  }, [load]);
+
+  async function onSignIn(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await signIn(email, password);
+      setPassword("");
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "That sign-in didn't work.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onSignOut() {
+    signOut();
+    setAuthed(false);
+    setQuestions([]);
+    setHeld([]);
+    setError("");
   }
 
   return (
@@ -139,18 +192,32 @@ export default function ForumAdmin() {
       <h1 className="font-serif text-4xl mb-6 leading-tight">Submitted questions</h1>
 
       {!authed ? (
-        <form onSubmit={(e) => { void load(e); }} className="space-y-4 max-w-md">
+        <form onSubmit={(e) => { void onSignIn(e); }} className="space-y-4 max-w-md">
           <div>
-            <label htmlFor="admin-code" className="block text-sm text-ink/70 mb-1">
-              Admin code
+            <label htmlFor="admin-email" className="block text-sm text-ink/70 mb-1">
+              Email
             </label>
             <input
-              id="admin-code"
+              id="admin-email"
+              type="email"
+              required
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded border border-ink/20 bg-paper px-3 py-2"
+            />
+          </div>
+          <div>
+            <label htmlFor="admin-password" className="block text-sm text-ink/70 mb-1">
+              Password
+            </label>
+            <input
+              id="admin-password"
               type="password"
               required
-              autoComplete="off"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded border border-ink/20 bg-paper px-3 py-2"
             />
           </div>
@@ -160,20 +227,30 @@ export default function ForumAdmin() {
             disabled={loading}
             className="rounded bg-accent px-5 py-2 text-paper disabled:opacity-60"
           >
-            {loading ? "Loading…" : "Show questions"}
+            {loading ? "Signing in…" : "Sign in"}
           </button>
           <p className="text-xs text-ink/50">
-            This code is not saved anywhere in the browser. Reloading means
-            entering it again.
+            The same account as webtop and the Deutsch app. This browser stays
+            signed in on this device until you sign out.
           </p>
         </form>
       ) : (
         <>
-          <p className="text-sm text-ink/60 mb-6">
-            {questions.length === 0
-              ? "No questions yet."
-              : `${questions.length} ${plural(questions.length)}, newest first.`}
-          </p>
+          <div className="flex flex-wrap items-baseline justify-between gap-3 mb-6">
+            <p className="text-sm text-ink/60">
+              {questions.length === 0
+                ? "No questions yet."
+                : `${questions.length} ${plural(questions.length)}, newest first.`}
+            </p>
+            <button
+              type="button"
+              onClick={onSignOut}
+              className={`text-sm ${linkClass}`}
+            >
+              Sign out
+            </button>
+          </div>
+          {error !== "" && <p className="text-sm text-accent mb-6">{error}</p>}
 
           {questions.length > 0 && (
             <ul className="space-y-6">

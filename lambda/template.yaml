@@ -13,9 +13,11 @@ Parameters:
     Description: Domain used for SES sending identity and DKIM records
 
   # ── Forum Q&A parameters ──────────────────────────────────────────────────
-  # The three secrets below have NO Default on purpose, so a deploy cannot
-  # silently ship a blank code (both handlers fail closed on an empty value,
-  # but an accidental blank should be caught at deploy time, not at runtime).
+  # The two secrets below have NO Default on purpose, so a deploy cannot
+  # silently ship a blank code (the intake handler fails closed on an empty
+  # value, but an accidental blank should be caught at deploy time, not at
+  # runtime). Reading submissions is no longer gated on a shared code at all:
+  # it needs a Cognito ID token for the identity in CognitoAdminSub.
   # They are supplied from the untracked lambda/forum-params.env — never from
   # samconfig.toml or .env, both of which are tracked in git.
   #
@@ -27,10 +29,6 @@ Parameters:
     Type: String
     NoEcho: true
     Description: Shared access code announced to the congregation (submit-only)
-  ForumAdminCode:
-    Type: String
-    NoEcho: true
-    Description: Admin code that reads EVERY submission — long, random, unrelated to the member code
   ForumTokenSecret:
     Type: String
     NoEcho: true
@@ -43,6 +41,26 @@ Parameters:
     Type: String
     Default: '2026-10-25T17:00:00Z'
     Description: Submissions close at this instant (noon CDT on 2026-10-25)
+
+  # ── Cognito (shared tigersndragons-users pool) ────────────────────────────
+  # The same pool, app client and sign-in that webtop and the Deutsch app use,
+  # so there is one password rather than three. None of these are secrets: a
+  # pool id and a public SPA client id ship in every Cognito SPA's JS bundle,
+  # and the sub is an allow-list identifier. The pool is shared with a
+  # neighborhood app, so "a valid token from this pool" is NOT authorization —
+  # CognitoAdminSub is what the admin handler checks.
+  CognitoUserPoolId:
+    Type: String
+    Default: us-west-2_OMwj6Yfpn
+    Description: Cognito user pool that issues admin ID tokens (tigersndragons-users)
+  CognitoClientId:
+    Type: String
+    Default: 5p01qepq8kh9qfuji1occiud19
+    Description: Public SPA app client id — also the JWT audience
+  CognitoAdminSub:
+    Type: String
+    Default: c831f380-7071-7082-6ecc-6110e068d744
+    Description: The one Cognito sub (iowatiger08@gmail.com) allowed to read submissions
 
 Globals:
   Function:
@@ -336,7 +354,9 @@ Resources:
         LogGroup: !Ref ForumAdminLogGroup
       Environment:
         Variables:
-          FORUM_ADMIN_CODE: !Ref ForumAdminCode
+          COGNITO_USER_POOL_ID: !Ref CognitoUserPoolId
+          COGNITO_CLIENT_ID: !Ref CognitoClientId
+          FORUM_ADMIN_SUB: !Ref CognitoAdminSub
           FORUM_ID: !Ref ForumId
           FORUM_TABLE: !Ref ForumQuestionsTable
       Policies:
@@ -346,12 +366,19 @@ Resources:
               - dynamodb:Query
             Resource: !GetAtt ForumQuestionsTable.Arn
       Events:
+        # The gateway verifies the Cognito signature, so an unsigned or expired
+        # token never reaches the function. The function still checks the sub —
+        # the authorizer only proves the token came from the pool.
         ForumAdminPost:
           Type: HttpApi
           Properties:
             Path: /forum/admin/questions
             Method: post
             ApiId: !Ref ContactHttpApi
+            Auth:
+              Authorizer: CognitoAdminAuthorizer
+        # Preflight carries no Authorization header, so it must stay open — no
+        # Auth block here, and the API has no DefaultAuthorizer to inherit.
         ForumAdminOptions:
           Type: HttpApi
           Properties:
@@ -383,10 +410,22 @@ Resources:
           - "http://localhost:4173"
         AllowHeaders:
           - Content-Type
+          - Authorization
         AllowMethods:
           - POST
           - OPTIONS
         MaxAge: 300
+      # Declared but NOT a DefaultAuthorizer: /contact and the public forum
+      # intake routes have to stay open, so this is attached per route — only
+      # the admin listing uses it.
+      Auth:
+        Authorizers:
+          CognitoAdminAuthorizer:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              Audience:
+                - !Ref CognitoClientId
+              Issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPoolId}"
 
 Outputs:
   BloggerApiUrl:

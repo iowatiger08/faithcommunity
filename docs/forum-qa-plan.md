@@ -50,9 +50,10 @@ Layered, because no single one of these is strong:
 4. **Minimum compose time.** Reject a submission arriving under ~3 seconds after the token was minted; the token's mint time is already signed, so this costs nothing to check and no extra state.
 5. **Per-IP throttles**, two independent limiters: ~10 failed verifies / 10 min, and ~20 submissions / hour. Only **failed** verifies count, because a congregation behind one church-wifi NAT shares a source IP and forty people typing the correct code must not lock each other out. Stated plainly: the limiter is per-container in-memory, so it resets on cold start and an attacker gets `limit × warm containers`. It is an abuse backstop, not the access control.
 6. **Stage-level throttle** on `ContactHttpApi` (`DefaultRouteSettings: ThrottlingRateLimit: 10, ThrottlingBurstLimit: 20`), which also caps the SES and DynamoDB bill under attack. Note this applies to `/contact` too; 10 rps is orders of magnitude above this site's real traffic, so it engages only during an attack.
-7. **Strong codes — the highest-value control, and free.** Member code ≥10 chars, mixed case and a digit, speakable for the bulletin. **Admin code ≥24 random chars from a password manager, unrelated to the member code.** A weak admin code defeats everything else on this list.
+7. **A strong member code — the highest-value control, and free.** ≥10 chars, mixed case and a digit, speakable for the bulletin.
+8. **Cognito for reading submissions** (see "Admin auth moved to Cognito" below). The admin route is the one that reads everything, and it is no longer gated on a shared secret at all.
 
-CORS is *not* on this list: it protects browsers, not the API, and `curl` ignores it. No code comment should imply otherwise. All secrets travel in the JSON body, never a custom header — so `AllowHeaders` stays `Content-Type` and **no CORS config changes are needed**.
+CORS is *not* on this list: it protects browsers, not the API, and `curl` ignores it. No code comment should imply otherwise. The member code travels in the JSON body, never a custom header; the admin ID token travels in `Authorization`, which is why `AllowHeaders` carries `Content-Type` **and** `Authorization`.
 
 ## Preventing harassing or threatening posts
 
@@ -89,11 +90,11 @@ Reuse the API rather than standing up a new one: its CORS allowlist is already e
 |---|---|---|
 | `POST /forum/verify` | `{ code, confirm_url }` | `200 {ok, token, expiresAt}` / `400` / `401` / `403` closed / `429` |
 | `POST /forum/question` | `{ token, anonymous, name?, email?, question, confirm_url }` | `200 {ok, id}` / `400` / `401` expired → re-gate / `403` closed / `500` |
-| `POST /forum/admin/questions` | `{ code }` | `200 {ok, count, questions, held}` / `400` / `401` / `429` / `500` |
+| `POST /forum/admin/questions` | `Authorization: Bearer <Cognito ID token>`, empty body | `200 {ok, count, questions, held}` / `401` no or bad token / `403` not the owner / `429` / `500` |
 
-Plus `OPTIONS` on each, following the `ContactPost` / `ContactOptions` pair at `template.yaml:170-181`. Admin listing is a **POST, not a GET**, so the admin code travels in the body — query strings land in access logs, browser history, and referrers. Admin responses carry `Cache-Control: no-store`.
+Plus `OPTIONS` on each, following the `ContactPost` / `ContactOptions` pair at `template.yaml:170-181`. Admin listing stays a **POST, not a GET** (it predates Cognito, and a GET would invite caching of a response that holds every disclosure). Admin responses carry `Cache-Control: no-store`.
 
-The admin route gets no separate verify step: the list request *is* the verification.
+The admin route gets no separate verify step: the list request *is* the verification — now against the Cognito signature rather than a code.
 
 ### Two Lambda functions, not one
 
@@ -229,7 +230,7 @@ Never persist the token to `localStorage` or `sessionStorage` — React state on
 
 ### `src/pages/ForumAdmin.tsx` (new)
 
-Admin code input, then submissions newest-first: timestamp, name/email or "Anonymous", question text. A separate **"Held for review"** section below for `status: "held"` items, each showing its `flagReason` **and the full question text** — held means "read this carefully before using it", not "hidden from Tony". Read-only, unlisted, `noindex`, admin code never persisted to storage.
+Cognito email/password sign-in, then submissions newest-first: timestamp, name/email or "Anonymous", question text. A separate **"Held for review"** section below for `status: "held"` items, each showing its `flagReason` **and the full question text** — held means "read this carefully before using it", not "hidden from Tony". Read-only, unlisted, `noindex`. The password is dropped from state as soon as Cognito accepts it; the session itself is cached by Cognito's SDK, so the page carries a sign-out.
 
 ### `src/components/PageHead.tsx` (modify)
 
@@ -343,14 +344,14 @@ Test-first throughout, per the repo's red-green-refactor practice.
 
 1. `docs/forum-qa-plan.md` — save this plan into the repo.
 2. `lambda/forum-intake/` — `package.json`, `.gitignore`, then `index.test.mjs` → `index.mjs`, in this test order: routing and OPTIONS; verify (correct, wrong, missing, 5000-char, **fail-closed on unset code**, trim-but-case-sensitive, 429 on 11th failure, other IP unaffected); token round-trip, forged HMAC, expired, wrong-secret; **cutoff passed → 403 on both routes**; submit validation (missing/malformed email, **newline in email → 400 with no SES and no PutItem**, blank question, >5000 chars, name >100, honeypot → 200 with neither PutItem nor SES, link → visible 400); item shape (`sk` matches `/#[0-9a-f]{8}$/`, `status: "received"`, **no `ttl` attribute**); **`anonymous: true` → no `name`/`email` keys even when supplied**, and neither value in the SES body; held path (`VIOLENCE_OR_THREAT` over 0.9 → `status: "held"` and still stored and still `200`; Comprehend throw → `"received"`, not `"held"`; `SEXUAL`/`PROFANITY` hits do **not** hold); **SES throws → still 200 and item stored**; **PutItem throws → 500 and no success claim**; origin/CORS (reflected, unknown → `""`, disallowed → 403, missing → allowed); and last, **the log-sentinel test** — submit distinctive sentinels and assert no `console.log`/`console.error` argument contains any of them.
-3. `lambda/forum-admin/` — same shape. Tests: correct code → 200; wrong code → 401 with `QueryCommand` **not** called; **member code → 401** (codes not interchangeable); unset admin code → 401; `ScanIndexForward: false` passed *and* output order asserted; `QueryCommand` used and `ScanCommand` never constructed; held items returned separately with full text; anonymous items have no `name`/`email`; `Cache-Control: no-store`; 429 on 21st attempt; Query throws → 500 with no partial data; log sentinels.
-4. `lambda/template.yaml` — `ForumQuestionsTable`; `ForumIntakeFunction` + `ForumAdminFunction` + their log groups and route/OPTIONS event pairs; `NoEcho: true` parameters `ForumMemberCode`, `ForumAdminCode`, `ForumTokenSecret` (no defaults) plus `ForumId`, `ForumClosesAt`; `DefaultRouteSettings` throttle on `ContactHttpApi`; `ForumApiBase` output. Then `sam validate --template lambda/template.yaml --region us-west-2` (read-only).
+3. `lambda/forum-admin/` — same shape. Tests (updated for Cognito, see below): owner's ID token → 200; no token → 401 with `QueryCommand` **not** called; invalid or expired token → 401; **another member of the same pool → 403**; retired shared code in the body → 401; unset `FORUM_ADMIN_SUB` → 403; `ScanIndexForward: false` passed *and* output order asserted; `QueryCommand` used and `ScanCommand` never constructed; held items returned separately with full text; anonymous items have no `name`/`email`; `Cache-Control: no-store`; 429 on 21st attempt; Query throws → 500 with no partial data; log sentinels.
+4. `lambda/template.yaml` — `ForumQuestionsTable`; `ForumIntakeFunction` + `ForumAdminFunction` + their log groups and route/OPTIONS event pairs; `NoEcho: true` parameters `ForumMemberCode`, `ForumTokenSecret` (no defaults) plus `ForumId`, `ForumClosesAt`, and the non-secret `CognitoUserPoolId` / `CognitoClientId` / `CognitoAdminSub`; `DefaultRouteSettings` throttle on `ContactHttpApi`; `ForumApiBase` output. Then `sam validate --template lambda/template.yaml --region us-west-2` (read-only).
 5. `src/vite-env.d.ts` — add `readonly VITE_FORUM_API_BASE: string;` (one base; pages append `/verify`, `/question`, `/admin/questions`).
 6. `src/components/PageHead.tsx` — the `noindex` prop.
 7. `src/pages/Forum.test.tsx` → `src/pages/Forum.tsx`. Cover: statistics render with no code; **no rendered text or attribute contains an access code**; correct code POSTs to `/forum/verify`; 200 reveals the form; 401 keeps it hidden; anonymous checkbox clears and un-requires name/email; **anonymous submit sends `anonymous: true` and no `name`/`email` keys**; named submit sends all fields plus the honeypot key; success state; **401 on submit re-gates and preserves the typed question**; submit disabled in flight; honeypot inside `aria-hidden="true"`; closed state past the cutoff; **`localStorage` and `sessionStorage` both untouched**.
 8. `src/pages/ForumAdmin.test.tsx` → `src/pages/ForumAdmin.tsx`. Cover: gate; correct code renders each question; anonymous renders as "Anonymous" with no email; 401; empty state; **held items appear in their own section with the reason and the full text**; code not persisted.
 9. `src/main.tsx` — the two routes before the catch-all. No `Layout.tsx` change, no `robots.txt`.
-10. `scripts/forum-questions.ts` — local reader using Tony's existing aws-cli credentials (`tsx`, following `scripts/import-posts.ts`). Subcommands: default list, `--held`, and `--delete-all` with a typed-name confirmation like `scripts/teardown.sh`. **This is the recommended primary way to read submissions** — it exposes no public endpoint to the sensitive data. The `/forum-admin` page stays in scope because it is what lets Tony read questions from his phone at church; if it were dropped, `/forum/admin/questions` and the admin code would go with it.
+10. `scripts/forum-questions.ts` — local reader using Tony's existing aws-cli credentials (`tsx`, following `scripts/import-posts.ts`). Subcommands: default list, `--held`, and `--delete-all` with a typed-name confirmation like `scripts/teardown.sh`. **This is the recommended primary way to read submissions** — it exposes no public endpoint to the sensitive data. The `/forum-admin` page stays in scope because it is what lets Tony read questions from his phone at church; if it were dropped, `/forum/admin/questions` and its Cognito gate would go with it.
 11. `npm run lint && npm run typecheck && npm test`.
 
 ### Where the codes must not go
@@ -371,7 +372,7 @@ Both `.env` and `lambda/samconfig.toml` are **tracked in git** (`.gitignore` cov
 3. After `npm run build`, **`grep -r` the access code against `dist/` and confirm it is absent.** This check must not be skipped.
 4. Confirm `<meta name="robots" content="noindex, nofollow">` in `dist/forum/index.html` and `dist/forum-admin/index.html`, and that no `robots.txt` was created.
 5. `DRY_RUN=1 ./scripts/deploy-lambda.sh` to eyeball the command, then `./scripts/deploy.sh --with-lambda`.
-6. Live smoke test in order: wrong code → 401; right code → token; token → submit → 200; forged token → 401; **member code on the admin route → 401**; admin code → list contains the submission; `curl` the admin route with no Origin header to confirm the gate is the code, not CORS.
+6. Live smoke test in order: wrong code → 401; right code → token; token → submit → 200; forged token → 401; admin route with **no** `Authorization` header → 401; admin route with the **member code in the body** → 401; signed in as `iowatiger08@gmail.com` → list contains the submission; `curl` the admin route with no Origin header to confirm the gate is the token, not CORS.
 7. `aws dynamodb query` one item: confirm **no `ttl` attribute**, and that an anonymous item has **no** `name`/`email` attributes.
 8. **Read both new CloudWatch log groups and confirm no submission text appears anywhere.**
 9. Confirm the notification email arrived with a content-free subject.
@@ -418,8 +419,48 @@ Three notes for whoever writes the copy: the Pew mother/father split and the "on
 - Extract `lambda/shared/` as a Lambda layer; migrate contact-form onto it.
 - Move the three secrets to Secrets Manager.
 - Fix `lambda/blogger-proxy/index.mjs:38`, which logs the full request event for the public blog proxy.
-- Rotate `ForumAdminCode` once Tony has finished reading, and delete the questions deliberately.
+- Delete the questions deliberately once Tony has finished reading them.
+- Consider turning on TOTP MFA for the Cognito user; the pool is `MfaConfiguration: OFF` today, shared with webtop and the Deutsch app, so that is a decision across all three.
 
 ## Open item
 
-Tony supplies the member code, admin code, and HMAC secret at deploy time via untracked `lambda/forum-params.env` — deliberately not written into this plan, the repo, or `.env`.
+Tony supplies the member code and HMAC secret at deploy time via untracked `lambda/forum-params.env` — deliberately not written into this plan, the repo, or `.env`. Admin access needs no deploy-time secret at all.
+
+## Admin auth moved to Cognito (2026-10-21)
+
+The shared admin code is gone. `/forum-admin` signs in against the existing
+**`tigersndragons-users`** pool (`us-west-2_OMwj6Yfpn`, public SPA client
+`5p01qepq8kh9qfuji1occiud19`) — the same pool, client and password already used
+by webtop and the Deutsch vocabulary app, so there is one account to remember
+rather than three, and no new infrastructure to run.
+
+How it fits together:
+
+- `src/lib/auth.ts` — SRP sign-in with `amazon-cognito-identity-js`, mirroring
+  `deutsch/web/src/lib/auth.ts`. The password goes straight to Cognito and never
+  touches this site's API. Resolves only for the allowed `sub`.
+- `src/pages/ForumAdmin.tsx` — email/password form, then `Authorization: Bearer
+  <ID token>` on the listing request. `401`/`403` end the session and return to
+  the form.
+- `lambda/template.yaml` — a JWT authorizer (`CognitoAdminAuthorizer`) attached
+  **only** to the admin POST route, so `/contact` and the public intake routes
+  stay open. `OPTIONS` carries no `Authorization` header and so stays
+  unauthenticated. Parameters `CognitoUserPoolId`, `CognitoClientId`,
+  `CognitoAdminSub` replace `ForumAdminCode`.
+- `lambda/forum-admin/index.mjs` — verifies the token again with
+  `aws-jwt-verify` (`tokenUse: 'id'`, audience = client id) and then requires
+  `sub === FORUM_ADMIN_SUB`. **That second check is the real gate:** the pool is
+  shared with a neighborhood app whose ~25 members would otherwise hold valid
+  tokens for this audience. An unset `FORUM_ADMIN_SUB` authorizes nobody.
+
+Pool id, client id and `sub` are not secrets — the first two ship in the JS
+bundle of every Cognito SPA, and the third is an allow-list identifier. The
+signature is what grants access.
+
+Trade-off accepted: Cognito's SDK caches the session in `localStorage`, where
+the old admin code was deliberately never persisted. That is what keeps the
+phone signed in at church, and the sign-out button is the counterweight.
+
+Fallback if sign-in ever fails on the day: `npx tsx scripts/forum-questions.ts`
+reads straight from DynamoDB with aws-cli credentials and does not depend on
+Cognito, the API, or the browser.

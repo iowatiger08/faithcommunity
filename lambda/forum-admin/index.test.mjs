@@ -1,17 +1,21 @@
 /**
  * Unit tests for the forum Q&A admin listing Lambda handler.
- * AWS SDK clients are mocked so tests run without credentials.
+ * AWS SDK clients and the Cognito verifier are mocked so tests run without
+ * credentials or network.
  *
  * This route reads every submission in the table, so the tests concentrate on
- * the gate: the admin code is not the member code, an unset code fails closed,
- * and a rejected request never reaches DynamoDB.
+ * the gate: only a valid Cognito ID token for the one allowed identity gets
+ * through, the retired shared code gets nowhere, an unset allow-list fails
+ * closed, and a rejected request never reaches DynamoDB.
  */
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
-const { ddbSend, queryInputs, scanConstructed } = vi.hoisted(() => ({
+const { ddbSend, queryInputs, scanConstructed, verify, verifierOptions } = vi.hoisted(() => ({
   ddbSend: vi.fn(),
   queryInputs: [],
   scanConstructed: { count: 0 },
+  verify: vi.fn(),
+  verifierOptions: [],
 }));
 
 vi.mock("@aws-sdk/client-dynamodb", () => ({ DynamoDBClient: class {} }));
@@ -32,19 +36,37 @@ vi.mock("@aws-sdk/lib-dynamodb", () => ({
     }
   },
 }));
+vi.mock("aws-jwt-verify", () => ({
+  CognitoJwtVerifier: {
+    create: (options) => {
+      verifierOptions.push(options);
+      return { verify };
+    },
+  },
+}));
 
 import { handler } from "./index.mjs";
 
-const ADMIN_CODE = "s7K2vQp9RtZx4LmW8bNcH3Yd";
-const MEMBER_CODE = "Belong2026";
+const OWNER_SUB = "c831f380-7071-7082-6ecc-6110e068d744";
+const OTHER_SUB = "e8319310-2001-70e0-897f-4d872634c576";
+const OWNER_EMAIL = "iowatiger08@gmail.com";
+const TOKEN = "header.payload.signature";
+const RETIRED_CODE = "s7K2vQp9RtZx4LmW8bNcH3Yd";
 const FORUM_ID = "windsor-heights-2026-10";
 
 let ipCounter = 0;
 const freshIp = () => `10.1.${Math.floor(++ipCounter / 256)}.${ipCounter % 256}`;
 
-function makeEvent(body = {}, { ip = freshIp(), method = "POST", origin = "https://hopeandtruthministry.com" } = {}) {
+function makeEvent({
+  token = TOKEN,
+  body = {},
+  ip = freshIp(),
+  method = "POST",
+  origin = "https://hopeandtruthministry.com",
+} = {}) {
   const headers = {};
   if (origin !== null) headers.origin = origin;
+  if (token !== null) headers.authorization = `Bearer ${token}`;
   return {
     requestContext: { http: { method, path: "/forum/admin/questions", sourceIp: ip } },
     rawPath: "/forum/admin/questions",
@@ -89,17 +111,20 @@ const items = [
 ];
 
 beforeEach(() => {
-  process.env.FORUM_ADMIN_CODE = ADMIN_CODE;
+  process.env.FORUM_ADMIN_SUB = OWNER_SUB;
+  process.env.COGNITO_USER_POOL_ID = "us-west-2_OMwj6Yfpn";
+  process.env.COGNITO_CLIENT_ID = "5p01qepq8kh9qfuji1occiud19";
   process.env.FORUM_ID = FORUM_ID;
   process.env.FORUM_TABLE = "forum-questions-test";
   queryInputs.length = 0;
   scanConstructed.count = 0;
   ddbSend.mockReset().mockResolvedValue({ Items: items });
+  verify.mockReset().mockResolvedValue({ sub: OWNER_SUB, email: OWNER_EMAIL, token_use: "id" });
 });
 
 describe("the gate", () => {
-  it("returns the questions for the correct admin code", async () => {
-    const res = await handler(makeEvent({ code: ADMIN_CODE }));
+  it("returns the questions for the owner's Cognito ID token", async () => {
+    const res = await handler(makeEvent());
     expect(res.statusCode).toBe(200);
     const body = parse(res);
     expect(body.ok).toBe(true);
@@ -107,84 +132,111 @@ describe("the gate", () => {
     expect(body.questions).toHaveLength(2);
   });
 
-  it("rejects a wrong code without touching DynamoDB", async () => {
-    const res = await handler(makeEvent({ code: "wrong" }));
+  it("verifies the token as an ID token for this pool and client", async () => {
+    await handler(makeEvent());
+    expect(verify).toHaveBeenCalledWith(TOKEN);
+    expect(verifierOptions[0]).toMatchObject({
+      userPoolId: "us-west-2_OMwj6Yfpn",
+      clientId: "5p01qepq8kh9qfuji1occiud19",
+      tokenUse: "id",
+    });
+  });
+
+  it("rejects a request with no bearer token without touching DynamoDB", async () => {
+    const res = await handler(makeEvent({ token: null }));
     expect(res.statusCode).toBe(401);
     expect(ddbSend).not.toHaveBeenCalled();
   });
 
-  it("rejects the MEMBER code — the two codes are not interchangeable", async () => {
-    const res = await handler(makeEvent({ code: MEMBER_CODE }));
+  it("rejects an invalid or expired token", async () => {
+    verify.mockRejectedValue(new Error("Token expired"));
+    const res = await handler(makeEvent());
     expect(res.statusCode).toBe(401);
     expect(ddbSend).not.toHaveBeenCalled();
   });
 
-  it("rejects a missing or non-string code", async () => {
-    expect((await handler(makeEvent({}))).statusCode).toBe(400);
-    expect((await handler(makeEvent({ code: 7 }))).statusCode).toBe(400);
-  });
-
-  it("fails CLOSED when no admin code is configured", async () => {
-    process.env.FORUM_ADMIN_CODE = "";
-    expect((await handler(makeEvent({ code: "" }))).statusCode).toBe(401);
-    expect((await handler(makeEvent({ code: ADMIN_CODE }))).statusCode).toBe(401);
+  it("rejects another member of the same user pool", async () => {
+    // The pool is shared with a neighborhood app; a valid token from one of
+    // those users must not read a single disclosure here.
+    verify.mockResolvedValue({ sub: OTHER_SUB, email: "neighbor@example.com", token_use: "id" });
+    const res = await handler(makeEvent());
+    expect(res.statusCode).toBe(403);
     expect(ddbSend).not.toHaveBeenCalled();
   });
 
-  it("throttles repeated attempts from one IP", async () => {
+  it("no longer accepts the retired shared admin code", async () => {
+    const res = await handler(makeEvent({ token: null, body: { code: RETIRED_CODE } }));
+    expect(res.statusCode).toBe(401);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("fails CLOSED when no allowed identity is configured", async () => {
+    process.env.FORUM_ADMIN_SUB = "";
+    const res = await handler(makeEvent());
+    expect(res.statusCode).toBe(403);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("throttles repeated rejected attempts from one IP", async () => {
+    verify.mockRejectedValue(new Error("Invalid token"));
     const ip = freshIp();
-    for (let i = 0; i < 20; i++) await handler(makeEvent({ code: "wrong" }, { ip }));
-    expect((await handler(makeEvent({ code: "wrong" }, { ip }))).statusCode).toBe(429);
+    for (let i = 0; i < 20; i++) await handler(makeEvent({ ip }));
+    expect((await handler(makeEvent({ ip }))).statusCode).toBe(429);
   });
 });
 
 describe("the query", () => {
   it("uses Query on the forum partition, never Scan", async () => {
-    await handler(makeEvent({ code: ADMIN_CODE }));
+    await handler(makeEvent());
     expect(queryInputs).toHaveLength(1);
     expect(queryInputs[0].ExpressionAttributeValues[":forumId"]).toBe(FORUM_ID);
     expect(scanConstructed.count).toBe(0);
   });
 
   it("asks DynamoDB for newest-first", async () => {
-    await handler(makeEvent({ code: ADMIN_CODE }));
+    await handler(makeEvent());
     expect(queryInputs[0].ScanIndexForward).toBe(false);
   });
 
   it("returns questions newest-first", async () => {
-    const body = parse(await handler(makeEvent({ code: ADMIN_CODE })));
+    const body = parse(await handler(makeEvent()));
     expect(body.questions.map((q) => q.questionId)).toEqual(["aaaaaaaa", "bbbbbbbb"]);
   });
 });
 
 describe("the response", () => {
   it("separates held items from the main list", async () => {
-    const body = parse(await handler(makeEvent({ code: ADMIN_CODE })));
+    const body = parse(await handler(makeEvent()));
     expect(body.questions.map((q) => q.status)).not.toContain("held");
     expect(body.held).toHaveLength(1);
   });
 
   it("includes the full text and reason for a held item", async () => {
-    const body = parse(await handler(makeEvent({ code: ADMIN_CODE })));
+    const body = parse(await handler(makeEvent()));
     expect(body.held[0].question).toBe("A threatening message.");
     expect(body.held[0].flagReason).toBe("VIOLENCE_OR_THREAT:0.97");
   });
 
   it("returns anonymous items with no name or email", async () => {
-    const body = parse(await handler(makeEvent({ code: ADMIN_CODE })));
+    const body = parse(await handler(makeEvent()));
     const anon = body.questions.find((q) => q.anonymous);
     expect("name" in anon).toBe(false);
     expect("email" in anon).toBe(false);
   });
 
   it("is not cacheable", async () => {
-    const res = await handler(makeEvent({ code: ADMIN_CODE }));
+    const res = await handler(makeEvent());
     expect(res.headers["Cache-Control"]).toBe("no-store");
+  });
+
+  it("allows the Authorization header through CORS", async () => {
+    const res = await handler(makeEvent({ method: "OPTIONS" }));
+    expect(res.headers["Access-Control-Allow-Headers"]).toContain("Authorization");
   });
 
   it("handles an empty table", async () => {
     ddbSend.mockResolvedValue({});
-    const body = parse(await handler(makeEvent({ code: ADMIN_CODE })));
+    const body = parse(await handler(makeEvent()));
     expect(body.count).toBe(0);
     expect(body.questions).toEqual([]);
     expect(body.held).toEqual([]);
@@ -194,35 +246,30 @@ describe("the response", () => {
 describe("failure modes", () => {
   it("returns 500 with no partial data when the query fails", async () => {
     ddbSend.mockRejectedValue(new Error("DynamoDB down"));
-    const res = await handler(makeEvent({ code: ADMIN_CODE }));
+    const res = await handler(makeEvent());
     expect(res.statusCode).toBe(500);
     expect(parse(res).questions).toBeUndefined();
   });
 
-  it("rejects an invalid JSON body", async () => {
-    const event = makeEvent({});
-    event.body = "{not json";
-    expect((await handler(event)).statusCode).toBe(400);
-  });
-
-  it("answers OPTIONS preflight", async () => {
-    expect((await handler(makeEvent({}, { method: "OPTIONS" }))).statusCode).toBe(200);
+  it("answers OPTIONS preflight without a token", async () => {
+    expect((await handler(makeEvent({ token: null, method: "OPTIONS" }))).statusCode).toBe(200);
   });
 
   it("rejects a cross-site POST", async () => {
-    expect((await handler(makeEvent({ code: ADMIN_CODE }, { origin: "https://evil.example" }))).statusCode).toBe(403);
+    expect((await handler(makeEvent({ origin: "https://evil.example" }))).statusCode).toBe(403);
   });
 });
 
 describe("logging", () => {
-  it("never writes question content or the admin code to the logs", async () => {
+  it("never writes question content or the token to the logs", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    await handler(makeEvent({ code: ADMIN_CODE }));
-    await handler(makeEvent({ code: "SENTINEL_WRONG_CODE_ZQX" }));
+    await handler(makeEvent());
+    verify.mockRejectedValueOnce(new Error("Invalid token"));
+    await handler(makeEvent({ token: "SENTINEL.BAD.TOKEN" }));
     ddbSend.mockRejectedValueOnce(new Error("DDB down"));
-    await handler(makeEvent({ code: ADMIN_CODE }));
+    await handler(makeEvent());
 
     const logged = [logSpy, errSpy]
       .flatMap((spy) => spy.mock.calls)
@@ -230,7 +277,7 @@ describe("logging", () => {
       .map((arg) => (typeof arg === "string" ? arg : JSON.stringify(arg)))
       .join(" | ");
 
-    for (const value of [ADMIN_CODE, "SENTINEL_WRONG_CODE_ZQX", "How do I support my daughter?", "jane@example.com"]) {
+    for (const value of [TOKEN, "SENTINEL.BAD.TOKEN", "How do I support my daughter?", "jane@example.com"]) {
       expect(logged, `leaked: ${value}`).not.toContain(value);
     }
 

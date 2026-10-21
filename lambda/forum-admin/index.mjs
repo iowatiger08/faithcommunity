@@ -1,15 +1,22 @@
 /**
  * Forum Q&A admin listing — read-only.
  *
- *   POST /forum/admin/questions  { code }  ->  { ok, count, questions, held }
+ *   POST /forum/admin/questions   Authorization: Bearer <Cognito ID token>
+ *     ->  { ok, count, questions, held }
  *
  * This is the one route that reads every submission in the table, so it is a
  * separate function with a separate IAM role holding `dynamodb:Query` and
  * nothing else — no PutItem, and deliberately no Scan. A bug in the public
  * intake path therefore cannot read anyone's disclosure.
  *
- * POST rather than GET so the admin code travels in the request body: query
- * strings land in access logs, browser history, and referrer headers.
+ * The gate is Cognito, matching webtop and the Deutsch app: sign-in happens in
+ * the browser against the shared `tigersndragons-users` pool, and the ID token
+ * travels in the Authorization header. API Gateway's JWT authorizer verifies
+ * the signature before the request reaches here; this handler verifies it again
+ * (cheap, and it keeps the function safe if it is ever invoked by another path)
+ * and then checks the identity. That second check is the one that matters: the
+ * pool is shared with a neighborhood app, so "a valid token from this pool" is
+ * not the same as "the owner of this ministry site".
  *
  * Helpers below are intentionally duplicated from contact-form/index.mjs rather
  * than shared: SAM packages each CodeUri independently, and the contact form is
@@ -18,18 +25,31 @@
  */
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { createHash, timingSafeEqual } from 'node:crypto';
+import { CognitoJwtVerifier } from 'aws-jwt-verify';
+import { createHash } from 'node:crypto';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-west-2' }));
 
-// Read lazily, not at module load, so the code can be rotated without a cold
+// Read lazily, not at module load, so a value can be changed without a cold
 // start and so tests can set process.env after importing the handler.
-const adminCode = () => process.env.FORUM_ADMIN_CODE || '';
+const allowedSub = () => process.env.FORUM_ADMIN_SUB || '';
 const forumId = () => process.env.FORUM_ID || 'forum';
 const tableName = () => process.env.FORUM_TABLE || '';
 
-const MAX_CODE_LENGTH = 200;
+// Pool and client ids are not secrets — they ship in the browser bundle of
+// every Cognito SPA. The allow-list above is what grants access.
+const USER_POOL_ID = process.env.COGNITO_USER_POOL_ID || 'us-west-2_OMwj6Yfpn';
+const CLIENT_ID = process.env.COGNITO_CLIENT_ID || '5p01qepq8kh9qfuji1occiud19';
+
 const MAX_ITEMS = 200;
+
+// Verifies signature, expiry, audience (clientId) and token_use=id against the
+// pool's JWKS (fetched and cached on first use).
+const verifier = CognitoJwtVerifier.create({
+  userPoolId: USER_POOL_ID,
+  clientId: CLIENT_ID,
+  tokenUse: 'id',
+});
 
 const ALLOWED_ORIGINS = new Set([
   'https://hopeandtruthministry.com',
@@ -43,7 +63,7 @@ function corsHeaders(event) {
   return {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : '',
     'Vary': 'Origin',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
     'Access-Control-Allow-Methods': 'POST,OPTIONS',
     'Content-Type': 'application/json',
     // Every submission is in this response; it must not sit in a cache.
@@ -59,16 +79,17 @@ const reply = (statusCode, headers, body) => ({
 
 const sha256 = (value) => createHash('sha256').update(String(value), 'utf8').digest();
 
-/** Constant-time compare that also hides length, and fails closed on no code. */
-function codeMatches(supplied, expected) {
-  if (typeof supplied !== 'string' || !expected) return false;
-  return timingSafeEqual(sha256(supplied.trim()), sha256(expected));
-}
-
 const actorHint = (ip) => sha256(`${ip}:${forumId()}`).toString('hex').slice(0, 8);
 
-// In memory per container, so leaky across concurrent containers — the real
-// protection is that the admin code is long and random.
+/** The bearer token from the Authorization header, or null. */
+function bearer(event) {
+  const raw = event.headers?.authorization || event.headers?.Authorization || '';
+  const match = /^Bearer\s+(.+)$/i.exec(raw.trim());
+  return match ? match[1].trim() : null;
+}
+
+// In memory per container, so leaky across concurrent containers — a brake on
+// token guessing, not the gate. The gate is the Cognito signature.
 const attempts = new Map();
 function allowAttempt(ip) {
   const now = Date.now();
@@ -87,33 +108,38 @@ export const handler = async (event) => {
   if (method === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   // Origin enforcement is a first filter against a cross-site browser POST,
-  // not the gate — CORS protects browsers, not the API. The gate is the code.
+  // not the gate — CORS protects browsers, not the API. The gate is the token.
   const origin = event.headers?.origin || event.headers?.Origin || '';
   if (origin && !ALLOWED_ORIGINS.has(origin)) {
     return reply(403, headers, { ok: false, error: 'Forbidden' });
   }
 
-  let body;
-  try {
-    body = JSON.parse(event.body || '{}');
-  } catch {
-    return reply(400, headers, { ok: false, error: 'Invalid JSON' });
-  }
-
   const ip = event.requestContext?.http?.sourceIp || event.requestContext?.identity?.sourceIp || 'unknown';
-
-  if (typeof body.code !== 'string' || body.code.length > MAX_CODE_LENGTH) {
-    return reply(400, headers, { ok: false, error: 'Invalid input' });
-  }
 
   if (!allowAttempt(ip)) {
     console.log(`admin throttled actor=${actorHint(ip)}`);
     return reply(429, headers, { ok: false, error: 'Too many attempts. Wait a few minutes.' });
   }
 
-  if (!codeMatches(body.code, adminCode())) {
-    console.log(`admin rejected actor=${actorHint(ip)}`);
-    return reply(401, headers, { ok: false, error: 'Invalid code' });
+  const token = bearer(event);
+  if (!token) {
+    console.log(`admin no-token actor=${actorHint(ip)}`);
+    return reply(401, headers, { ok: false, error: 'Sign in to read the questions.' });
+  }
+
+  let claims;
+  try {
+    claims = await verifier.verify(token);
+  } catch {
+    console.log(`admin bad-token actor=${actorHint(ip)}`);
+    return reply(401, headers, { ok: false, error: 'Your session has expired. Sign in again.' });
+  }
+
+  // Fails closed: an unset allow-list authorizes nobody, even with a valid
+  // token from the pool.
+  if (!allowedSub() || claims.sub !== allowedSub()) {
+    console.log(`admin not-owner sub=${String(claims.sub).slice(0, 8)} actor=${actorHint(ip)}`);
+    return reply(403, headers, { ok: false, error: 'That account cannot read the questions.' });
   }
 
   let items;

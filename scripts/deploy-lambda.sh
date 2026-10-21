@@ -19,11 +19,15 @@
 #   echo "VITE_CONTACT_API_URL=<ContactApiUrl from outputs>" >> .env
 #   echo "VITE_FORUM_API_BASE=<ForumApiBase from outputs>" >> .env
 #
-# ⚠️  FORUM SECRETS: the forum stack needs three values that must NOT be
+# ⚠️  FORUM SECRETS: the forum stack needs two values that must NOT be
 #     committed. Both .env and lambda/samconfig.toml are tracked in git, so
 #     they live in the untracked lambda/forum-params.env instead — copy
 #     lambda/forum-params.env.example and fill it in. This script fails if it
 #     is missing. See lambda/forum-params.env.example for how to generate them.
+#
+#     Reading submissions at /forum-admin is NOT one of them: that route takes
+#     a Cognito ID token for iowatiger08@gmail.com in the shared
+#     tigersndragons-users pool, the same sign-in as webtop and the Deutsch app.
 #
 # Usage:
 #   ./scripts/deploy-lambda.sh             # deploy
@@ -60,9 +64,9 @@ echo
 PARAMS_FILE="$LAMBDA_DIR/forum-params.env"
 if [[ ! -f "$PARAMS_FILE" ]]; then
   echo "ERROR: $PARAMS_FILE not found." >&2
-  echo "       The forum stack needs ForumMemberCode, ForumAdminCode and" >&2
-  echo "       ForumTokenSecret. Copy forum-params.env.example and fill it in;" >&2
-  echo "       it is gitignored on purpose." >&2
+  echo "       The forum stack needs ForumMemberCode and ForumTokenSecret." >&2
+  echo "       Copy forum-params.env.example and fill it in; it is gitignored" >&2
+  echo "       on purpose." >&2
   exit 1
 fi
 
@@ -70,9 +74,18 @@ OVERRIDES=(
   "HopeAndTruthHostedZoneId=Z1W12OVIJHI59G"
   "SenderDomain=hopeandtruthministry.com"
 )
+# Lines whose key the template no longer declares are skipped rather than
+# passed: sam deploy rejects an unknown parameter outright, and a retired key
+# (ForumAdminCode, once the admin route moved to Cognito) should not be able to
+# break a deploy just by still sitting in the untracked params file.
 while IFS= read -r line || [[ -n "$line" ]]; do
   [[ -z "$line" || "$line" == \#* ]] && continue
-  OVERRIDES+=("$line")
+  key="${line%%=*}"
+  if grep -qE "^  ${key}:\$" "$LAMBDA_DIR/template.yaml"; then
+    OVERRIDES+=("$line")
+  else
+    echo "  skipping $key — not a parameter of template.yaml"
+  fi
 done < "$PARAMS_FILE"
 
 echo "=== deploying stack via SAM ==="
