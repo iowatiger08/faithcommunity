@@ -277,6 +277,12 @@ async function handleQuestion(body, headers, ip) {
   const name = anonymous ? undefined : body.name;
   const email = anonymous ? undefined : body.email;
 
+  // Permission to say someone's name out loud in the forum. Requires a
+  // literal `true`: anything else — absent, "true", 1 — withholds. An
+  // anonymous submission can never grant it, because there is no name to use
+  // and the admin view must not offer to attribute one.
+  const allowName = !anonymous && body.allowName === true;
+
   const question = typeof body.question === 'string' ? body.question.trim() : '';
   if (!question || question.length > MAX_QUESTION_LENGTH) {
     return reply(400, headers, {
@@ -316,6 +322,7 @@ async function handleQuestion(body, headers, ip) {
     questionId,
     submittedAt,
     anonymous,
+    allowName,
     question,
     status,
     // Spread rather than `name: undefined`, so an anonymous submission has no

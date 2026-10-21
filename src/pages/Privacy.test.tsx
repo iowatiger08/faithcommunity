@@ -50,9 +50,11 @@ describe("the promises the page makes", () => {
     expect(screen.getByText(/used to train AI models/i)).toBeTruthy();
   });
 
-  it("states that forum questions are raised without a name attached", () => {
+  it("states that a name is withheld unless permission is given", () => {
     renderPrivacy();
-    expect(screen.getByText(/without any name attached/i)).toBeTruthy();
+    expect(screen.getAllByText(/without your name attached/i).length).toBeGreaterThan(0);
+    // Unticked must be the default, so that doing nothing is the safe choice.
+    expect(screen.getByText(/Unticked is the default/i)).toBeTruthy();
   });
 
   it("discloses that page visits are counted", () => {

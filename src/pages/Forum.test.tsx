@@ -241,6 +241,52 @@ describe("anonymity", () => {
     expect(JSON.stringify(body)).not.toContain("jane@example.com");
   });
 
+  it("withholds the name by default, and says so in the payload", async () => {
+    renderForum();
+    await enterGate();
+    fillNamed();
+
+    // The box starts unticked: doing nothing is the safe choice.
+    const box = screen.getByRole("checkbox", { name: /may use my name/i });
+    expect((box as HTMLInputElement).checked).toBe(false);
+
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, id: "abc" }));
+    clickButton(/send my question/i);
+    await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
+    expect(requestBody(1).allowName).toBe(false);
+  });
+
+  it("sends permission when the box is ticked, and confirms it back", async () => {
+    renderForum();
+    await enterGate();
+    fillNamed();
+    fireEvent.click(screen.getByRole("checkbox", { name: /may use my name/i }));
+
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, id: "abc" }));
+    clickButton(/send my question/i);
+    await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
+    expect(requestBody(1).allowName).toBe(true);
+    // The success screen should reflect the choice that was actually made.
+    expect(screen.getByText(/your name may be used/i)).toBeTruthy();
+  });
+
+  it("hides the permission box, and revokes it, when going anonymous", async () => {
+    renderForum();
+    await enterGate();
+    fireEvent.click(screen.getByRole("checkbox", { name: /may use my name/i }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /anonymously/i }));
+
+    expect(screen.queryByRole("checkbox", { name: /may use my name/i })).toBeNull();
+    setField(/your question/i, "Am I still loved by God?");
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, id: "abc" }));
+    clickButton(/send my question/i);
+
+    await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
+    // An anonymous submission must not carry stale permission from before.
+    expect(requestBody(1).allowName).toBeUndefined();
+    expect(screen.getByText(/without your name attached/i)).toBeTruthy();
+  });
+
   it("sends name and email for a named question", async () => {
     renderForum();
     await enterGate("tok-abc");
@@ -329,8 +375,8 @@ describe("bot defenses and privacy", () => {
     await enterGate();
     // The privacy terms have to be visible at the moment of deciding whether
     // to write something hard, not linked from a footer.
-    expect(screen.getByText(/only Pastor Tony/i)).toBeTruthy();
-    expect(screen.getByText(/without any\s+name attached/i)).toBeTruthy();
+    expect(screen.getByText(/only Tony/i)).toBeTruthy();
+    expect(screen.getByText(/without your name\s+unless you give permission/i)).toBeTruthy();
     expect(screen.getByText(/ask for yours to be removed/i)).toBeTruthy();
     const hrefs = Array.from(document.querySelectorAll("a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toContain("/privacy");

@@ -20,6 +20,7 @@ Deadline is four days, so the build reuses the already-working contact-form pipe
 | Retention | **No auto-delete.** No TTL. Data persists until Tony deletes it deliberately |
 | Submission window | Closes **Sunday 2026-10-25 at 12:00 CDT** (`2026-10-25T17:00:00Z`), enforced in the Lambda |
 | Name / email | Required by default, with an "Ask this anonymously" checkbox; omission enforced **server-side** |
+| Attribution | Names are withheld unless the submitter ticks "You may use my name" — unticked is the default, and an anonymous submission can never grant it |
 | Harassment / threats | Narrow automated screening → **held for review**, never silently discarded |
 | Statistics | Public — only the question form sits behind the access code |
 | Route / visibility | `/forum`, unlisted (no nav/footer entry), `noindex`; admin at `/forum-admin` |
@@ -134,7 +135,7 @@ Add `ForumIntakeLogGroup` and `ForumAdminLogGroup`, `RetentionInDays: 14`, match
 
 - `forumId` is a constant per forum (`"windsor-heights-2026-10"`, from env). That constant partition is what makes the admin read a **`Query`** with `ScanIndexForward: false` — newest-first for free, and the admin role never needs `dynamodb:Scan`, which on a table of sensitive disclosures is a strictly broader capability than this feature needs. A future forum is a new partition, not a schema change.
 - `sk` is `${ISO}#${8 hex}` — chronologically sortable, suffix guarantees uniqueness in the same millisecond. `submittedAt` is stored separately so the admin handler never parses the sort key.
-- Attributes: `forumId`, `sk`, `questionId`, `submittedAt`, `anonymous` (BOOL), `name`/`email` (**keys absent entirely** when anonymous — never `""`), `question`, `status` (`"received"` | `"held"`), `flagReason` (optional).
+- Attributes: `forumId`, `sk`, `questionId`, `submittedAt`, `anonymous` (BOOL), `allowName` (BOOL), `name`/`email` (**keys absent entirely** when anonymous — never `""`), `question`, `status` (`"received"` | `"held"`), `flagReason` (optional).
 - **No `ttl` attribute and no `TimeToLiveSpecification`**, per the retention decision.
 - **No IP address, ever.** An IP stored beside an anonymous submission re-identifies it.
 - `PAY_PER_REQUEST` — tens of writes total; provisioned would cost ~$0.50/mo for unused capacity plus autoscaling to think about.
@@ -151,6 +152,19 @@ IAM, scoped to the table ARN rather than `"*"` (the existing `ses:SendEmail` sta
 # ForumAdminFunction — read-only, Query only, no Scan
 - { Effect: Allow, Action: [dynamodb:Query], Resource: !GetAtt ForumQuestionsTable.Arn }
 ```
+
+### Permission to use a name
+
+Separate from anonymity. A submitter who gives their name may also tick "You may use my name if you raise this"; unticked is the default, so doing nothing keeps them unattributed. Phrased as permission rather than refusal precisely so the safe answer is also the default answer.
+
+```js
+// Requires a literal true: absent, "true", 1 all withhold. An anonymous
+// submission can never grant it — there is no name to use, and the admin
+// view must not offer to attribute one.
+const allowName = !anonymous && body.allowName === true;
+```
+
+Stored as `allowName` and surfaced in `/forum-admin` as "name may be used" or a bolded "do not use name" beside each question, so it cannot be missed while reading aloud. Three places must agree on this and are covered by tests: the notice above the form, the success message, and the privacy page.
 
 ### Server-side anonymity enforcement — the single most important rule
 

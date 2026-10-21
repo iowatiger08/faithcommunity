@@ -417,6 +417,44 @@ describe("anonymity", () => {
   });
 });
 
+// ── Permission to use a name ───────────────────────────────────────────────
+describe("permission to use a name", () => {
+  it("withholds the name by default when the client says nothing", async () => {
+    await handler(questionEvent({ ...validQuestion, token: makeToken() }));
+    expect(storedItem().allowName).toBe(false);
+  });
+
+  it("records permission only when it is given explicitly", async () => {
+    await handler(questionEvent({ ...validQuestion, token: makeToken(), allowName: true }));
+    expect(storedItem().allowName).toBe(true);
+  });
+
+  it("treats anything other than a literal true as withholding", async () => {
+    for (const value of ["true", 1, {}, null, "yes"]) {
+      ddbSend.mockClear();
+      await handler(questionEvent({ ...validQuestion, token: makeToken(), allowName: value }));
+      expect(storedItem().allowName, `allowName=${JSON.stringify(value)}`).toBe(false);
+    }
+  });
+
+  it("never grants permission for an anonymous submission", async () => {
+    // There is no name to use, so permission must not be recorded as given —
+    // otherwise the admin view would offer to attribute an anonymous question.
+    await handler(
+      questionEvent({
+        token: makeToken(),
+        anonymous: true,
+        allowName: true,
+        question: "Am I still loved by God?",
+        confirm_url: "",
+      })
+    );
+    const item = storedItem();
+    expect(item.allowName).toBe(false);
+    expect("name" in item).toBe(false);
+  });
+});
+
 // ── Moderation: hold, never discard ────────────────────────────────────────
 describe("moderation", () => {
   const flag = (name, score) => ({ ResultList: [{ Labels: [{ Name: name, Score: score }] }] });

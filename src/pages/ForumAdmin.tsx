@@ -18,6 +18,7 @@ interface Question {
   email?: string;
   status: string;
   flagReason?: string;
+  allowName?: boolean;
 }
 
 interface ListResponse {
@@ -62,6 +63,12 @@ function QuestionCard({ q }: { q: Question }) {
             )}
           </span>
         )}
+        {!q.anonymous &&
+          (q.allowName === true ? (
+            <span className="text-accent">name may be used</span>
+          ) : (
+            <span className="font-semibold text-ink/70">do not use name</span>
+          ))}
         <span className="text-ink/40">#{q.questionId}</span>
       </div>
       <p className="text-ink/85 mt-3 leading-relaxed whitespace-pre-wrap break-words">

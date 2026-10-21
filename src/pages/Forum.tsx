@@ -489,10 +489,14 @@ export default function Forum() {
   const [email, setEmail] = useState("");
   const [question, setQuestion] = useState("");
   const [anonymous, setAnonymous] = useState(false);
+  // Unchecked means withhold. Phrased as permission rather than refusal so
+  // that the safe answer is also the default answer.
+  const [allowName, setAllowName] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [sending, setSending] = useState(false);
   const [formError, setFormError] = useState("");
   const [sent, setSent] = useState(false);
+  const [sentWithName, setSentWithName] = useState(false);
 
   // Evaluated once, in a state initialiser rather than on every render, so
   // the view cannot flip mid-interaction. The Lambda is what actually
@@ -533,6 +537,7 @@ export default function Forum() {
       // these never get stored.
       setName("");
       setEmail("");
+      setAllowName(false);
     }
   }
 
@@ -550,6 +555,7 @@ export default function Forum() {
       if (!anonymous) {
         payload.name = name;
         payload.email = email;
+        payload.allowName = allowName;
       }
       const res = await fetch(`${API_BASE}/question`, {
         method: "POST",
@@ -568,9 +574,11 @@ export default function Forum() {
       }
       if (res.ok && data.ok === true) {
         setSent(true);
+        setSentWithName(allowName);
         setQuestion("");
         setName("");
         setEmail("");
+        setAllowName(false);
         return;
       }
       setFormError(data.error ?? "We couldn't send your question. Please try again.");
@@ -633,8 +641,10 @@ export default function Forum() {
           <div className="space-y-3 text-ink/80 leading-relaxed">
             <p className="font-serif text-xl">Thank you. Your question is in.</p>
             <p>
-              It will be read before Sunday and raised in the forum without your
-              name attached.
+              It will be read before Sunday and considered in the forum
+              {sentWithName
+                ? ", and you have said your name may be used."
+                : " without your name attached."}
             </p>
             <button
               type="button"
@@ -678,8 +688,9 @@ export default function Forum() {
             <div className="text-sm text-ink/70 leading-relaxed space-y-2">
               <p>
                 <span className="font-semibold text-ink/80">Who sees this:</span>{" "}
-                only Pastor Tony. Questions are raised in the forum without any
-                name attached, and nothing is posted publicly.
+                only Tony Hansen, who is running the forum. Questions are
+                raised without your name unless you give permission below, and
+                nothing is posted publicly.
               </p>
               <p>
                 Submissions are kept only until they are deleted after the
@@ -716,6 +727,19 @@ export default function Forum() {
 
             {!anonymous && (
               <>
+                <label className="flex items-start gap-2 text-sm text-ink/80">
+                  <input
+                    type="checkbox"
+                    checked={allowName}
+                    onChange={(e) => setAllowName(e.target.checked)}
+                    className="mt-1"
+                  />
+                  <span>
+                    You may use my name if you raise this. Leave it unticked
+                    to stay unattributed.
+                  </span>
+                </label>
+
                 <div>
                   <label
                     htmlFor="forum-name"

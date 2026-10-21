@@ -140,9 +140,12 @@ export default function Privacy() {
             rather than living indefinitely in an inbox.
           </p>
           <p className="mt-4">
-            Forum questions are raised in the forum{" "}
-            <strong className="text-ink/90">without any name attached</strong>,
-            whether or not you submitted anonymously.
+            Forum questions are raised{" "}
+            <strong className="text-ink/90">without your name attached</strong>{" "}
+            unless you tick the box on the form giving permission to use it.
+            Unticked is the default, so doing nothing keeps you unattributed.
+            Submitting anonymously means there is no name to attach in the
+            first place.
           </p>
         </section>
 
