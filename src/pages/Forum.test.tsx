@@ -98,9 +98,8 @@ describe("the public part of the page", () => {
     // are out to their congregation, and how few have supportive faith leaders.
     expect(screen.getByText("63.1%")).toBeTruthy();
     expect(screen.getByText("54.5%")).toBeTruthy();
-    expect(screen.getByText("1 in 5")).toBeTruthy();
+    expect(screen.getByText("20.1%")).toBeTruthy();
     expect(screen.getByText("25.9%")).toBeTruthy();
-    expect(screen.getAllByText(/least likely to be known/i).length).toBeGreaterThan(0);
   });
 
   it("is explicit that the HRC faith figures describe Black and Latine youth", () => {
@@ -109,11 +108,16 @@ describe("the public part of the page", () => {
     // the research, so the scope has to be visible on the page.
     expect(screen.getByText(/describe those groups rather than all young people/i)).toBeTruthy();
     expect(screen.getAllByText(/Black and Latine LGBTQ\+ Youth Reports/).length).toBeGreaterThan(0);
+    // The surveys never recorded a denomination, so the page must say the
+    // figures cannot be read as being about any particular church.
+    expect(
+      screen.getByText(/nothing about any particular church, denomination, or community/i)
+    ).toBeTruthy();
   });
 
   it("shows the HRC coming-out and current-climate figures", () => {
     renderForum();
-    expect(screen.getByText("82.7%, but 26.4%")).toBeTruthy();
+    expect(screen.getByText("82.7%")).toBeTruthy();
     expect(screen.getByText("63% and 57%")).toBeTruthy();
     expect(screen.getByText("85%")).toBeTruthy();
     expect(screen.getByText(/August.September 2026/)).toBeTruthy();
@@ -144,7 +148,6 @@ describe("the public part of the page", () => {
     expect(screen.getByText(/2× and 4×/)).toBeTruthy();
     expect(screen.getByText("82%")).toBeTruthy();
     expect(screen.getAllByText(/SAGE/).length).toBeGreaterThan(2);
-    expect(screen.getByText(/notice when you don.t turn up/i)).toBeTruthy();
   });
 
   it("covers marriage acceptance, including that it can move backwards", () => {
@@ -153,19 +156,25 @@ describe("the public part of the page", () => {
     expect(screen.getByText("65%")).toBeTruthy();
     expect(screen.getByText("87% / 67% / 37%")).toBeTruthy();
     expect(screen.getAllByText(/Gallup/).length).toBeGreaterThan(2);
-    expect(screen.getByText(/not a ratchet that only turns one way/i)).toBeTruthy();
     // The mainline figure moved here from the faith group; it should appear once.
     expect(screen.getAllByText("76%")).toHaveLength(1);
   });
 
   it("frames the page as covering a whole life, not only adolescence", () => {
     renderForum();
-    expect(screen.getByText(/runs the length of a life/i)).toBeTruthy();
+    expect(screen.getByText(/happens over a lifetime/i)).toBeTruthy();
   });
 
   it("puts crisis resources on the page alongside the risk figures", () => {
     renderForum();
     expect(screen.getByText(/Call or text 988/)).toBeTruthy();
+  });
+
+  it("says plainly that the page is still a work in progress", () => {
+    renderForum();
+    expect(screen.getByText(/a work in progress/i)).toBeTruthy();
+    // And reassures people the form itself is not provisional.
+    expect(screen.getByText(/anything you send is already saved/i)).toBeTruthy();
   });
 
   it("shows the gate rather than the question fields initially", () => {
@@ -377,7 +386,7 @@ describe("bot defenses and privacy", () => {
     // to write something hard, not linked from a footer.
     expect(screen.getByText(/only Tony/i)).toBeTruthy();
     expect(screen.getByText(/without your name\s+unless you give permission/i)).toBeTruthy();
-    expect(screen.getByText(/ask for yours to be removed/i)).toBeTruthy();
+    expect(screen.getByText(/ask for yours to be\s+deleted/i)).toBeTruthy();
     const hrefs = Array.from(document.querySelectorAll("a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toContain("/privacy");
     expect(hrefs).toContain("/care#crisis");

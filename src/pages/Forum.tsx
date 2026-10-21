@@ -64,8 +64,7 @@ const acceptance: Stat[] = [
     figure: "6% vs. 18%",
     detail:
       "attempted suicide in the past year: 6% of LGBTQ+ young people in very " +
-      "accepting communities, compared with 18% in the least accepting. Less than a " +
-      "third of the rate.",
+      "accepting communities, compared with 18% in the least accepting.",
     source:
       "The Trevor Project, 2025 national survey (16,000+ young people, ages 13–24)",
   },
@@ -93,7 +92,7 @@ const rejection: Stat[] = [
     figure: "13%",
     detail:
       "of LGBTQ+ young people have been threatened with or subjected to conversion " +
-      "therapy — a practice every major medical association rejects, and one " +
+      "therapy, a practice every major medical association rejects. Exposure is " +
       "associated with more than double the likelihood of a past-year suicide " +
       "attempt.",
     source: "The Trevor Project, 2024 national survey",
@@ -102,9 +101,7 @@ const rejection: Stat[] = [
     figure: "54%",
     detail:
       "of the more than 1,320 active conversion therapy practitioners identified " +
-      "across 48 states operate in a ministerial or religious capacity. This is the " +
-      "harm a church is most likely to be caught up in, and the reason this forum is " +
-      "worth holding.",
+      "across 48 states operate in a ministerial or religious capacity.",
     source: "The Trevor Project practitioner report",
   },
   {
@@ -113,7 +110,7 @@ const rejection: Stat[] = [
       "screened positive for depression among transgender and gender-expansive youth " +
       "whose families never use their correct pronouns. Where families always use " +
       "them, the figure falls to 49.6%. Using a young person’s correct name moves " +
-      "anxiety from 72.1% to 61.9%. Small courtesies are doing real work.",
+      "anxiety from 72.1% to 61.9%.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report (12,615 youth ages 13–18)",
   },
 ];
@@ -123,7 +120,8 @@ const scale: Stat[] = [
     figure: "36%",
     detail:
       "of LGBTQ+ young people seriously considered suicide in the past year, " +
-      "including 40% of transgender and nonbinary young people. One in ten attempted.",
+      "including 40% of transgender and nonbinary young people. One in ten " +
+      "attempted.",
     source: "The Trevor Project, 2025 national survey",
   },
   {
@@ -145,7 +143,7 @@ const scale: Stat[] = [
   {
     figure: "51% and 67%",
     detail:
-      "of LGBTQ+ youth reported for depression and for anxiety " +
+      "of LGBTQ+ youth screened positive for depression and for anxiety " +
       "respectively, and 30% for severe psychological distress. Transgender and " +
       "gender-expansive youth were higher on every measure.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report",
@@ -156,8 +154,8 @@ const comingOut: Stat[] = [
   {
     figure: "96%",
     detail:
-      "of LGBTQ adults have told someone that they are or might be LGBTQ. Even so, " +
-      "23% have still not told their parents or the people who raised them.",
+      "of LGBTQ adults have told someone that they are or might be LGBTQ. 23% have " +
+      "not told their parents or the people who raised them.",
     source: "Pew Research Center, January 2025 survey",
   },
   {
@@ -176,31 +174,28 @@ const comingOut: Stat[] = [
     source: "Pew Research Center, 2013 survey — the most recent with this breakdown",
   },
   {
-    figure: "82.7%, but 26.4%",
+    figure: "82.7%",
     detail:
-      "of LGBTQ+ youth are out to at least one person in their immediate family — " +
-      "but only a quarter are out to all of them, and 40.9% to all of their parents " +
-      "or guardians. Coming out is rarely one conversation. It is a long series of " +
-      "them, and it is seldom finished.",
+      "of LGBTQ+ youth are out to at least one person in their immediate family. A " +
+      "quarter (26.4%) are out to all of them, and 40.9% to all of their parents or " +
+      "guardians.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report (12,615 youth ages 13–18)",
   },
   {
     figure: "63% and 57%",
     detail:
-      "Both at once: 63.1% of LGBTQ+ youth reported at least one supportive response " +
-      "from a parent, and 57.4% reported at least one rejecting one. Those " +
-      "majorities overlap, so most young people get both from the same family — " +
-      "often from the same person. Families are seldom all one thing.",
+      "63.1% of LGBTQ+ youth reported at least one supportive response from a " +
+      "parent, and 57.4% reported at least one rejecting one. Those majorities " +
+      "overlap, so many young people reported both.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report",
   },
   {
     figure: "85%",
     detail:
       "of LGBTQ+ adults are at least somewhat open about who they are. A third have " +
-      "grown more open over the past two years, while 22% have grown less — and 78% " +
-      "believe social acceptance of transgender and nonbinary people has fallen in " +
-      "that time. Coming out runs both ways: people step back when it stops feeling " +
-      "safe.",
+      "grown more open over the past two years, 22% have grown less, and 78% believe " +
+      "social acceptance of transgender and nonbinary people has fallen in that " +
+      "time.",
     source:
       "HRC Community Insights, survey of 9,328 LGBTQ+ adults, August–September 2026",
   },
@@ -218,10 +213,9 @@ const faith: Stat[] = [
   {
     figure: "No significant effect",
     detail:
-      "was found between valuing religion and suicide risk, in either direction. " +
-      "Faith on its own does not settle the question. What the research keeps " +
-      "pointing to is whether the community around a person is affirming — and that " +
-      "is something a congregation chooses.",
+      "was found between valuing religion and suicide risk, in either direction. The " +
+      "research points instead to whether the community around a person is " +
+      "affirming.",
     source: "The Trevor Project research brief, December 2022",
   },
 ];
@@ -244,25 +238,21 @@ const church: Stat[] = [
     figure: "54.5%",
     detail:
       "said their religious beliefs triggered feelings of guilt and shame when they " +
-      "came out — 52.1% among Latine LGBTQ+ youth. This is the part that belongs to " +
-      "the church. The family’s reaction belongs to the family and the school’s to " +
-      "the school. This one is ours.",
+      "came out; 52.1% among Latine LGBTQ+ youth.",
     source: "HRC Foundation, 2024 Black and Latine LGBTQ+ Youth Reports",
   },
   {
-    figure: "1 in 5",
+    figure: "20.1%",
     detail:
-      "Black LGBTQ+ youth are out to even some members of their faith community " +
-      "(20.1%). That makes the congregation the place they are least likely to be " +
-      "known — behind family, friends, and school.",
+      "are out to at least some members of their faith community — lower than the " +
+      "shares who are out to family, friends, or people at school.",
     source: "HRC Foundation, 2024 Black LGBTQ+ Youth Report",
   },
   {
     figure: "25.9%",
     detail:
       "said the leaders of their faith community support and include them as an " +
-      "LGBTQ+ person. Among Latine LGBTQ+ youth it is 20%. Which leaves roughly " +
-      "three in four sitting in a pew on Sunday without that.",
+      "LGBTQ+ person; 20% among Latine LGBTQ+ youth.",
     source: "HRC Foundation, 2024 Black and Latine LGBTQ+ Youth Reports",
   },
 ];
@@ -275,35 +265,29 @@ const work: Stat[] = [
     figure: "47%",
     detail:
       "of LGBTQ workers have experienced discrimination or harassment at work at " +
-      "some point. A third — 34% — have been fired, not hired, or passed over for " +
-      "promotion because of who they are. 17% experienced something in the past year " +
-      "alone.",
+      "some point. 34% have been fired, not hired, or passed over for promotion. 17% " +
+      "experienced something in the past year.",
     source:
       "Williams Institute, UCLA School of Law — survey of 1,902 LGBTQ workers, 2023",
   },
   {
     figure: "46%",
     detail:
-      "are not out to their current supervisor, and 21% are not out to a single " +
-      "coworker. A great many people spend their working lives managing what their " +
-      "colleagues know.",
+      "are not out to their current supervisor, and 21% are not out to any coworker.",
     source: "Williams Institute, UCLA School of Law, 2023",
   },
   {
     figure: "39% vs. 12%",
     detail:
-      "reported discrimination among those who are out at work, against those who " +
-      "are out to no one — more than three times the rate. Being known carries a " +
-      "cost, and people price that cost accurately. It is worth remembering before " +
-      "telling anyone that they ought to be braver.",
+      "reported discrimination among those who are out at work, compared with those " +
+      "who are out to no one.",
     source: "Williams Institute, UCLA School of Law, 2023",
   },
   {
     figure: "33%",
     detail:
       "have left a job because of how an employer treated them over their sexual " +
-      "orientation or gender identity. Discrimination does not only cost people a " +
-      "promotion. It costs them careers.",
+      "orientation or gender identity.",
     source: "Williams Institute, UCLA School of Law, 2023",
   },
 ];
@@ -315,35 +299,30 @@ const older: Stat[] = [
   {
     figure: "3 million → 7 million",
     detail:
-      "LGBT adults over the age of 50 in the United States today, a figure expected " +
-      "to reach around seven million by 2030. These are people who came of age when " +
-      "being openly gay could cost you your job, your housing, or your liberty.",
+      "LGBT adults over the age of 50 in the United States, expected to reach around " +
+      "seven million by 2030. Many came of age when being openly gay was grounds for " +
+      "arrest or dismissal.",
     source: "SAGE and the National Resource Center on LGBT Aging, Facts on LGBT Aging",
   },
   {
     figure: "2× and 4×",
-    detail:
-      "as likely to live alone, and four times less likely to have children. The " +
-      "care network that most people assume will be there — a spouse, grown kids " +
-      "nearby — is far less likely to exist. What stands in its place is friends and " +
-      "community.",
+    detail: "as likely to live alone, and four times less likely to have children.",
     source: "SAGE and the National Resource Center on LGBT Aging",
   },
   {
     figure: "59% and 53%",
     detail:
       "report a lack of companionship and feeling isolated from others. Among SAGE’s " +
-      "care-management clients in New York City, one in four said they had no one at " +
-      "all to call in an emergency.",
+      "care-management clients in New York City, one in four said they had no one to " +
+      "call in an emergency.",
     source: "SAGE and the National Resource Center on LGBT Aging",
   },
   {
     figure: "34%",
     detail:
       "worry about having to hide who they are in order to get into senior housing. " +
-      "And 88% say they would feel more comfortable in long-term care if they knew " +
-      "staff had been trained in the needs of LGBT patients. Some people go back " +
-      "into the closet in order to be cared for.",
+      "88% say they would feel more comfortable in long-term care if they knew staff " +
+      "had been trained in the needs of LGBT patients.",
     source: "SAGE, drawing on AARP’s Maintaining Dignity survey of LGBT adults 45+",
   },
   {
@@ -362,9 +341,8 @@ const marriage: Stat[] = [
   {
     figure: "65%",
     detail:
-      "of Americans favor legal same-sex marriage. That is down from a peak of 71% " +
-      "in 2022 and 2023 — and up from 27% when Gallup first asked the question in " +
-      "1996. The long trend is steeply upward; the last three years are not.",
+      "of Americans favor legal same-sex marriage, down from a peak of 71% in 2022 " +
+      "and 2023, and up from 27% when Gallup first asked the question in 1996.",
     source:
       "Gallup, Values and Beliefs survey, May 1–17 2026 (1,001 adults, ±4 points)",
   },
@@ -372,26 +350,21 @@ const marriage: Stat[] = [
     figure: "87% / 67% / 37%",
     detail:
       "support among Democrats, independents, and Republicans respectively. " +
-      "Republican support stood at 55% in 2021 and 2022. Nearly all of the recent " +
-      "national decline sits in one of those three columns.",
+      "Republican support stood at 55% in 2021 and 2022.",
     source: "Gallup, May 2026",
   },
   {
     figure: "62%",
     detail:
       "say gay or lesbian relations are morally acceptable — the lowest reading " +
-      "since 2016. Acceptance is not a ratchet that only turns one way, which is " +
-      "worth knowing before assuming this conversation has already been settled by " +
-      "time.",
+      "since 2016.",
     source: "Gallup, May 2026",
   },
   {
     figure: "76%",
     detail:
-      "of white mainline Protestants support same-sex marriage — higher than the " +
-      "country as a whole. Across all Americans, 72% support nondiscrimination " +
-      "protections for LGBTQ people. In this tradition, welcome is the majority " +
-      "position, not the brave one.",
+      "of white mainline Protestants support same-sex marriage. Across all " +
+      "Americans, 72% support nondiscrimination protections for LGBTQ people.",
     source: "PRRI 2025 American Values Atlas (22,000+ adults)",
   },
 ];
@@ -612,16 +585,22 @@ export default function Forum() {
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
           On Sunday, October 25, we are setting aside time to talk together about
-          coming out &mdash; what it asks of a person, what it asks of a family,
-          and what it asks of a church. This page is where you can send a
-          question ahead of time.
+          coming out. This page is where you can send a question ahead of time.
         </p>
         <p>
-          There is no question too small, too blunt, or too late. The ones that
-          are hardest to say out loud are usually the ones worth the hour. If you
-          would rather not put your name to it, you don&apos;t have to.
+          No question is too small or too blunt. If you would rather not put your
+          name to it, you don&apos;t have to.
         </p>
       </div>
+
+      {/* The page is still being written ahead of Sunday and the link is
+          already circulating. Say so, rather than letting someone assume a
+          half-finished section is the finished position. */}
+      <p className="mt-8 border-l-2 border-accent/40 pl-4 text-sm text-ink/60">
+        A work in progress. This page is still being put together ahead of
+        Sunday, so wording and sections may change. The question form below
+        works now, and anything you send is already saved.
+      </p>
 
       {/* ── Ask a question ──────────────────────────────────────────────────────── */}
       <section className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
@@ -693,15 +672,13 @@ export default function Forum() {
                 nothing is posted publicly.
               </p>
               <p>
-                Submissions are kept only until they are deleted after the
-                forum, and you can ask for yours to be removed sooner at any
-                time. If you are not out, or not out to everyone, use the
-                anonymous option below &mdash; it is there for exactly this,
-                and ticking it means your name and email are never sent.
+                Submissions are kept only for the forum, and you can ask for yours to be
+                deleted at any time. Checking the box above means your name and email
+                are never sent.
               </p>
               <p>
                 Please don&apos;t use this form for anything urgent &mdash;
-                questions are read before Sunday, not continuously. If you need
+                questions are read on or before Sunday. If you need
                 someone now, the{" "}
                 <Link to="/care#crisis" className={linkClass}>
                   crisis resources
@@ -735,7 +712,7 @@ export default function Forum() {
                     className="mt-1"
                   />
                   <span>
-                    You may use my name if you raise this. Leave it unticked
+                    You may use my name if you raise this. Leave it unchecked
                     to stay unattributed.
                   </span>
                 </label>
@@ -825,21 +802,18 @@ export default function Forum() {
         <h2 className="font-serif text-2xl mb-3">What the research says</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            One thing to hold onto before any of these numbers: LGBTQ+ young
-            people are not at higher risk because of who they are. They are at
-            higher risk because of how they are treated. That is the framing the
-            researchers themselves use, and it matters, because it means the risk can
-            change. It answers to what the people around someone do.
+            One consideration before these statistics: LGBTQ+ young people are not at
+            higher risk because of who they are. They are at higher risk because of
+            how they are treated. That is the framing the researchers themselves
+            use, and it matters, because it means the risk can change. People and
+            environment can change.
           </p>
+
           <p>
-            Which is the uncomfortable and hopeful thing about a forum like this
-            one. The variable in most of this research is us.
-          </p>
-          <p>
-            What follows runs the length of a life, not just the start of one:
-            a teenager deciding whether to tell their parents, an adult deciding
-            whether to tell a manager, someone in their eighties deciding
-            whether it is safe to be known in a care home.
+            Coming out happens over a lifetime rather than in a single moment: a
+            teenager deciding whether to tell their parents, an adult deciding
+            whether to tell a manager, someone in their eighties deciding whether
+            it is safe to be known in a care home.
           </p>
         </div>
       </section>
@@ -855,7 +829,7 @@ export default function Forum() {
       </section>
 
       <section className="mt-14">
-        <h3 className="font-serif text-xl">The scale of it</h3>
+        <h3 className="font-serif text-xl">Reality is</h3>
         <StatList items={scale} />
       </section>
 
@@ -922,51 +896,28 @@ export default function Forum() {
         <h3 className="font-serif text-xl">Growing older</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
-            Almost all of the research on this subject is about young people,
-            which can leave the impression that it is a young person&apos;s
-            question. The people in a pew on a given Sunday are, on average, not
-            young. And the oldest LGBTQ+ people in any congregation are the ones
-            who paid the highest price for being known.
+            Almost all of the research on this subject is about young people. The
+            figures
+            below are about adults over 50.
           </p>
         </div>
         <StatList items={older} />
-        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-8">
-          <p>
-            Read those first two figures together and something specific comes
-            into view. The thing many older LGBTQ+ people are short of is not
-            money or medicine. It is the ordinary web of people who notice when
-            you don&apos;t turn up &mdash; and that is close to a definition of
-            what a congregation is for.
-          </p>
-        </div>
       </section>
 
       <section className="mt-14">
         <h3 className="font-serif text-xl">What young people say about church</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
-            These are the numbers that belong to us. The questions behind them
-            were asked of Black and Latine LGBTQ+ young people, so they describe
-            those groups rather than all young people &mdash; but they are the
-            clearest picture anyone has of what it is like to be queer and in a
-            pew.
+            Two limits on these figures, which matter for how they are used. They come
+            from HRC surveys of Black and Latine LGBTQ+ young people, so they
+            describe those groups rather than all young people. And the surveys
+            asked each respondent about their own religious upbringing without
+            recording a denomination or tradition &mdash; so the figures say
+            nothing about any particular church, denomination, or community, and
+            should not be quoted as though they did.
           </p>
         </div>
         <StatList items={church} />
-        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-8">
-          <p>
-            Set that last figure against the one at the top of this page. One
-            affirming space in a young person&apos;s life is associated with 35%
-            lower odds of a suicide attempt. And of all the places in their
-            lives, church is where they are least likely to be known.
-          </p>
-          <p>
-            That gap is an opening. It is the most straightforward thing on this entire
-            page: there is a protective
-            factor with good evidence behind it, and a congregation can simply
-            decide to be one.
-          </p>
-        </div>
       </section>
 
       <section className="mt-14">
@@ -984,25 +935,22 @@ export default function Forum() {
         <h2 className="font-serif text-2xl mb-3">Where the ELCA stands</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            The wider church has been having this conversation for years, and it remains
-            open. In 2009 the Churchwide Assembly voted to
-            let congregations call partnered gay pastors and to recognize
-            same-sex relationships.
+            The wider church has been having this conversation for years. In 2009 the
+            Churchwide Assembly voted to let congregations call partnered gay
+            pastors and to recognize same-sex relationships.
           </p>
           <p>
             The 2022 Assembly reopened the 2009 social statement{" "}
             <em>Human Sexuality: Gift and Trust</em>. The first revision &mdash;
             the language on marriage and family &mdash; was adopted at the 2025
             Churchwide Assembly by a vote of 724 to 46, and is now the official
-            text. A second reconsideration, on &ldquo;bound conscience,&rdquo; is
-            still underway and will come to a future assembly. So this forum is
-            happening inside a live question, not after one.
+            text. A second reconsideration, on &ldquo;bound
+            conscience,&rdquo; is still underway and will come to a future
+            assembly. The question remains open.
           </p>
           <p>
-            Since 1983, the way a Lutheran congregation has said this out loud is
-            the Reconciling in Christ program. Whether that is something this
-            congregation wants to take up is exactly the kind of question worth
-            bringing on Sunday.
+            Since 1983, the way a Lutheran congregation has stated a public position on
+            this has been the Reconciling in Christ program.
           </p>
         </div>
       </section>
@@ -1028,9 +976,8 @@ export default function Forum() {
           and state surveys and research briefs, the Human Rights Campaign
           Foundation&apos;s LGBTQ+ Youth Reports and Community Insights surveys,
           the Family Acceptance Project at San Francisco State University, Pew
-          Research Center, and PRRI&apos;s American Values Atlas. Each is named
-          with its year and sample above, because where a number comes from is
-          part of the number.
+          Research Center, and PRRI&apos;s American Values Atlas. Each is named with its
+          year and sample above.
         </p>
       </div>
     </div>
