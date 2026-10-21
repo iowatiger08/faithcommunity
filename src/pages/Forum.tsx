@@ -145,7 +145,7 @@ const scale: Stat[] = [
   {
     figure: "51% and 67%",
     detail:
-      "of LGBTQ+ youth screened positive for depression and for anxiety " +
+      "of LGBTQ+ youth reported for depression and for anxiety " +
       "respectively, and 30% for severe psychological distress. Transgender and " +
       "gender-expansive youth were higher on every measure.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report",
@@ -224,14 +224,6 @@ const faith: Stat[] = [
       "is something a congregation chooses.",
     source: "The Trevor Project research brief, December 2022",
   },
-  {
-    figure: "76%",
-    detail:
-      "of white mainline Protestants support same-sex marriage. Across all " +
-      "Americans, 72% support nondiscrimination protections for LGBTQ people and 65% " +
-      "favor same-sex marriage.",
-    source: "PRRI 2025 American Values Atlas (22,000+ adults)",
-  },
 ];
 
 // The most directly relevant data on this page for a congregation: church is
@@ -272,6 +264,135 @@ const church: Stat[] = [
       "LGBTQ+ person. Among Latine LGBTQ+ youth it is 20%. Which leaves roughly " +
       "three in four sitting in a pew on Sunday without that.",
     source: "HRC Foundation, 2024 Black and Latine LGBTQ+ Youth Reports",
+  },
+];
+
+// Employment. Worth having on the page because the forum is not only about
+// teenagers: most of the congregation is of working age, and these figures
+// describe a decision adults make every week about whether to be known.
+const work: Stat[] = [
+  {
+    figure: "47%",
+    detail:
+      "of LGBTQ workers have experienced discrimination or harassment at work at " +
+      "some point. A third — 34% — have been fired, not hired, or passed over for " +
+      "promotion because of who they are. 17% experienced something in the past year " +
+      "alone.",
+    source:
+      "Williams Institute, UCLA School of Law — survey of 1,902 LGBTQ workers, 2023",
+  },
+  {
+    figure: "46%",
+    detail:
+      "are not out to their current supervisor, and 21% are not out to a single " +
+      "coworker. A great many people spend their working lives managing what their " +
+      "colleagues know.",
+    source: "Williams Institute, UCLA School of Law, 2023",
+  },
+  {
+    figure: "39% vs. 12%",
+    detail:
+      "reported discrimination among those who are out at work, against those who " +
+      "are out to no one — more than three times the rate. Being known carries a " +
+      "cost, and people price that cost accurately. It is worth remembering before " +
+      "telling anyone that they ought to be braver.",
+    source: "Williams Institute, UCLA School of Law, 2023",
+  },
+  {
+    figure: "33%",
+    detail:
+      "have left a job because of how an employer treated them over their sexual " +
+      "orientation or gender identity. Discrimination does not only cost people a " +
+      "promotion. It costs them careers.",
+    source: "Williams Institute, UCLA School of Law, 2023",
+  },
+];
+
+// Aging. Nearly all of the research on this subject is about young people,
+// which can leave the impression that this is a young person's question. The
+// people in a pew on a given Sunday are, on average, not young.
+const older: Stat[] = [
+  {
+    figure: "3 million → 7 million",
+    detail:
+      "LGBT adults over the age of 50 in the United States today, a figure expected " +
+      "to reach around seven million by 2030. These are people who came of age when " +
+      "being openly gay could cost you your job, your housing, or your liberty.",
+    source: "SAGE and the National Resource Center on LGBT Aging, Facts on LGBT Aging",
+  },
+  {
+    figure: "2× and 4×",
+    detail:
+      "as likely to live alone, and four times less likely to have children. The " +
+      "care network that most people assume will be there — a spouse, grown kids " +
+      "nearby — is far less likely to exist. What stands in its place is friends and " +
+      "community.",
+    source: "SAGE and the National Resource Center on LGBT Aging",
+  },
+  {
+    figure: "59% and 53%",
+    detail:
+      "report a lack of companionship and feeling isolated from others. Among SAGE’s " +
+      "care-management clients in New York City, one in four said they had no one at " +
+      "all to call in an emergency.",
+    source: "SAGE and the National Resource Center on LGBT Aging",
+  },
+  {
+    figure: "34%",
+    detail:
+      "worry about having to hide who they are in order to get into senior housing. " +
+      "And 88% say they would feel more comfortable in long-term care if they knew " +
+      "staff had been trained in the needs of LGBT patients. Some people go back " +
+      "into the closet in order to be cared for.",
+    source: "SAGE, drawing on AARP’s Maintaining Dignity survey of LGBT adults 45+",
+  },
+  {
+    figure: "82%",
+    detail:
+      "report at least one instance of victimization — threats, harassment, or " +
+      "physical assault — and about two-thirds have experienced it three or more " +
+      "times. More than half report discrimination in employment, housing, or both.",
+    source: "SAGE and the National Resource Center on LGBT Aging",
+  },
+];
+
+// Marriage. This is the question the ELCA has been formally reconsidering, so
+// the national numbers are the backdrop to the section that follows.
+const marriage: Stat[] = [
+  {
+    figure: "65%",
+    detail:
+      "of Americans favor legal same-sex marriage. That is down from a peak of 71% " +
+      "in 2022 and 2023 — and up from 27% when Gallup first asked the question in " +
+      "1996. The long trend is steeply upward; the last three years are not.",
+    source:
+      "Gallup, Values and Beliefs survey, May 1–17 2026 (1,001 adults, ±4 points)",
+  },
+  {
+    figure: "87% / 67% / 37%",
+    detail:
+      "support among Democrats, independents, and Republicans respectively. " +
+      "Republican support stood at 55% in 2021 and 2022. Nearly all of the recent " +
+      "national decline sits in one of those three columns.",
+    source: "Gallup, May 2026",
+  },
+  {
+    figure: "62%",
+    detail:
+      "say gay or lesbian relations are morally acceptable — the lowest reading " +
+      "since 2016. Acceptance is not a ratchet that only turns one way, which is " +
+      "worth knowing before assuming this conversation has already been settled by " +
+      "time.",
+    source: "Gallup, May 2026",
+  },
+  {
+    figure: "76%",
+    detail:
+      "of white mainline Protestants support same-sex marriage — higher than the " +
+      "country as a whole. Across all Americans, 72% support nondiscrimination " +
+      "protections for LGBTQ people. In this tradition, welcome is the majority " +
+      "position, not the brave one.",
+    source: "PRRI 2025 American Values Atlas (22,000+ adults)",
   },
 ];
 
@@ -395,7 +516,7 @@ export default function Forum() {
         setToken(data.token);
         setCode("");
       } else {
-        setGateError(data.error ?? 
+        setGateError(data.error ??
           "That code didn't match. Check with the facilitator.");
       }
     } catch {
@@ -466,7 +587,7 @@ export default function Forum() {
         title="Forum Questions"
         description={
           "Submit a question ahead of the Windsor Heights Lutheran Church forum on " +
-          "coming out and being queer as a Christian, and read the research on " +
+          "coming out, and read the research on " +
           "acceptance, faith, and LGBTQ+ youth."
         }
         path="/forum/"
@@ -690,6 +811,12 @@ export default function Forum() {
             Which is the uncomfortable and hopeful thing about a forum like this
             one. The variable in most of this research is us.
           </p>
+          <p>
+            What follows runs the length of a life, not just the start of one:
+            a teenager deciding whether to tell their parents, an adult deciding
+            whether to tell a manager, someone in their eighties deciding
+            whether it is safe to be known in a care home.
+          </p>
         </div>
       </section>
 
@@ -743,6 +870,54 @@ export default function Forum() {
       </section>
 
       <section className="mt-14">
+        <h3 className="font-serif text-xl">At work</h3>
+        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
+          <p>
+            Since 2020 this has been settled federal law. In{" "}
+            <em>Bostock v. Clayton County</em> the Supreme Court held that Title
+            VII&apos;s ban on sex discrimination covers sexual orientation and
+            gender identity, which means firing someone for being gay or
+            transgender is illegal employment discrimination nationwide. Every
+            figure below was gathered after that ruling.
+          </p>
+          <p>
+            In Iowa the ground moved the other way more recently. In February
+            2025 the state removed gender identity from the Iowa Civil Rights
+            Act, effective that July &mdash; the first state in the country to
+            repeal a protection of that kind rather than simply never having had
+            one. Sexual orientation remains protected under Iowa law, and the
+            federal employment protection still stands. But for transgender
+            Iowans, the state-level protections covering housing, wages, and
+            public accommodations are gone.
+          </p>
+        </div>
+        <StatList items={work} />
+      </section>
+
+      <section className="mt-14">
+        <h3 className="font-serif text-xl">Growing older</h3>
+        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
+          <p>
+            Almost all of the research on this subject is about young people,
+            which can leave the impression that it is a young person&apos;s
+            question. The people in a pew on a given Sunday are, on average, not
+            young. And the oldest LGBTQ+ people in any congregation are the ones
+            who paid the highest price for being known.
+          </p>
+        </div>
+        <StatList items={older} />
+        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-8">
+          <p>
+            Read those first two figures together and something specific comes
+            into view. The thing many older LGBTQ+ people are short of is not
+            money or medicine. It is the ordinary web of people who notice when
+            you don&apos;t turn up &mdash; and that is close to a definition of
+            what a congregation is for.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
         <h3 className="font-serif text-xl">What young people say about church</h3>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
           <p>
@@ -773,6 +948,11 @@ export default function Forum() {
       <section className="mt-14">
         <h3 className="font-serif text-xl">Faith, and the people who hold both</h3>
         <StatList items={faith} />
+      </section>
+
+      <section className="mt-14">
+        <h3 className="font-serif text-xl">Marriage</h3>
+        <StatList items={marriage} />
       </section>
 
       {/* ── Lutheran context ────────────────────────────────────────────────────── */}

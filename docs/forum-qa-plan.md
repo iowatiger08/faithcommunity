@@ -262,7 +262,30 @@ All figures verified against primary sources during planning. Each renders with 
 - **63.1%** reported at least one supportive parental response and **57.4%** at least one rejecting one — overlapping majorities, so most young people get both from the same family. HRC Foundation 2023 LGBTQ+ Youth Report.
 - **85%** of LGBTQ+ adults are at least somewhat open; **33%** more open than two years ago, **22%** less, and **78%** think acceptance of transgender and nonbinary people has fallen — HRC Community Insights, 9,328 adults, August–September 2026. Outness is not a one-way door.
 
-### Group 5 — What young people say about church (HRC)
+### Group 5 — At work
+
+Added because the forum is not only about teenagers — most of the congregation is of working age, and these figures describe a decision adults make every week.
+
+- **47%** of LGBTQ workers have experienced discrimination or harassment at work at some point; **34%** have been fired, not hired, or passed over for promotion; **17%** in the past year — Williams Institute, UCLA, survey of 1,902 LGBTQ workers, 2023.
+- **46%** are not out to their current supervisor; **21%** are not out to any coworker.
+- **39% vs. 12%** reported discrimination among those out at work against those out to no one — more than triple. Being known carries a cost and people price it accurately.
+- **33%** have left a job over an employer's treatment of their orientation or gender identity.
+
+Legal framing stated on the page, and it must stay precise: *Bostock v. Clayton County* (2020) made firing someone for being gay or transgender illegal nationwide under Title VII. Separately, in **February 2025 Iowa removed gender identity from the Iowa Civil Rights Act**, effective July 2025 — the first state to repeal such a protection rather than never having had one. **Sexual orientation remains protected under Iowa law and the federal employment protection still stands**; what transgender Iowans lost were the state-level housing, wage, and public-accommodation protections. Overstating that repeal would be its own misinformation, and a test asserts the qualifier stays on the page.
+
+### Group 6 — Growing older
+
+Nearly all research on this subject concerns young people, which misleads a congregation whose members are mostly not young.
+
+- **~3 million** LGBT adults over 50 in the US, expected to reach **~7 million by 2030** — SAGE and the National Resource Center on LGBT Aging.
+- **2×** as likely to live alone and **4×** less likely to have children: the assumed care network of spouse and nearby grown children is far less likely to exist.
+- **59%** report a lack of companionship and **53%** feeling isolated; a quarter of SAGE's New York care-management clients had **no one to call in an emergency**.
+- **34%** worry about hiding who they are to get into senior housing; **88%** would feel more comfortable in long-term care with LGBT-trained staff. Some people re-closet themselves in order to be cared for.
+- **82%** report at least one instance of victimization and about two-thirds three or more; more than half report employment or housing discrimination.
+
+The page draws the conclusion explicitly: what these elders lack is not money or medicine but the ordinary web of people who notice when you don't turn up — which is close to a definition of what a congregation is for.
+
+### Group 7 — What young people say about church (HRC)
 
 The most directly relevant group on the page for a congregation. These questions were asked in HRC's reports on Black and Latine LGBTQ+ youth, so the figures describe those populations — the page states that scope explicitly rather than implying they cover all young people.
 
@@ -273,13 +296,22 @@ The most directly relevant group on the page for a congregation. These questions
 
 Pair the third figure with Group 1's affirming-space finding: one affirming space is associated with 35% lower odds of a suicide attempt, and church is the place these young people are least likely to be known. That gap is the argument for the forum, and the page makes it explicitly.
 
-### Group 6 — Faith and the queer community
+### Group 8 — Faith and the queer community
 
 - **21%** of LGBTQ youth say religion or spirituality is important or very important (26% of those 18–24); **23%** pray or reflect at least weekly — Trevor Project brief, December 2022.
 - That brief found valuing religion associated with slightly lower depression (55% vs. 58%) but **no significant relationship with suicidality** — faith on its own is neither protective nor harmful here; what matters is whether the community is affirming. State it that way rather than overclaiming in either direction.
 - **72%** of Americans support LGBTQ nondiscrimination protections, **65%** favor same-sex marriage, **76%** of white mainline Protestants favor same-sex marriage — PRRI 2025 American Values Atlas (22,000+ adults).
 
-### Group 7 — Lutheran and ELCA context
+### Group 9 — Marriage
+
+Placed immediately before the ELCA section, because marriage is precisely what the ELCA has been reconsidering.
+
+- **65%** of Americans favor legal same-sex marriage — down from a **71%** peak in 2022–23, up from **27%** in 1996 — Gallup Values and Beliefs survey, May 1–17 2026 (1,001 adults, ±4).
+- **87% / 67% / 37%** among Democrats, independents, and Republicans; Republican support was 55% in 2021–22, so nearly all the recent decline sits in one column.
+- **62%** say gay or lesbian relations are morally acceptable — the lowest since 2016. Acceptance is not a ratchet that turns only one way.
+- **76%** of white mainline Protestants support same-sex marriage, above the national figure; **72%** of all Americans back nondiscrimination protections. In this tradition welcome is the majority position, not the brave one. (PRRI 2025 — moved here from the faith group, where it sat awkwardly.)
+
+### Group 10 — Lutheran and ELCA context
 
 - The **2009 ELCA Churchwide Assembly** voted to let congregations ordain partnered gay clergy and recognize same-sex relationships.
 - The 2022 Assembly authorized reconsidering the 2009 social statement *Human Sexuality: Gift and Trust*. The first reconsideration (Section IV, marriage and family language) was **adopted at the 2025 Churchwide Assembly by a two-thirds vote, 724–46**, and is now the official text. A **second reconsideration, on "bound conscience," is still underway** — worth naming, because it is the live question in the ELCA right now and this forum sits inside it.
@@ -346,6 +378,10 @@ Both `.env` and `lambda/samconfig.toml` are **tracked in git** (`.gitignore` cov
 - Pew, acceptance & discrimination (May 2025) — https://www.pewresearch.org/social-trends/2025/05/29/personal-experiences-with-acceptance-and-discrimination/
 - Pew 2013, coming out chapter — https://www.pewresearch.org/social-trends/2013/06/13/chapter-3-the-coming-out-experience/
 - PRRI 2025 American Values Atlas — https://prri.org/research/americans-support-for-key-lgbtq-rights-continues-to-tick-upward/
+- Gallup, U.S. Support for LGBTQ+ Issues Remains Down From Peak (May 2026) — https://news.gallup.com/poll/710810/support-lgbtq-issues-remains-down-peak.aspx
+- Williams Institute, LGBTQ workplace discrimination and harassment — https://williamsinstitute.law.ucla.edu/publications/lgbt-workplace-discrimination/
+- SAGE / National Resource Center on LGBT Aging, Facts on LGBT Aging — https://www.sageusa.org/
+- Iowa Senate File 418 (gender identity removed from the Iowa Civil Rights Act, 2025) — https://en.wikipedia.org/wiki/Iowa_Senate_File_418
 - HRC 2023 LGBTQ+ Youth Report — https://reports.hrc.org/2023-lgbtq-youth-report
 - HRC 2024 Black LGBTQ+ Youth Report — https://www.hrc.org/press-releases/human-rights-campaign-report-releases-new-data-on-experiences-of-black-queer-youth
 - HRC 2024 Latine LGBTQ+ Youth Report — https://www.hrc.org/press-releases/out-proud-latine-new-report-finds-that-nearly-90-of-latine-lgbtq-youth-are-proud-of-their-identity-but-many-still-struggle-with-challenges-surrounding-being-queer-or-trans
@@ -356,6 +392,8 @@ Both `.env` and `lambda/samconfig.toml` are **tracked in git** (`.gitignore` cov
 - ReconcilingWorks / RIC — https://www.reconcilingworks.org/
 - One Iowa hotlines & support — https://oneiowa.org/resources/hotlines-support/
 - Iowa Safe Schools — https://iowasafeschools.org/
+
+A note on the aging figures: SAGE's fact sheet compiles research spanning roughly 2010–2018 (AARP's Maintaining Dignity, Fredriksen-Goldsen's Aging and Health, SAGE's Out & Visible). It is the best accessible compilation, but it is not fresh data, and the page credits SAGE rather than implying a current survey.
 
 A fourth note: the HRC faith figures (religion unfriendly, guilt and shame, outness to a congregation, leader support) come from the **Black and Latine** youth reports specifically, because that is where the questions were asked. Do not restate them as applying to all LGBTQ+ youth; the page names the scope on the figures themselves. The **56%/70%** "political climate made me less open" figures that circulate from HRC's 2026 survey could not be confirmed on HRC's own page — only the 85 / 33 / 22 / 45 / 78 / 65 figures were — so they are left out.
 

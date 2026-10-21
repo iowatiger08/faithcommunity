@@ -119,6 +119,50 @@ describe("the public part of the page", () => {
     expect(screen.getByText(/August.September 2026/)).toBeTruthy();
   });
 
+  it("covers work, not just youth", () => {
+    renderForum();
+    expect(screen.getByText(/^At work$/)).toBeTruthy();
+    expect(screen.getByText("47%")).toBeTruthy();
+    expect(screen.getByText("39% vs. 12%")).toBeTruthy();
+    expect(screen.getAllByText(/Williams Institute/).length).toBeGreaterThan(2);
+    // Bostock made this federal law; the Iowa repeal is the local counterpoint.
+    expect(screen.getByText(/Bostock v. Clayton County/)).toBeTruthy();
+    expect(screen.getByText(/removed gender identity from the Iowa Civil Rights/i)).toBeTruthy();
+  });
+
+  it("is precise about what Iowa law still protects", () => {
+    renderForum();
+    // Sexual orientation was NOT repealed, and federal employment protection
+    // survives. Overstating the repeal would be its own kind of misinformation.
+    expect(screen.getByText(/Sexual orientation remains protected under Iowa law/i)).toBeTruthy();
+  });
+
+  it("covers growing older, where most of the congregation actually is", () => {
+    renderForum();
+    expect(screen.getByText(/^Growing older$/)).toBeTruthy();
+    expect(screen.getByText(/3 million/)).toBeTruthy();
+    expect(screen.getByText(/2× and 4×/)).toBeTruthy();
+    expect(screen.getByText("82%")).toBeTruthy();
+    expect(screen.getAllByText(/SAGE/).length).toBeGreaterThan(2);
+    expect(screen.getByText(/notice when you don.t turn up/i)).toBeTruthy();
+  });
+
+  it("covers marriage acceptance, including that it can move backwards", () => {
+    renderForum();
+    expect(screen.getByText(/^Marriage$/)).toBeTruthy();
+    expect(screen.getByText("65%")).toBeTruthy();
+    expect(screen.getByText("87% / 67% / 37%")).toBeTruthy();
+    expect(screen.getAllByText(/Gallup/).length).toBeGreaterThan(2);
+    expect(screen.getByText(/not a ratchet that only turns one way/i)).toBeTruthy();
+    // The mainline figure moved here from the faith group; it should appear once.
+    expect(screen.getAllByText("76%")).toHaveLength(1);
+  });
+
+  it("frames the page as covering a whole life, not only adolescence", () => {
+    renderForum();
+    expect(screen.getByText(/runs the length of a life/i)).toBeTruthy();
+  });
+
   it("puts crisis resources on the page alongside the risk figures", () => {
     renderForum();
     expect(screen.getByText(/Call or text 988/)).toBeTruthy();
