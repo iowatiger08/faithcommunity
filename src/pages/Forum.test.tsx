@@ -280,6 +280,19 @@ describe("submitting", () => {
 });
 
 describe("bot defenses and privacy", () => {
+  it("tells people what happens to a submission, before they write it", async () => {
+    renderForum();
+    await enterGate();
+    // The privacy terms have to be visible at the moment of deciding whether
+    // to write something hard, not linked from a footer.
+    expect(screen.getByText(/only Pastor Tony/i)).toBeTruthy();
+    expect(screen.getByText(/without any\s+name attached/i)).toBeTruthy();
+    expect(screen.getByText(/ask for yours to be removed/i)).toBeTruthy();
+    const hrefs = Array.from(document.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/privacy");
+    expect(hrefs).toContain("/care#crisis");
+  });
+
   it("keeps a honeypot field present but hidden from assistive tech", async () => {
     renderForum();
     await enterGate();

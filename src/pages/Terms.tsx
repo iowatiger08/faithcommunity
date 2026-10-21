@@ -17,7 +17,7 @@ export default function Terms() {
         Using this ministry&apos;s content
       </h1>
       <p className="text-ink/60 text-sm mb-12">
-        Last updated: June 2026
+        Last updated: October 2026
       </p>
 
       <div className="space-y-12 text-ink/80 leading-relaxed">
@@ -198,6 +198,26 @@ export default function Terms() {
             Tony E Hansen asserts authorship only over his original writings.
             Quoted material remains under the rights of its respective
             authors or traditions.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-2xl mb-4">Information you send us</h2>
+          <p>
+            Everything above governs this ministry&apos;s own writing and how
+            you may use it. It does not cover the other direction &mdash; what
+            happens to a prayer request, a message, or a forum question that
+            you send to us.
+          </p>
+          <p className="mt-4">
+            That is set out separately, in plain language, on the{" "}
+            <Link to="/privacy" className="text-accent underline">
+              privacy page
+            </Link>
+            : what is collected, who can see it, how long it is kept, how to
+            have it deleted, and the terms that apply to what you submit. In
+            short, it goes to Tony and no one else, it is never published or
+            sold, and you can ask for it to be removed at any time.
           </p>
         </section>
 

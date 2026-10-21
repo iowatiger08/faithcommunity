@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 
 const CATEGORIES = [
@@ -59,6 +60,19 @@ export default function Contact() {
         <p>
           Send a prayer request, ask a question, or share a reflection on
           something you&apos;ve read here.
+        </p>
+        <p className="text-sm text-ink/60">
+          What you write goes to Tony and no one else. It is never published,
+          shared, or added to a mailing list, and you can ask for it to be
+          deleted at any time &mdash; see the{" "}
+          <Link to="/privacy" className="text-accent underline underline-offset-2 hover:no-underline">
+            privacy page
+          </Link>
+          . For anything urgent, please use the{" "}
+          <Link to="/care#crisis" className="text-accent underline underline-offset-2 hover:no-underline">
+            crisis resources
+          </Link>{" "}
+          instead &mdash; messages here are not monitored continuously.
         </p>
       </div>
 

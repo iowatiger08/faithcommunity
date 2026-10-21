@@ -18,6 +18,7 @@ import FourNobleTruths from "./pages/FourNobleTruths";
 import Forum from "./pages/Forum";
 import ForumAdmin from "./pages/ForumAdmin";
 import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { getAllPosts } from "./lib/content";
 import { currentSeason } from "./lib/liturgical";
@@ -66,6 +67,7 @@ const routes: RouteRecord[] = [
       { path: "community-sitting", Component: CommunitySitting },
       { path: "four-noble-truths", Component: FourNobleTruths },
       { path: "terms", Component: Terms },
+      { path: "privacy", Component: Privacy },
       // Unlisted on purpose — no nav or footer entry, and both are noindex.
       // The forum page is shared by link with one congregation; the admin view
       // is private to the pastor behind its own code.

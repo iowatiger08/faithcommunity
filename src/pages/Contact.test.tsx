@@ -39,6 +39,17 @@ describe("Contact page", () => {
     mockFetch.mockReset();
   });
 
+  it("says where a message goes and links to the privacy notice", () => {
+    renderContact();
+    expect(screen.getByText(/goes to Tony and no one else/i)).toBeTruthy();
+    expect(screen.getByText(/never published/i)).toBeTruthy();
+    const hrefs = Array.from(
+      document.querySelectorAll("a")
+    ).map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/privacy");
+    expect(hrefs).toContain("/care#crisis");
+  });
+
   it("renders the required form fields", () => {
     renderContact();
     expect(screen.getByPlaceholderText("you@example.com")).toBeTruthy();

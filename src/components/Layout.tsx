@@ -66,7 +66,7 @@ export default function Layout() {
           </div>
           <p className="text-xs text-ink/50 mt-8">
             &copy; {new Date().getFullYear()} Tony E Hansen / Hope and Truth Ministry.{" "}
-            <Link to="/terms" className="underline hover:text-ink/70">Terms of use</Link>.
+            <Link to="/terms" className="underline hover:text-ink/70">Terms of use</Link> &middot; <Link to="/privacy" className="underline hover:text-ink/70">Privacy</Link>.
           </p>
         </div>
       </footer>

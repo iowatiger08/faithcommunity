@@ -458,9 +458,25 @@ export default function Forum() {
                 name attached, and nothing is posted publicly.
               </p>
               <p>
-                Submissions are kept only until they are deleted after the forum.
-                If you are not out, or not out to everyone, use the anonymous
-                option below &mdash; it is there for exactly this.
+                Submissions are kept only until they are deleted after the
+                forum, and you can ask for yours to be removed sooner at any
+                time. If you are not out, or not out to everyone, use the
+                anonymous option below &mdash; it is there for exactly this,
+                and ticking it means your name and email are never sent.
+              </p>
+              <p>
+                Please don&apos;t use this form for anything urgent &mdash;
+                questions are read before Sunday, not continuously. If you need
+                someone now, the{" "}
+                <Link to="/care#crisis" className="text-accent underline underline-offset-2 hover:no-underline">
+                  crisis resources
+                </Link>{" "}
+                are there any hour. Full details of what happens to what you
+                send are on the{" "}
+                <Link to="/privacy" className="text-accent underline underline-offset-2 hover:no-underline">
+                  privacy page
+                </Link>
+                .
               </p>
             </div>
 
