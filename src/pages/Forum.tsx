@@ -5,6 +5,10 @@ import PageHead from "~/components/PageHead";
 
 const API_BASE = import.meta.env.VITE_FORUM_API_BASE;
 
+// Repeated on every inline link; named so the JSX stays readable.
+const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
+
+
 /**
  * Submissions close at noon CDT on the day of the forum. This is a courtesy
  * copy of the cutoff for the UI only &mdash; the Lambda enforces the same
@@ -33,7 +37,7 @@ interface Stat {
   source: string;
 }
 
-// ── Statistics ─────────────────────────────────────────────────────────────
+// ── Statistics ───────────────────────────────────────────────────────────────────────
 // Every figure is checked against a primary source, and every source is named
 // inline with its year. In a church forum the numbers will be questioned, and
 // an unsourced figure is worse than no figure. Years matter: where the newest
@@ -43,25 +47,34 @@ const acceptance: Stat[] = [
   {
     figure: "40% lower",
     detail:
-      "odds of a suicide attempt in the past year among LGBTQ+ young people who have at least one accepting adult in their life — 17%, against more than 25% for those who have none.",
+      "odds of a suicide attempt in the past year among LGBTQ+ young people who have " +
+      "at least one accepting adult in their life — 17%, compared with more than 25% " +
+      "for those who have none.",
     source: "The Trevor Project, 2019 national survey",
   },
   {
     figure: "35% lower",
     detail:
-      "odds of a past-year suicide attempt for young people with at least one LGBTQ-affirming space in their life. For transgender and nonbinary youth, a gender-affirming space is associated with 25% lower odds.",
+      "odds of a past-year suicide attempt for young people with at least one " +
+      "LGBTQ-affirming space in their life. For transgender and nonbinary youth, a " +
+      "gender-affirming space is associated with 25% lower odds.",
     source: "The Trevor Project research brief, 2020 data",
   },
   {
     figure: "6% vs. 18%",
     detail:
-      "attempted suicide in the past year among LGBTQ+ young people in very accepting communities, against those in very unaccepting ones — less than a third of the rate.",
-    source: "The Trevor Project, 2025 national survey (16,000+ young people, ages 13–24)",
+      "attempted suicide in the past year: 6% of LGBTQ+ young people in very " +
+      "accepting communities, compared with 18% in the least accepting. Less than a " +
+      "third of the rate.",
+    source:
+      "The Trevor Project, 2025 national survey (16,000+ young people, ages 13–24)",
   },
   {
     figure: "7% vs. 18%",
     detail:
-      "attempted suicide among transgender and nonbinary young people where everyone at home respected their pronouns, against those where no one did.",
+      "attempted suicide among transgender and nonbinary young people: 7% where " +
+      "everyone at home respected their pronouns, compared with 18% where no one " +
+      "did.",
     source: "The Trevor Project, 2025 national survey",
   },
 ];
@@ -70,25 +83,37 @@ const rejection: Stat[] = [
   {
     figure: "8.4×",
     detail:
-      "more likely to have attempted suicide: lesbian, gay, and bisexual young adults who experienced high levels of family rejection as adolescents. They were also 5.9× as likely to report high levels of depression and 3.4× as likely to use illegal drugs.",
+      "more likely to have attempted suicide: lesbian, gay, and bisexual young " +
+      "adults who experienced high levels of family rejection as adolescents. They " +
+      "were also 5.9× as likely to report high levels of depression and 3.4× as " +
+      "likely to use illegal drugs.",
     source: "Family Acceptance Project, San Francisco State University (Ryan et al.)",
   },
   {
     figure: "13%",
     detail:
-      "of LGBTQ+ young people have been threatened with or subjected to conversion therapy — a practice every major medical association rejects, and which is associated with more than double the likelihood of a past-year suicide attempt.",
+      "of LGBTQ+ young people have been threatened with or subjected to conversion " +
+      "therapy — a practice every major medical association rejects, and one " +
+      "associated with more than double the likelihood of a past-year suicide " +
+      "attempt.",
     source: "The Trevor Project, 2024 national survey",
   },
   {
     figure: "54%",
     detail:
-      "of the more than 1,320 active conversion therapy practitioners identified across 48 states operate in a ministerial or religious capacity. This is the harm a church is most likely to be implicated in, and the reason this forum is worth holding.",
+      "of the more than 1,320 active conversion therapy practitioners identified " +
+      "across 48 states operate in a ministerial or religious capacity. This is the " +
+      "harm a church is most likely to be caught up in, and the reason this forum is " +
+      "worth holding.",
     source: "The Trevor Project practitioner report",
   },
   {
     figure: "65.5% → 49.6%",
     detail:
-      "screened positive for depression among transgender and gender-expansive youth whose families never use their correct pronouns, against those whose families always do. Using a young person’s correct name moves the anxiety figure from 72.1% to 61.9%. The smallest courtesies are doing real work.",
+      "screened positive for depression among transgender and gender-expansive youth " +
+      "whose families never use their correct pronouns. Where families always use " +
+      "them, the figure falls to 49.6%. Using a young person’s correct name moves " +
+      "anxiety from 72.1% to 61.9%. Small courtesies are doing real work.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report (12,615 youth ages 13–18)",
   },
 ];
@@ -97,25 +122,32 @@ const scale: Stat[] = [
   {
     figure: "36%",
     detail:
-      "of LGBTQ+ young people seriously considered suicide in the past year, including 40% of transgender and nonbinary young people. One in ten attempted.",
+      "of LGBTQ+ young people seriously considered suicide in the past year, " +
+      "including 40% of transgender and nonbinary young people. One in ten attempted.",
     source: "The Trevor Project, 2025 national survey",
   },
   {
     figure: "59%",
     detail:
-      "of LGBTQ+ young people ages 13–17 were bullied in the past year. Those who were reported more than three times the rate of attempting suicide.",
+      "of LGBTQ+ young people ages 13–17 were bullied in the past year. Those who " +
+      "were bullied attempted suicide at more than three times the rate of those who " +
+      "were not.",
     source: "The Trevor Project, 2025 national survey",
   },
   {
     figure: "34% in Iowa",
     detail:
-      "of LGBTQ+ young people in this state seriously considered suicide in the past year, including 42% of transgender and nonbinary young people. Nine percent attempted — 13% among transgender and nonbinary youth.",
+      "of LGBTQ+ young people in this state seriously considered suicide in the past " +
+      "year, including 42% of transgender and nonbinary young people. Nine percent " +
+      "attempted — 13% among transgender and nonbinary youth.",
     source: "The Trevor Project, 2024 50-state report (Iowa)",
   },
   {
     figure: "51% and 67%",
     detail:
-      "of LGBTQ+ youth screened positive for depression and for anxiety respectively, and 30% for severe psychological distress. Transgender and gender-expansive youth were higher on every measure.",
+      "of LGBTQ+ youth screened positive for depression and for anxiety " +
+      "respectively, and 30% for severe psychological distress. Transgender and " +
+      "gender-expansive youth were higher on every measure.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report",
   },
 ];
@@ -124,38 +156,53 @@ const comingOut: Stat[] = [
   {
     figure: "96%",
     detail:
-      "of LGBTQ adults have told someone that they are or might be LGBTQ. But 23% are not out to their parents or the people who raised them.",
+      "of LGBTQ adults have told someone that they are or might be LGBTQ. Even so, " +
+      "23% have still not told their parents or the people who raised them.",
     source: "Pew Research Center, January 2025 survey",
   },
   {
     figure: "46%",
     detail:
-      "say all of their parents are accepting — 52% of gay and lesbian adults, 44% of bisexual adults, and 31% of transgender adults.",
+      "say all of their parents are accepting — 52% of gay and lesbian adults, 44% " +
+      "of bisexual adults, and 31% of transgender adults.",
     source: "Pew Research Center, 2025",
   },
   {
     figure: "56% and 39%",
     detail:
-      "had told their mother and their father respectively. One-third of religiously affiliated LGBT adults reported a conflict between their religious beliefs and their identity.",
+      "had told their mother and their father respectively. One-third of religiously " +
+      "affiliated LGBT adults reported a conflict between their religious beliefs " +
+      "and their identity.",
     source: "Pew Research Center, 2013 survey — the most recent with this breakdown",
   },
   {
     figure: "82.7%, but 26.4%",
     detail:
-      "of LGBTQ+ youth are out to at least one person in their immediate family — yet only a quarter are out to all of them, and 40.9% to all of their parents or guardians. Coming out is almost never one conversation. It is a long series of them, and it is rarely finished.",
+      "of LGBTQ+ youth are out to at least one person in their immediate family — " +
+      "but only a quarter are out to all of them, and 40.9% to all of their parents " +
+      "or guardians. Coming out is rarely one conversation. It is a long series of " +
+      "them, and it is seldom finished.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report (12,615 youth ages 13–18)",
   },
   {
     figure: "63% and 57%",
     detail:
-      "Both at once: 63.1% of LGBTQ+ youth reported at least one supportive response from a parent, and 57.4% reported at least one rejecting one. Those majorities overlap, which means most young people are getting both from the same family — often from the same person. Families are rarely all one thing.",
+      "Both at once: 63.1% of LGBTQ+ youth reported at least one supportive response " +
+      "from a parent, and 57.4% reported at least one rejecting one. Those " +
+      "majorities overlap, so most young people get both from the same family — " +
+      "often from the same person. Families are seldom all one thing.",
     source: "HRC Foundation, 2023 LGBTQ+ Youth Report",
   },
   {
     figure: "85%",
     detail:
-      "of LGBTQ+ adults are at least somewhat open about who they are. A third have grown more open over the past two years while 22% have grown less — and 78% believe social acceptance of transgender and nonbinary people has fallen in that time. Coming out is not a one-way door; people go back in when it stops feeling safe.",
-    source: "HRC Community Insights, survey of 9,328 LGBTQ+ adults, August–September 2026",
+      "of LGBTQ+ adults are at least somewhat open about who they are. A third have " +
+      "grown more open over the past two years, while 22% have grown less — and 78% " +
+      "believe social acceptance of transgender and nonbinary people has fallen in " +
+      "that time. Coming out runs both ways: people step back when it stops feeling " +
+      "safe.",
+    source:
+      "HRC Community Insights, survey of 9,328 LGBTQ+ adults, August–September 2026",
   },
 ];
 
@@ -163,19 +210,26 @@ const faith: Stat[] = [
   {
     figure: "21%",
     detail:
-      "of LGBTQ young people say religion or spirituality is important or very important to them — 26% of those aged 18–24. Nearly a quarter pray, meditate, or reflect at least weekly.",
+      "of LGBTQ young people say religion or spirituality is important or very " +
+      "important to them — 26% of those aged 18–24. Nearly a quarter pray, meditate, " +
+      "or reflect at least weekly.",
     source: "The Trevor Project research brief, December 2022",
   },
   {
     figure: "No significant effect",
     detail:
-      "was found between valuing religion and suicide risk, in either direction. Faith by itself is neither the danger nor the cure. What the research keeps pointing to is whether the community around a person is affirming — which is a thing a congregation decides.",
+      "was found between valuing religion and suicide risk, in either direction. " +
+      "Faith on its own does not settle the question. What the research keeps " +
+      "pointing to is whether the community around a person is affirming — and that " +
+      "is something a congregation chooses.",
     source: "The Trevor Project research brief, December 2022",
   },
   {
     figure: "76%",
     detail:
-      "of white mainline Protestants support same-sex marriage. Across all Americans, 72% support nondiscrimination protections for LGBTQ people and 65% favor same-sex marriage.",
+      "of white mainline Protestants support same-sex marriage. Across all " +
+      "Americans, 72% support nondiscrimination protections for LGBTQ people and 65% " +
+      "favor same-sex marriage.",
     source: "PRRI 2025 American Values Atlas (22,000+ adults)",
   },
 ];
@@ -188,26 +242,35 @@ const church: Stat[] = [
   {
     figure: "63.1%",
     detail:
-      "of Black LGBTQ+ youth raised in a religion said that religion was unfriendly to LGBTQ+ people. Among Latine LGBTQ+ youth the figure is 60.3%.",
+      "of Black LGBTQ+ youth raised in a religion said that religion was unfriendly " +
+      "to LGBTQ+ people. Among Latine LGBTQ+ youth the figure is 60.3%.",
     source:
-      "HRC Foundation, 2024 Black LGBTQ+ Youth Report (~1,200 youth, with the University of Connecticut) and 2024 Latine LGBTQ+ Youth Report (~2,200 youth)",
+      "HRC Foundation, 2024 Black LGBTQ+ Youth Report (~1,200 youth, with the " +
+      "University of Connecticut) and 2024 Latine LGBTQ+ Youth Report (~2,200 youth)",
   },
   {
     figure: "54.5%",
     detail:
-      "said their religious beliefs triggered feelings of guilt and shame when they came out — 52.1% among Latine LGBTQ+ youth. This is the part a church is directly responsible for. Not the family’s reaction, not the school’s: ours.",
+      "said their religious beliefs triggered feelings of guilt and shame when they " +
+      "came out — 52.1% among Latine LGBTQ+ youth. This is the part that belongs to " +
+      "the church. The family’s reaction belongs to the family and the school’s to " +
+      "the school. This one is ours.",
     source: "HRC Foundation, 2024 Black and Latine LGBTQ+ Youth Reports",
   },
   {
     figure: "1 in 5",
     detail:
-      "Black LGBTQ+ youth are out to even some members of their faith community (20.1%) — making the congregation the place they are least likely to be out of anywhere in their lives, behind family, friends, and school.",
+      "Black LGBTQ+ youth are out to even some members of their faith community " +
+      "(20.1%). That makes the congregation the place they are least likely to be " +
+      "known — behind family, friends, and school.",
     source: "HRC Foundation, 2024 Black LGBTQ+ Youth Report",
   },
   {
     figure: "25.9%",
     detail:
-      "said the leaders of their faith community support and include them as an LGBTQ+ person. Among Latine LGBTQ+ youth it is 20%. Which leaves roughly three in four sitting in a pew on Sunday without that.",
+      "said the leaders of their faith community support and include them as an " +
+      "LGBTQ+ person. Among Latine LGBTQ+ youth it is 20%. Which leaves roughly " +
+      "three in four sitting in a pew on Sunday without that.",
     source: "HRC Foundation, 2024 Black and Latine LGBTQ+ Youth Reports",
   },
 ];
@@ -233,12 +296,45 @@ interface Resource {
 }
 
 const local: Resource[] = [
-  { name: "One Iowa", href: "https://oneiowa.org/resources/hotlines-support/", detail: "Statewide LGBTQ advocacy, health care referrals, and a directory of hotlines and support groups." },
-  { name: "Iowa Safe Schools", href: "https://iowasafeschools.org/", detail: "Safe and affirming spaces for LGBTQ youth in Iowa schools since 2002." },
-  { name: "Capital City Pride", href: "https://capitalcitypride.org/resources/lgbtq-organizations/", detail: "A directory of LGBTQ+ organizations around Des Moines." },
-  { name: "PFLAG", href: "https://pflag.org/", detail: "Chapters for parents, families, and allies — the first place many parents find other parents." },
-  { name: "Human Rights Campaign — coming out resources", href: "https://www.hrc.org/resources/coming-out", detail: "Guides written for the person coming out and for the people they are coming out to, including workplaces, families, and faith communities. HRC also publishes the youth research cited on this page." },
-  { name: "ReconcilingWorks", href: "https://www.reconcilingworks.org/", detail: "The Lutheran body behind the Reconciling in Christ (RIC) program, which since 1983 has been how a congregation publicly declares itself welcoming." },
+  {
+    name: "One Iowa",
+    href: "https://oneiowa.org/resources/hotlines-support/",
+    detail:
+      "Statewide LGBTQ advocacy, health care referrals, and a directory of hotlines " +
+      "and support groups.",
+  },
+  {
+    name: "Iowa Safe Schools",
+    href: "https://iowasafeschools.org/",
+    detail: "Safe and affirming spaces for LGBTQ youth in Iowa schools since 2002.",
+  },
+  {
+    name: "Capital City Pride",
+    href: "https://capitalcitypride.org/resources/lgbtq-organizations/",
+    detail: "A directory of LGBTQ+ organizations around Des Moines.",
+  },
+  {
+    name: "PFLAG",
+    href: "https://pflag.org/",
+    detail:
+      "Chapters for parents, families, and allies — the first place many parents " +
+      "find other parents.",
+  },
+  {
+    name: "Human Rights Campaign — coming out resources",
+    href: "https://www.hrc.org/resources/coming-out",
+    detail:
+      "Guides written for the person coming out and for the people they are coming " +
+      "out to, including workplaces, families, and faith communities. HRC also " +
+      "publishes the youth research cited on this page.",
+  },
+  {
+    name: "ReconcilingWorks",
+    href: "https://www.reconcilingworks.org/",
+    detail:
+      "The Lutheran body behind the Reconciling in Christ (RIC) program, which since " +
+      "1983 has been how a congregation publicly declares itself welcoming.",
+  },
 ];
 
 function ResourceList({ items }: { items: Resource[] }) {
@@ -250,7 +346,7 @@ function ResourceList({ items }: { items: Resource[] }) {
             href={r.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-accent underline underline-offset-2 hover:no-underline"
+            className={`font-medium ${linkClass}`}
           >
             {r.name}
           </a>
@@ -261,7 +357,7 @@ function ResourceList({ items }: { items: Resource[] }) {
   );
 }
 
-// ── Page ───────────────────────────────────────────────────────────────────
+// ── Page ─────────────────────────────────────────────────────────────────────────────
 export default function Forum() {
   const [token, setToken] = useState<string | null>(null);
   const [code, setCode] = useState("");
@@ -299,7 +395,8 @@ export default function Forum() {
         setToken(data.token);
         setCode("");
       } else {
-        setGateError(data.error ?? "That code didn't match. Check with the facilitator.");
+        setGateError(data.error ?? 
+          "That code didn't match. Check with the facilitator.");
       }
     } catch {
       setGateError("Something went wrong reaching the server. Please try again.");
@@ -343,7 +440,9 @@ export default function Forum() {
         // Back to the gate — but keep what they typed. Losing a long, hard
         // message here would be its own small cruelty.
         setToken(null);
-        setGateError("Your session expired. Please enter the code again — your question is saved below.");
+        setGateError(
+          "Your session expired. Please enter the code again — your question is " +
+          "saved below.");
         return;
       }
       if (res.ok && data.ok === true) {
@@ -365,7 +464,11 @@ export default function Forum() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Forum Questions"
-        description="Submit a question ahead of the Windsor Heights Lutheran Church forum on coming out and being queer as a Christian, and read the research on acceptance, faith, and LGBTQ+ youth."
+        description={
+          "Submit a question ahead of the Windsor Heights Lutheran Church forum on " +
+          "coming out and being queer as a Christian, and read the research on " +
+          "acceptance, faith, and LGBTQ+ youth."
+        }
         path="/forum/"
         noindex
       />
@@ -391,7 +494,7 @@ export default function Forum() {
         </p>
       </div>
 
-      {/* ── Ask a question ─────────────────────────────────────────────── */}
+      {/* ── Ask a question ──────────────────────────────────────────────────────── */}
       <section className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
         <h2 className="font-serif text-2xl mb-2">Ask a question</h2>
 
@@ -400,7 +503,7 @@ export default function Forum() {
             Submissions for this forum are now closed. Thank you to everyone who
             sent something in. The research below stays here, and you are always
             welcome to{" "}
-            <Link to="/contact" className="text-accent underline underline-offset-2 hover:no-underline">
+            <Link to="/contact" className={linkClass}>
               get in touch directly
             </Link>
             .
@@ -415,7 +518,7 @@ export default function Forum() {
             <button
               type="button"
               onClick={() => setSent(false)}
-              className="text-accent underline underline-offset-2 hover:no-underline"
+              className={linkClass}
             >
               Ask another question
             </button>
@@ -468,12 +571,12 @@ export default function Forum() {
                 Please don&apos;t use this form for anything urgent &mdash;
                 questions are read before Sunday, not continuously. If you need
                 someone now, the{" "}
-                <Link to="/care#crisis" className="text-accent underline underline-offset-2 hover:no-underline">
+                <Link to="/care#crisis" className={linkClass}>
                   crisis resources
                 </Link>{" "}
                 are there any hour. Full details of what happens to what you
                 send are on the{" "}
-                <Link to="/privacy" className="text-accent underline underline-offset-2 hover:no-underline">
+                <Link to="/privacy" className={linkClass}>
                   privacy page
                 </Link>
                 .
@@ -493,7 +596,10 @@ export default function Forum() {
             {!anonymous && (
               <>
                 <div>
-                  <label htmlFor="forum-name" className="block text-sm text-ink/70 mb-1">
+                  <label
+                    htmlFor="forum-name"
+                    className="block text-sm text-ink/70 mb-1"
+                  >
                     Your name
                   </label>
                   <input
@@ -506,7 +612,10 @@ export default function Forum() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="forum-email" className="block text-sm text-ink/70 mb-1">
+                  <label
+                    htmlFor="forum-email"
+                    className="block text-sm text-ink/70 mb-1"
+                  >
                     Your email
                   </label>
                   <input
@@ -522,7 +631,10 @@ export default function Forum() {
             )}
 
             <div>
-              <label htmlFor="forum-question" className="block text-sm text-ink/70 mb-1">
+              <label
+                htmlFor="forum-question"
+                className="block text-sm text-ink/70 mb-1"
+              >
                 Your question
               </label>
               <textarea
@@ -563,7 +675,7 @@ export default function Forum() {
         )}
       </section>
 
-      {/* ── Statistics ─────────────────────────────────────────────────── */}
+      {/* ── Statistics ──────────────────────────────────────────────────────────── */}
       <section className="mt-16">
         <h2 className="font-serif text-2xl mb-3">What the research says</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
@@ -571,8 +683,8 @@ export default function Forum() {
             One thing to hold onto before any of these numbers: LGBTQ+ young
             people are not at higher risk because of who they are. They are at
             higher risk because of how they are treated. That is the framing the
-            researchers themselves use, and it matters, because it means the risk
-            is not fixed. It responds to what the people around someone do.
+            researchers themselves use, and it matters, because it means the risk can
+            change. It answers to what the people around someone do.
           </p>
           <p>
             Which is the uncomfortable and hopeful thing about a forum like this
@@ -599,7 +711,9 @@ export default function Forum() {
       {/* Crisis resources sit in the same part of the page as the risk figures,
           deliberately — not buried at the bottom. */}
       <section className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
-        <h3 className="font-serif text-xl mb-2">If you or someone you love is in crisis</h3>
+        <h3 className="font-serif text-xl mb-2">
+          If you or someone you love is in crisis
+        </h3>
         <ul className="space-y-2 text-ink/80">
           <li>
             <span className="font-semibold">Call or text 988</span> &mdash; Suicide
@@ -616,7 +730,7 @@ export default function Forum() {
         </ul>
         <p className="text-sm text-ink/70 mt-4">
           More, including recovery and family support, on the{" "}
-          <Link to="/care#crisis" className="text-accent underline underline-offset-2 hover:no-underline">
+          <Link to="/care#crisis" className={linkClass}>
             care &amp; support page
           </Link>
           .
@@ -648,8 +762,8 @@ export default function Forum() {
             lives, church is where they are least likely to be known.
           </p>
           <p>
-            That gap is not a tragedy. It is an opening. It is the most
-            straightforward thing on this entire page: there is a protective
+            That gap is an opening. It is the most straightforward thing on this entire
+            page: there is a protective
             factor with good evidence behind it, and a congregation can simply
             decide to be one.
           </p>
@@ -661,13 +775,13 @@ export default function Forum() {
         <StatList items={faith} />
       </section>
 
-      {/* ── Lutheran context ───────────────────────────────────────────── */}
+      {/* ── Lutheran context ────────────────────────────────────────────────────── */}
       <section className="mt-16">
         <h2 className="font-serif text-2xl mb-3">Where the ELCA stands</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
-            This is not a conversation the wider church is having for the first
-            time, and it is not settled. In 2009 the Churchwide Assembly voted to
+            The wider church has been having this conversation for years, and it remains
+            open. In 2009 the Churchwide Assembly voted to
             let congregations call partnered gay pastors and to recognize
             same-sex relationships.
           </p>
@@ -694,7 +808,7 @@ export default function Forum() {
         <ResourceList items={local} />
         <p className="text-sm text-ink/70 mt-6">
           Affirming organizations, books, and further reading are gathered on the{" "}
-          <Link to="/queer-resources" className="text-accent underline underline-offset-2 hover:no-underline">
+          <Link to="/queer-resources" className={linkClass}>
             queer resources page
           </Link>
           .

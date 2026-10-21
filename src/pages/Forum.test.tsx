@@ -100,7 +100,7 @@ describe("the public part of the page", () => {
     expect(screen.getByText("54.5%")).toBeTruthy();
     expect(screen.getByText("1 in 5")).toBeTruthy();
     expect(screen.getByText("25.9%")).toBeTruthy();
-    expect(screen.getByText(/least likely to be out/i)).toBeTruthy();
+    expect(screen.getAllByText(/least likely to be known/i).length).toBeGreaterThan(0);
   });
 
   it("is explicit that the HRC faith figures describe Black and Latine youth", () => {

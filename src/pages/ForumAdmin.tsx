@@ -5,6 +5,10 @@ import PageHead from "~/components/PageHead";
 
 const API_BASE = import.meta.env.VITE_FORUM_API_BASE;
 
+// Repeated on every inline link; named so the JSX stays readable.
+const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
+
+
 interface Question {
   questionId: string;
   submittedAt: string;
@@ -24,6 +28,8 @@ interface ListResponse {
   error?: string;
 }
 
+const plural = (n: number) => (n === 1 ? "question" : "questions");
+
 function formatWhen(iso: string) {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
@@ -32,7 +38,9 @@ function formatWhen(iso: string) {
 function QuestionCard({ q }: { q: Question }) {
   return (
     <li className="border border-ink/10 rounded-lg p-6">
-      <div className="flex flex-wrap gap-x-3 gap-y-1 items-baseline text-sm text-ink/60">
+      <div
+        className="flex flex-wrap gap-x-3 gap-y-1 items-baseline text-sm text-ink/60"
+      >
         <span>{formatWhen(q.submittedAt)}</span>
         <span aria-hidden="true">&middot;</span>
         {q.anonymous ? (
@@ -46,7 +54,7 @@ function QuestionCard({ q }: { q: Question }) {
                 &mdash;{" "}
                 <a
                   href={`mailto:${q.email}`}
-                  className="text-accent underline underline-offset-2 hover:no-underline"
+                  className={linkClass}
                 >
                   {q.email}
                 </a>
@@ -56,7 +64,9 @@ function QuestionCard({ q }: { q: Question }) {
         )}
         <span className="text-ink/40">#{q.questionId}</span>
       </div>
-      <p className="text-ink/85 mt-3 leading-relaxed whitespace-pre-wrap">{q.question}</p>
+      <p className="text-ink/85 mt-3 leading-relaxed whitespace-pre-wrap break-words">
+        {q.question}
+      </p>
       {q.flagReason !== undefined && q.flagReason !== "" && (
         <p className="text-xs text-accent mt-3">
           Automated screening flagged this ({q.flagReason}). It is stored in full
@@ -155,7 +165,7 @@ export default function ForumAdmin() {
           <p className="text-sm text-ink/60 mb-6">
             {questions.length === 0
               ? "No questions yet."
-              : `${questions.length} question${questions.length === 1 ? "" : "s"}, newest first.`}
+              : `${questions.length} ${plural(questions.length)}, newest first.`}
           </p>
 
           {questions.length > 0 && (
@@ -171,8 +181,8 @@ export default function ForumAdmin() {
               <h2 className="font-serif text-2xl mb-2">Held for review</h2>
               <p className="text-sm text-ink/70 mb-6 max-w-prose leading-relaxed">
                 Automated screening flagged these for threatening or harassing
-                language and kept them out of the list above, so none is read
-                aloud by accident. The screening is narrow and it is often wrong
+                language and kept them out of the list above, so they stay clear of the
+                stack you read from. The screening is narrow and it is often wrong
                 &mdash; a first-person account of being threatened looks much
                 like a threat to a classifier. Read each one and decide.
               </p>
@@ -187,8 +197,10 @@ export default function ForumAdmin() {
           <p className="text-xs text-ink/50 mt-16 pt-8 border-t border-ink/10">
             These are confidential. Raise them in the forum without names
             attached, and delete them once the forum is done &mdash;{" "}
-            <code className="text-ink/60">npx tsx scripts/forum-questions.ts --delete-all</code>.{" "}
-            <Link to="/forum" className="text-accent underline underline-offset-2 hover:no-underline">
+            <code className="text-ink/60">
+              npx tsx scripts/forum-questions.ts --delete-all
+            </code>.{" "}
+            <Link to="/forum" className={linkClass}>
               The public page
             </Link>{" "}
             is where people submit.

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 
+// Repeated on every inline link; named so the JSX stays readable.
+const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
+
+
 /**
  * Privacy notice for information people send through this site, plus the
  * terms that apply to what they submit.
@@ -19,7 +23,11 @@ export default function Privacy() {
     <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Privacy"
-        description="What happens to the information you send through this site — what is collected, who can see it, how long it is kept, and how to have it deleted."
+        description={
+          "What happens to the information you send through this site — what is " +
+          "collected, who can see it, how long it is kept, and how to have it " +
+          "deleted."
+        }
         path="/privacy/"
       />
 
@@ -54,13 +62,14 @@ export default function Privacy() {
               <p>
                 Your email address, the category you pick, and your message.
                 The email address is used to reply to you, and for nothing
-                else. There is no mailing list, and you are not subscribed to
-                anything by writing in.
+                else. Writing in signs you up for nothing. There is no mailing list.
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold text-ink/90 mb-2">The forum question form</h3>
+              <h3 className="font-semibold text-ink/90 mb-2">
+                The forum question form
+              </h3>
               <p>
                 Your question, and &mdash; unless you choose to ask
                 anonymously &mdash; your name and email address.
@@ -68,8 +77,8 @@ export default function Privacy() {
               <p className="mt-4">
                 <strong className="text-ink/90">Anonymous means anonymous.</strong>{" "}
                 When that box is ticked, your name and email are not sent from
-                your browser, and the server is written so that it does not
-                read or store those fields at all. There is no hidden copy. If
+                your browser, and the server is written to ignore those fields entirely.
+                There is no hidden copy. If
                 you are not out, or not out to everyone, that option exists for
                 exactly this reason and you should feel free to use it.
               </p>
@@ -89,7 +98,9 @@ export default function Privacy() {
         </section>
 
         <section>
-          <h2 className="font-serif text-2xl mb-4">What is deliberately not collected</h2>
+          <h2 className="font-serif text-2xl mb-4">
+            What is deliberately not collected
+          </h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>
               <strong>No IP address is stored with any submission.</strong> An
@@ -98,15 +109,14 @@ export default function Privacy() {
             </li>
             <li>
               <strong>No tracking cookies and no advertising.</strong> Nothing
-              here follows you to other sites, and nothing about you is sold or
-              given to advertisers &mdash; not now, and not as a change of
-              policy later.
+              here follows you to other sites, and nothing about you is sold or given to
+              advertisers, now or ever.
             </li>
             <li>
               <strong>Nothing you write is used to train AI models</strong>, by
               this ministry or by anyone it would hand the material to. The
               same restriction this site places on its own content, in the{" "}
-              <Link to="/terms" className="text-accent underline underline-offset-2 hover:no-underline">
+              <Link to="/terms" className={linkClass}>
                 terms of use
               </Link>
               , applies to yours.
@@ -145,13 +155,15 @@ export default function Privacy() {
             are useful for replying and following up, and no longer.
           </p>
           <p className="mt-4">
-            <strong className="text-ink/90">You can ask for yours to be deleted at any time</strong>,
+            <strong className="text-ink/90">
+              You can ask for yours to be deleted at any time
+            </strong>,
             for any reason or none, through the{" "}
-            <Link to="/contact" className="text-accent underline underline-offset-2 hover:no-underline">
+            <Link to="/contact" className={linkClass}>
               contact page
             </Link>
-            . You do not have to explain why, and it will not be treated as a
-            problem. If you submitted a forum question anonymously there is
+            . You never have to explain why, and asking is a perfectly ordinary thing to
+            do. If you submitted a forum question anonymously there is
             nothing linking it to you, so say roughly what it was about and it
             will be found and removed.
           </p>
@@ -162,26 +174,30 @@ export default function Privacy() {
 
           <div className="space-y-6">
             <div>
-              <h3 className="font-semibold text-ink/90 mb-2">This is not confidential pastoral conversation</h3>
+              <h3 className="font-semibold text-ink/90 mb-2">
+                This is not confidential pastoral conversation
+              </h3>
               <p>
                 A message typed into a web form is not the same thing as a
-                private conversation with a pastor, and it should not be
-                assumed to carry the legal protection that such a conversation
-                sometimes does. If you need to say something that must stay
+                private conversation with a pastor, and it may lack the legal protection
+                that such a conversation can carry. If you need to say something that
+                must stay
                 privileged, say it in person instead &mdash; ask, and that
                 conversation can be arranged.
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold text-ink/90 mb-2">Please do not use these forms in an emergency</h3>
+              <h3 className="font-semibold text-ink/90 mb-2">
+                Please do not use these forms in an emergency
+              </h3>
               <p>
                 Submissions are read periodically, not continuously, so a form
                 is the wrong tool when something is urgent. If you or someone
                 you love is in danger right now, call or text{" "}
                 <strong className="text-ink/90">988</strong> for the Suicide
                 &amp; Crisis Lifeline, or 911. More places to turn are on the{" "}
-                <Link to="/care#crisis" className="text-accent underline underline-offset-2 hover:no-underline">
+                <Link to="/care#crisis" className={linkClass}>
                   care &amp; support page
                 </Link>
                 .
@@ -191,9 +207,9 @@ export default function Privacy() {
                 write indicates that a child is being harmed, or that someone
                 is in immediate danger, Tony may be obliged &mdash; morally and
                 in some circumstances legally &mdash; to act on it, including
-                by contacting someone who can help. That is not a loophole in
-                the privacy described above. It is the one situation where
-                keeping a confidence would cost more than keeping it is worth.
+                by contacting someone who can help. That is the one exception to
+                everything above, and it exists because silence in that situation would
+                do more harm than good.
               </p>
             </div>
           </div>
@@ -201,20 +217,22 @@ export default function Privacy() {
 
         <section>
           <h2 className="font-serif text-2xl mb-4">Terms for what you submit</h2>
-          <p className="mb-4">By sending something through this site, you agree that:</p>
+          <p className="mb-4">
+            By sending something through this site, you agree that:
+          </p>
           <ul className="list-disc pl-6 space-y-3">
             <li>
               <strong>What you write stays yours.</strong> You are giving
               permission for it to be read, and for a forum question to be
-              raised and discussed without your name attached &mdash; not
-              handing over ownership of your words.
+              raised and discussed without your name attached &mdash; You keep ownership
+              of your words.
             </li>
             <li>
-              <strong>Please write about yourself.</strong> Try not to include
-              private details about other people who have not agreed to have
-              their situation discussed &mdash; particularly anything about
-              someone else&apos;s sexual orientation or gender identity, which
-              is theirs to share and not ours.
+              <strong>Please write about yourself.</strong> Leave out private details
+              about other people unless they have agreed to have their
+              situation discussed &mdash; especially anything about someone
+              else&apos;s sexual orientation or gender identity, which is
+              theirs to share rather than ours.
             </li>
             <li>
               <strong>Nothing harassing or threatening.</strong> Submissions
@@ -227,7 +245,7 @@ export default function Privacy() {
             <li>
               <strong>Not every question can be used.</strong> There is limited
               time in a forum and some questions are better answered privately.
-              A question not raised is not a question dismissed.
+              If yours is not raised, it has still been read and it still counts.
             </li>
           </ul>
         </section>
@@ -237,8 +255,8 @@ export default function Privacy() {
           <p>
             The date at the top says when this was last revised. If what
             happens to submitted information ever changes materially, this page
-            changes with it &mdash; and such a change would not be applied
-            retroactively to something you already sent under these terms.
+            changes with it &mdash; and a change would apply only going forward, never
+            to something you already sent under these terms.
           </p>
         </section>
 
@@ -246,7 +264,7 @@ export default function Privacy() {
           <h2 className="font-serif text-2xl mb-4">Questions about any of this</h2>
           <p>
             Ask. The{" "}
-            <Link to="/contact" className="text-accent underline underline-offset-2 hover:no-underline">
+            <Link to="/contact" className={linkClass}>
               contact page
             </Link>{" "}
             reaches Tony directly, and a question about how your information is
@@ -259,7 +277,7 @@ export default function Privacy() {
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="text-sm text-ink/60">
           See also the{" "}
-          <Link to="/terms" className="text-accent underline underline-offset-2 hover:no-underline">
+          <Link to="/terms" className={linkClass}>
             terms of use
           </Link>{" "}
           covering how this ministry&apos;s own writing may be shared.

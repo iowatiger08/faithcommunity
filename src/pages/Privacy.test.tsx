@@ -26,7 +26,7 @@ describe("the promises the page makes", () => {
   it("states that anonymous submissions never carry a name or email", () => {
     renderPrivacy();
     expect(screen.getByText(/Anonymous means anonymous/i)).toBeTruthy();
-    expect(screen.getByText(/does not read or store those fields at all/i)).toBeTruthy();
+    expect(screen.getByText(/ignore those fields entirely/i)).toBeTruthy();
   });
 
   it("states that no IP address is stored with a submission", () => {
@@ -102,7 +102,7 @@ describe("terms for what is submitted", () => {
   it("carries a revision date and a no-retroactive-change promise", () => {
     renderPrivacy();
     expect(screen.getByText(/Last updated/i)).toBeTruthy();
-    expect(screen.getByText(/not be applied\s+retroactively/i)).toBeTruthy();
+    expect(screen.getByText(/apply only going forward/i)).toBeTruthy();
   });
 });
 
