@@ -113,8 +113,8 @@ export default function Privacy() {
               advertisers, now or ever.
             </li>
             <li>
-              <strong>Nothing you write is used to train AI models</strong>, by
-              this ministry or by anyone it would hand the material to. The
+              <strong>Nothing you write is used to train AI models</strong>, either by
+              this ministry or by any third party. The
               same restriction this site places on its own content, in the{" "}
               <Link to="/terms" className={linkClass}>
                 terms of use

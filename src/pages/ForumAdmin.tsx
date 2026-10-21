@@ -188,8 +188,8 @@ export default function ForumAdmin() {
               <h2 className="font-serif text-2xl mb-2">Held for review</h2>
               <p className="text-sm text-ink/70 mb-6 max-w-prose leading-relaxed">
                 Automated screening flagged these for threatening or harassing
-                language and kept them out of the list above, so they stay clear of the
-                stack you read from. The screening is narrow and it is often wrong
+                language and kept them out of the list above, so they stay clear of the stack you
+                read aloud. The screening is narrow and it is often wrong
                 &mdash; a first-person account of being threatened looks much
                 like a threat to a classifier. Read each one and decide.
               </p>

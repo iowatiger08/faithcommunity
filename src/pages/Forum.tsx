@@ -569,7 +569,7 @@ export default function Forum() {
         description={
           "Submit a question ahead of the Windsor Heights Lutheran Church forum on " +
           "coming out, and read the research on " +
-          "acceptance, faith, and LGBTQ+ youth."
+          "acceptance, faith, and LGBTQ+ people."
         }
         path="/forum/"
         noindex
@@ -579,17 +579,17 @@ export default function Forum() {
         Windsor Heights Lutheran Church
       </p>
       <h1 className="font-serif text-4xl mb-6 leading-tight">
-        Coming out, and being queer as a Christian
+        Let&apos;s talk about coming out.
       </h1>
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          On Sunday, October 25, we are setting aside time to talk together about
+          On Sunday, October 25, we are setting aside time to talk about
           coming out. This page is where you can send a question ahead of time.
         </p>
         <p>
           No question is too small or too blunt. If you would rather not put your
-          name to it, you don&apos;t have to.
+          name to it, that is not required.
         </p>
       </div>
 
