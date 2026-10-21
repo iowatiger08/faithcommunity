@@ -1025,16 +1025,15 @@ export default function Forum() {
         <h2 className="font-serif text-2xl mb-3">Where to find more</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mb-8">
           <p>
-            Two pieces written from experience rather than research, if they are
-            of use:{" "}
+            Two reflection pieces written from experience rather than research:{" "}
             <Link to="/reflections/it-was-1995" className={linkClass}>
               Coming Out Day Reflection
             </Link>{" "}
-            recounts a 1995 rally at the University of Iowa, and{" "}
+            recounts a 1995 rally at college, and{" "}
             <Link to="/reflections/pride-of-bullied" className={linkClass}>
               Pride of the Bullied
             </Link>{" "}
-            is about what being bullied leaves behind.
+            is about empowering people who have been bullied.
           </p>
         </div>
         <ResourceList items={local} />

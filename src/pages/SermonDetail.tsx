@@ -25,6 +25,14 @@ export default function SermonDetail() {
 
   const sectionSlug = post.section.replace("_", "-");
   const path = `/${sectionSlug}/${post.slug}/`;
+  // This component serves sermons, worship resources and reflections, so the
+  // back link has to follow the post rather than always saying "sermons".
+  const backTo: Record<string, { href: string; label: string }> = {
+    sermons: { href: "/sermons", label: "All sermons" },
+    "worship-resources": { href: "/worship-resources", label: "All worship resources" },
+    reflections: { href: "/queer-resources", label: "Back to queer resources" },
+  };
+  const back = backTo[sectionSlug] ?? backTo.sermons;
   // For sermons, build a richer description: summary + lectionary/scripture context.
   const meta = [
     post.summary,
@@ -46,8 +54,8 @@ export default function SermonDetail() {
         publishedTime={post.published_date}
       />
       <header className="mb-8 pb-6 border-b border-ink/10">
-        <Link to="/sermons" className="text-sm text-accent hover:underline">
-          &larr; All sermons
+        <Link to={back.href} className="text-sm text-accent hover:underline">
+          &larr; {back.label}
         </Link>
         <p className="text-xs text-ink/60 uppercase tracking-wide mt-4">
           {formatDate(post.published_date)}
@@ -56,6 +64,9 @@ export default function SermonDetail() {
           {post.lectionary_year && ` · Year ${post.lectionary_year}`}
         </p>
         <h1 className="font-serif text-4xl mt-2 leading-tight">{post.title}</h1>
+        {post.author !== null && post.author !== "" && (
+          <p className="text-sm text-ink/70 mt-3">By {post.author}</p>
+        )}
         {post.summary && (
           <p className="text-lg text-ink/80 mt-4 max-w-prose">{post.summary}</p>
         )}

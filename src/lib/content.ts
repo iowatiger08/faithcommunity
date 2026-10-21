@@ -93,10 +93,14 @@ export function getPostBySlug(slug: string): PublishedPost | undefined {
 export function formatDate(iso: string | null): string {
   if (iso === null || iso === "") return "";
   const d = new Date(iso);
+  // Render in UTC. A date-only string like "2020-10-10" parses as UTC
+  // midnight, so formatting it in a negative-offset zone (the site is read
+  // from America/Chicago) would show the previous day.
   return d.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 

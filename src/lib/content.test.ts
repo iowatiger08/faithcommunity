@@ -76,6 +76,15 @@ describe("formatDate", () => {
     expect(result.length).toBeGreaterThan(0);
   });
 
+  it("does not slip a day in a negative-offset timezone", () => {
+    // A date-only string parses as UTC midnight. Formatted in local time west
+    // of UTC that lands on the previous day, which had every date on the site
+    // showing one day early.
+    expect(formatDate("2020-10-10")).toBe("October 10, 2020");
+    expect(formatDate("2013-05-17")).toBe("May 17, 2013");
+    expect(formatDate("2024-01-01")).toBe("January 1, 2024");
+  });
+
   it("returns empty string for null", () => {
     expect(formatDate(null)).toBe("");
   });
