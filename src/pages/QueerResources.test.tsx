@@ -41,16 +41,18 @@ describe("Iowa resources", () => {
     ["One Iowa", "https://oneiowa.org/resources/hotlines-support/"],
     ["Iowa Safe Schools", "https://iowasafeschools.org/"],
     ["Capital City Pride", "https://capitalcitypride.org/resources/lgbtq-organizations/"],
-    ["Matthew Shepard Scholarship", "https://eychanerfoundation.org/"],
   ])("links to %s", (name, href) => {
     renderPage();
     const link = screen.getByRole("link", { name: new RegExp(name) });
     expect(link.getAttribute("href")).toBe(href);
   });
 
-  it("credits the Eychaner Foundation for the scholarship", () => {
+  it("lists the Matthew Shepard Scholarship without a link", () => {
     renderPage();
+    expect(screen.getByText("Matthew Shepard Scholarship")).toBeTruthy();
     expect(screen.getByText(/Eychaner Foundation/)).toBeTruthy();
+    expect(screen.queryByRole("link", { name: /Matthew Shepard/ })).toBeNull();
+    expect(document.querySelector('a[href*="eychaner"]')).toBeNull();
   });
 
   it("links the HRC coming-out guide alongside the HRC home page", () => {

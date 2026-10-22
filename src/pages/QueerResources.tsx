@@ -265,14 +265,7 @@ export default function QueerResources() {
           </li>
 
           <li className="border border-ink/10 rounded-lg p-6">
-            <a
-              href="https://eychanerfoundation.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
-            >
-              Matthew Shepard Scholarship
-            </a>
+            <p className="font-serif text-xl">Matthew Shepard Scholarship</p>
             <p className="text-sm text-ink/70 mt-2 leading-relaxed">
               College scholarships for LGBTQ+ Iowa students who have served the
               LGBTQ+ community, awarded by the Eychaner Foundation in Des
