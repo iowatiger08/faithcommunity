@@ -675,10 +675,10 @@ export default function Forum() {
           <div className="space-y-3 text-ink/80 leading-relaxed">
             <p className="font-serif text-xl">Thank you. Your question is in.</p>
             <p>
-              It will be read before Sunday and considered in the forum
+              It will be read before Sunday and considered in the forum.{" "}
               {sentWithName
-                ? ", and you have said your name may be used."
-                : " without your name attached."}
+                ? "Similar questions are often grouped together, so yours may be raised without your name."
+                : "You sent it anonymously, so it stays anonymous."}
             </p>
             <button
               type="button"

@@ -295,8 +295,10 @@ describe("anonymity", () => {
     clickButton(/send my question/i);
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     expect(requestBody(1).allowName).toBe(true);
-    // The success screen should reflect the choice that was actually made.
-    expect(screen.getByText(/your name may be used/i)).toBeTruthy();
+    // Permission to use the name is not a promise to use it: similar questions
+    // get grouped, so the confirmation must not imply they will be named.
+    expect(screen.getByText(/grouped/i)).toBeTruthy();
+    expect(screen.getByText(/may be raised without your name/i)).toBeTruthy();
   });
 
   it("hides the permission box, and revokes it, when going anonymous", async () => {
@@ -313,7 +315,8 @@ describe("anonymity", () => {
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     // An anonymous submission must not carry stale permission from before.
     expect(requestBody(1).allowName).toBeUndefined();
-    expect(screen.getByText(/without your name attached/i)).toBeTruthy();
+    // Anonymous is a guarantee, so say so plainly rather than hedging.
+    expect(screen.getByText(/stays anonymous/i)).toBeTruthy();
   });
 
   it("sends name and email for a named question", async () => {
