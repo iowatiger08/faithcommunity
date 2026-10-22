@@ -283,13 +283,9 @@ describe("anonymity", () => {
     clickButton(/send my question/i);
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     expect(requestBody(1).allowName).toBe(false);
-    // They shared a name even though they withheld permission to use it, so
-    // the confirmation thanks them for it rather than calling them anonymous.
-    expect(screen.getByText(/thank you for sharing your name/i)).toBeTruthy();
-    expect(screen.queryByText(/that will remain/i)).toBeNull();
   });
 
-  it("sends permission when the box is ticked, and confirms it back", async () => {
+  it("sends permission when the box is ticked", async () => {
     renderForum();
     await enterGate();
     fillNamed();
@@ -299,10 +295,9 @@ describe("anonymity", () => {
     clickButton(/send my question/i);
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     expect(requestBody(1).allowName).toBe(true);
-    // Permission to use the name is not a promise to use it, so the
-    // confirmation thanks them for sharing it rather than saying it will be
-    // used.
-    expect(screen.getByText(/thank you for sharing your name/i)).toBeTruthy();
+    // Permission to use the name is not a promise to use it: the confirmation
+    // must not tell them it will be.
+    expect(screen.queryByText(/your name may be used/i)).toBeNull();
   });
 
   it("hides the permission box, and revokes it, when going anonymous", async () => {
@@ -319,8 +314,6 @@ describe("anonymity", () => {
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     // An anonymous submission must not carry stale permission from before.
     expect(requestBody(1).allowName).toBeUndefined();
-    // Anonymous is a guarantee the server enforces, so say so plainly.
-    expect(screen.getByText(/that will remain/i)).toBeTruthy();
   });
 
   it("sends name and email for a named question", async () => {
@@ -355,6 +348,28 @@ describe("submitting", () => {
 
     await waitFor(() => expect(screen.getByText(/your question is in/i)).toBeTruthy());
     expect(screen.getByRole("button", { name: /ask another question/i })).toBeTruthy();
+  });
+
+  it("confirms the same way whether or not a name was shared", async () => {
+    // One message for every path: it promises nothing about how a shared name
+    // gets used, and it does not need to know which choice was made.
+    const confirmation = /if you chose to be anonymous, that will be honored/i;
+
+    renderForum();
+    await enterGate();
+    fillNamed("A named question.");
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, id: "abc" }));
+    clickButton(/send my question/i);
+    await waitFor(() => expect(screen.getByText(confirmation)).toBeTruthy());
+    cleanup();
+
+    renderForum();
+    await enterGate();
+    fireEvent.click(screen.getByRole("checkbox", { name: /anonymously/i }));
+    setField(/your question/i, "An anonymous question.");
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, id: "def" }));
+    clickButton(/send my question/i);
+    await waitFor(() => expect(screen.getByText(confirmation)).toBeTruthy());
   });
 
   it("re-gates on an expired session but does NOT lose what was typed", async () => {

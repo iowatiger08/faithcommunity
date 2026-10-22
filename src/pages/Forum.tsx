@@ -519,7 +519,6 @@ export default function Forum() {
   const [sending, setSending] = useState(false);
   const [formError, setFormError] = useState("");
   const [sent, setSent] = useState(false);
-  const [sentAnonymous, setSentAnonymous] = useState(false);
 
   // Evaluated once, in a state initialiser rather than on every render, so
   // the view cannot flip mid-interaction. The Lambda is what actually
@@ -597,7 +596,6 @@ export default function Forum() {
       }
       if (res.ok && data.ok === true) {
         setSent(true);
-        setSentAnonymous(anonymous);
         setQuestion("");
         setName("");
         setEmail("");
@@ -673,12 +671,10 @@ export default function Forum() {
           </p>
         ) : sent ? (
           <div className="space-y-3 text-ink/80 leading-relaxed">
-            <p className="font-serif text-xl">Thank you. Your question is in.</p>
+            <p className="font-serif text-xl">Your question is in.</p>
             <p>
-              It will be read before Sunday and considered in the forum.{" "}
-              {sentAnonymous
-                ? "You chose to stay anonymous, and that will remain."
-                : "Thank you for sharing your name."}
+              Thank you for your submission. If you chose to be anonymous, that
+              will be honored.
             </p>
             <button
               type="button"
