@@ -3,6 +3,13 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 
 export default defineConfig({
+  // amazon-cognito-identity-js (the /forum-admin sign-in) pulls in `buffer`,
+  // which references the Node global `global`. Without this the admin page
+  // throws "global is not defined" during hydration: the prerendered HTML still
+  // shows the form, so it looks fine, but React never attaches and the Sign in
+  // button does nothing. The Deutsch app carries the same define for the same
+  // reason. Do not remove it while that library is a dependency.
+  define: { global: "globalThis" },
   plugins: [react()],
   resolve: {
     alias: {
