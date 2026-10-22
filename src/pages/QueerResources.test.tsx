@@ -35,3 +35,27 @@ describe("the reflections", () => {
     }
   });
 });
+
+describe("Iowa resources", () => {
+  it.each([
+    ["One Iowa", "https://oneiowa.org/resources/hotlines-support/"],
+    ["Iowa Safe Schools", "https://iowasafeschools.org/"],
+    ["Capital City Pride", "https://capitalcitypride.org/resources/lgbtq-organizations/"],
+    ["Matthew Shepard Scholarship", "https://eychanerfoundation.org/"],
+  ])("links to %s", (name, href) => {
+    renderPage();
+    const link = screen.getByRole("link", { name: new RegExp(name) });
+    expect(link.getAttribute("href")).toBe(href);
+  });
+
+  it("credits the Eychaner Foundation for the scholarship", () => {
+    renderPage();
+    expect(screen.getByText(/Eychaner Foundation/)).toBeTruthy();
+  });
+
+  it("links the HRC coming-out guide alongside the HRC home page", () => {
+    renderPage();
+    const link = screen.getByRole("link", { name: /coming out resources/i });
+    expect(link.getAttribute("href")).toBe("https://www.hrc.org/resources/coming-out");
+  });
+});

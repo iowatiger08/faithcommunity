@@ -195,6 +195,90 @@ export default function QueerResources() {
               families, and religion and faith.
             </p>
           </li>
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://www.hrc.org/resources/coming-out"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Human Rights Campaign &mdash; coming out resources
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              Guides written for the person coming out and for the people they
+              are coming out to, including workplaces, families, and faith
+              communities.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section className="mt-14">
+        <h2 className="font-serif text-2xl mb-3">In Iowa</h2>
+        <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
+          Statewide and Des Moines organizations for LGBTQ+ Iowans, their
+          families, and students.
+        </p>
+        <ul className="space-y-6">
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://oneiowa.org/resources/hotlines-support/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              One Iowa
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              Statewide LGBTQ+ advocacy, health care referrals, and a directory
+              of hotlines and support groups.
+            </p>
+          </li>
+
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://iowasafeschools.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Iowa Safe Schools
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              Safe and affirming spaces for LGBTQ+ youth in Iowa schools since
+              2002.
+            </p>
+          </li>
+
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://capitalcitypride.org/resources/lgbtq-organizations/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Capital City Pride
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              A directory of LGBTQ+ organizations around Des Moines.
+            </p>
+          </li>
+
+          <li className="border border-ink/10 rounded-lg p-6">
+            <a
+              href="https://eychanerfoundation.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-xl text-accent underline underline-offset-2 hover:no-underline"
+            >
+              Matthew Shepard Scholarship
+            </a>
+            <p className="text-sm text-ink/70 mt-2 leading-relaxed">
+              College scholarships for LGBTQ+ Iowa students who have served the
+              LGBTQ+ community, awarded by the Eychaner Foundation in Des
+              Moines.
+            </p>
+          </li>
         </ul>
       </section>
 
