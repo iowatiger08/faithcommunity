@@ -83,3 +83,32 @@ WHERE region = 'us-west-2'
   AND useridentity.arn LIKE '%user/tehansen%'
 ORDER BY eventtime DESC
 LIMIT 200;
+
+
+-- Q7: Account Settings changes in the last 30 days (account name, contacts, regions)
+--     Explicit event names, not verb prefixes: the account-settings writes include
+--     Set*, Accept* and Close* calls that a Put/Update/Delete prefix filter misses,
+--     and billingconsole also logs billing actions that are not account settings.
+--     Names from the Account Management API reference and
+--     docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/logging-using-cloudtrail.html
+--     billingconsole: the Account Settings page logged here before AWS moved it to
+--     account.amazonaws.com. Drop the billingconsole names once a 90-day run returns
+--     none of them (billingconsole itself keeps emitting for billing actions).
+--     Global calls land in us-east-1, and us-west-2 is included because EnableRegion /
+--     DisableRegion can be logged in the region that served the request.
+SELECT eventtime, awsregion, eventsource, eventname, useridentity.arn AS who,
+       requestparameters, errorcode, sourceipaddress
+FROM cloudtrail_logs.events
+WHERE region IN ('us-east-1', 'us-west-2')
+  AND "timestamp" >= date_format(current_date - interval '30' day, '%Y/%m/%d')
+  AND (
+    (eventsource = 'account.amazonaws.com' AND eventname IN (
+       'PutAccountName', 'PutContactInformation', 'PutAlternateContact',
+       'DeleteAlternateContact', 'EnableRegion', 'DisableRegion',
+       'StartPrimaryEmailUpdate', 'AcceptPrimaryEmailUpdate'))
+    OR (eventsource = 'billingconsole.amazonaws.com' AND eventname IN (
+       'SetAccountPreferences', 'SetContactAddress', 'SetAdditionalContacts',
+       'SetSecurityQuestions', 'SetIAMAccessPreference', 'CloseAccount'))
+  )
+ORDER BY eventtime DESC
+LIMIT 200;
