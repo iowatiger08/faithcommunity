@@ -632,8 +632,10 @@ export default function Forum() {
 
       <div className="space-y-5 text-lg text-ink/80 max-w-prose leading-relaxed">
         <p>
-          On Sunday, October 25, we are taking time to talk about
-          coming out. This page is where you can send a question ahead of time.
+          On Sunday, October 25, we are talking about
+          coming out. This is where folks can send a question ahead of time
+          and learn about some statistics related to the LGBTQ+ community,
+          as well as some reading materials.
         </p>
         <p>
           No question is too small or too blunt. If you would rather not put your
@@ -645,7 +647,7 @@ export default function Forum() {
           already circulating. Say so, rather than letting someone assume a
           half-finished section is the finished position. */}
       <p className="mt-8 border-l-2 border-accent/40 pl-4 text-sm text-ink/60">
-        A work in progress. This page is still being put together ahead of
+        This is a work in progress. This page is still being put together ahead of
         Sunday, so wording and sections may change. The question form below
         works now, and anything you send is already saved.
       </p>
@@ -687,8 +689,8 @@ export default function Forum() {
         ) : token === null ? (
           <form onSubmit={(e) => { void verify(e); }} className="space-y-4">
             <p className="text-ink/80 leading-relaxed">
-              This page is for the Windsor Heights Lutheran congregation. Enter
-              the access code from the bulletin or the announcement.
+              This page is for the Windsor Heights Lutheran Church. Enter
+              the access code from the announcement.
             </p>
             <div>
               <label htmlFor="forum-code" className="block text-sm text-ink/70 mb-1">
