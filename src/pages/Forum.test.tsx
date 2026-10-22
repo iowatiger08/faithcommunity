@@ -283,6 +283,10 @@ describe("anonymity", () => {
     clickButton(/send my question/i);
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     expect(requestBody(1).allowName).toBe(false);
+    // They shared a name even though they withheld permission to use it, so
+    // the confirmation thanks them for it rather than calling them anonymous.
+    expect(screen.getByText(/thank you for sharing your name/i)).toBeTruthy();
+    expect(screen.queryByText(/that will remain/i)).toBeNull();
   });
 
   it("sends permission when the box is ticked, and confirms it back", async () => {
@@ -295,10 +299,10 @@ describe("anonymity", () => {
     clickButton(/send my question/i);
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     expect(requestBody(1).allowName).toBe(true);
-    // Permission to use the name is not a promise to use it: similar questions
-    // get grouped, so the confirmation must not imply they will be named.
-    expect(screen.getByText(/grouped/i)).toBeTruthy();
-    expect(screen.getByText(/may be raised without your name/i)).toBeTruthy();
+    // Permission to use the name is not a promise to use it, so the
+    // confirmation thanks them for sharing it rather than saying it will be
+    // used.
+    expect(screen.getByText(/thank you for sharing your name/i)).toBeTruthy();
   });
 
   it("hides the permission box, and revokes it, when going anonymous", async () => {
@@ -315,8 +319,8 @@ describe("anonymity", () => {
     await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(2));
     // An anonymous submission must not carry stale permission from before.
     expect(requestBody(1).allowName).toBeUndefined();
-    // Anonymous is a guarantee, so say so plainly rather than hedging.
-    expect(screen.getByText(/stays anonymous/i)).toBeTruthy();
+    // Anonymous is a guarantee the server enforces, so say so plainly.
+    expect(screen.getByText(/that will remain/i)).toBeTruthy();
   });
 
   it("sends name and email for a named question", async () => {
