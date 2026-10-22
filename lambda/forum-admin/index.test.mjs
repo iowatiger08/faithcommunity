@@ -10,9 +10,10 @@
  */
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
-const { ddbSend, queryInputs, scanConstructed, verify, verifierOptions } = vi.hoisted(() => ({
+const { ddbSend, queryInputs, deleteInputs, scanConstructed, verify, verifierOptions } = vi.hoisted(() => ({
   ddbSend: vi.fn(),
   queryInputs: [],
+  deleteInputs: [],
   scanConstructed: { count: 0 },
   verify: vi.fn(),
   verifierOptions: [],
@@ -25,6 +26,12 @@ vi.mock("@aws-sdk/lib-dynamodb", () => ({
     constructor(input) {
       this.input = input;
       queryInputs.push(input);
+    }
+  },
+  DeleteCommand: class {
+    constructor(input) {
+      this.input = input;
+      deleteInputs.push(input);
     }
   },
   // Present so that importing it would work — if the handler ever constructs
@@ -63,17 +70,24 @@ function makeEvent({
   ip = freshIp(),
   method = "POST",
   origin = "https://hopeandtruthministry.com",
+  path = "/forum/admin/questions",
 } = {}) {
   const headers = {};
   if (origin !== null) headers.origin = origin;
   if (token !== null) headers.authorization = `Bearer ${token}`;
   return {
-    requestContext: { http: { method, path: "/forum/admin/questions", sourceIp: ip } },
-    rawPath: "/forum/admin/questions",
+    requestContext: { http: { method, path, sourceIp: ip } },
+    rawPath: path,
     headers,
     body: JSON.stringify(body),
   };
 }
+
+const SK = "2026-10-21T08:00:00.000Z#cccccccc";
+
+/** A request to the delete route. */
+const deleteEvent = (body = { sk: SK }, opts = {}) =>
+  makeEvent({ ...opts, body, path: "/forum/admin/delete" });
 
 const parse = (res) => JSON.parse(res.body || "{}");
 
@@ -117,6 +131,7 @@ beforeEach(() => {
   process.env.FORUM_ID = FORUM_ID;
   process.env.FORUM_TABLE = "forum-questions-test";
   queryInputs.length = 0;
+  deleteInputs.length = 0;
   scanConstructed.count = 0;
   ddbSend.mockReset().mockResolvedValue({ Items: items });
   verify.mockReset().mockResolvedValue({ sub: OWNER_SUB, email: OWNER_EMAIL, token_use: "id" });
@@ -260,6 +275,89 @@ describe("failure modes", () => {
   });
 });
 
+describe("deleting a question", () => {
+  it("deletes the one item the owner named", async () => {
+    ddbSend.mockResolvedValue({});
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(200);
+    expect(parse(res)).toMatchObject({ ok: true, deleted: SK });
+    expect(deleteInputs).toHaveLength(1);
+    expect(deleteInputs[0].Key).toEqual({ forumId: FORUM_ID, sk: SK });
+    // Deleting must not also read the table.
+    expect(queryInputs).toHaveLength(0);
+  });
+
+  it("only deletes an item that is actually there, so a stale page cannot lie", async () => {
+    ddbSend.mockResolvedValue({});
+    await handler(deleteEvent());
+    expect(deleteInputs[0].ConditionExpression).toMatch(/attribute_exists/);
+  });
+
+  it("reports a question that has already gone rather than claiming success", async () => {
+    ddbSend.mockRejectedValue(
+      Object.assign(new Error("The conditional request failed"), {
+        name: "ConditionalCheckFailedException",
+      })
+    );
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(404);
+    expect(parse(res).ok).toBe(false);
+  });
+
+  it("refuses a delete with no bearer token", async () => {
+    const res = await handler(deleteEvent({ sk: SK }, { token: null }));
+    expect(res.statusCode).toBe(401);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("refuses another member of the same user pool", async () => {
+    verify.mockResolvedValue({ sub: OTHER_SUB, email: "neighbor@example.com", token_use: "id" });
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(403);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("fails CLOSED when no allowed identity is configured", async () => {
+    process.env.FORUM_ADMIN_SUB = "";
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(403);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("rejects a key it did not issue, rather than passing it to DynamoDB", async () => {
+    for (const sk of [undefined, "", 7, "not-a-key", "2026-10-21T08:00:00.000Z", `${SK} OR 1=1`]) {
+      const res = await handler(deleteEvent({ sk }));
+      expect(res.statusCode, `accepted: ${String(sk)}`).toBe(400);
+    }
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+
+  it("never deletes outside this forum's partition", async () => {
+    ddbSend.mockResolvedValue({});
+    await handler(deleteEvent({ sk: SK, forumId: "some-other-forum" }));
+    // The partition comes from the function's own config, never the request.
+    expect(deleteInputs[0].Key.forumId).toBe(FORUM_ID);
+  });
+
+  it("returns 500 when DynamoDB fails for any other reason", async () => {
+    ddbSend.mockRejectedValue(new Error("DynamoDB down"));
+    const res = await handler(deleteEvent());
+    expect(res.statusCode).toBe(500);
+    expect(parse(res).ok).toBe(false);
+  });
+
+  it("answers OPTIONS preflight on the delete route without a token", async () => {
+    const res = await handler(deleteEvent({}, { token: null, method: "OPTIONS" }));
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("rejects a cross-site delete", async () => {
+    const res = await handler(deleteEvent({ sk: SK }, { origin: "https://evil.example" }));
+    expect(res.statusCode).toBe(403);
+    expect(ddbSend).not.toHaveBeenCalled();
+  });
+});
+
 describe("logging", () => {
   it("never writes question content or the token to the logs", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -270,6 +368,8 @@ describe("logging", () => {
     await handler(makeEvent({ token: "SENTINEL.BAD.TOKEN" }));
     ddbSend.mockRejectedValueOnce(new Error("DDB down"));
     await handler(makeEvent());
+    ddbSend.mockResolvedValueOnce({});
+    await handler(deleteEvent());
 
     const logged = [logSpy, errSpy]
       .flatMap((spy) => spy.mock.calls)

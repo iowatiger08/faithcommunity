@@ -12,6 +12,8 @@ const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
 
 interface Question {
   questionId: string;
+  /** The item's DynamoDB sort key, which the delete route takes. */
+  sk: string;
   submittedAt: string;
   anonymous: boolean;
   question: string;
@@ -30,6 +32,12 @@ interface ListResponse {
   error?: string;
 }
 
+interface DeleteResponse {
+  ok?: boolean;
+  deleted?: string;
+  error?: string;
+}
+
 const plural = (n: number) => (n === 1 ? "question" : "questions");
 
 function formatWhen(iso: string) {
@@ -37,7 +45,20 @@ function formatWhen(iso: string) {
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
 }
 
-function QuestionCard({ q }: { q: Question }) {
+function QuestionCard({
+  q,
+  onDelete,
+  busy,
+}: {
+  q: Question;
+  onDelete: (q: Question) => void;
+  busy: boolean;
+}) {
+  // Confirmation lives on the card rather than in a window.confirm, which
+  // blocks the page and reads as a browser warning rather than a decision
+  // about someone's words.
+  const [confirming, setConfirming] = useState(false);
+
   return (
     <li className="border border-ink/10 rounded-lg p-6">
       <div
@@ -82,6 +103,39 @@ function QuestionCard({ q }: { q: Question }) {
           deciding.
         </p>
       )}
+      {confirming ? (
+        <div className="mt-4 pt-4 border-t border-ink/10">
+          <p className="text-sm text-ink/70 leading-relaxed">
+            This removes the question from the table. It cannot be undone, and
+            there is no copy anywhere else.
+          </p>
+          <div className="flex gap-4 mt-3">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => { onDelete(q); }}
+              className="rounded bg-accent px-4 py-1.5 text-sm text-paper disabled:opacity-60"
+            >
+              {busy ? "Deleting…" : "Delete for good"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className={`text-sm ${linkClass}`}
+            >
+              Keep it
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirming(true)}
+          className="text-sm text-ink/50 hover:text-accent mt-4"
+        >
+          Delete
+        </button>
+      )}
     </li>
   );
 }
@@ -110,6 +164,8 @@ export default function ForumAdmin() {
   const [held, setHeld] = useState<Question[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // The sk of the question being deleted, so only that card shows progress.
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   /** Fetch the listing with the cached ID token. Returns to the form on 401. */
   const load = useCallback(async () => {
@@ -171,6 +227,47 @@ export default function ForumAdmin() {
       setError(err instanceof Error ? err.message : "That sign-in didn't work.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  /**
+   * Remove one question: hostile submissions, tests, and the second of two
+   * near-identical questions do not belong in the stack being read aloud. A
+   * 404 means it has already gone, so the page drops it either way rather than
+   * keep showing something the table no longer holds.
+   */
+  async function onDelete(q: Question) {
+    setDeleting(q.sk);
+    setError("");
+    try {
+      const token = await getIdToken();
+      if (token === null) {
+        signOut();
+        setAuthed(false);
+        setError("Your session has expired. Sign in again.");
+        return;
+      }
+      const res = await fetch(`${API_BASE}/admin/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ sk: q.sk }),
+      });
+      const data = (await res.json().catch(() => ({}))) as DeleteResponse;
+      if ((res.ok && data.ok === true) || res.status === 404) {
+        const drop = (list: Question[]) => list.filter((x) => x.sk !== q.sk);
+        setQuestions(drop);
+        setHeld(drop);
+        if (res.status === 404) setError(data.error ?? "That question was already gone.");
+      } else {
+        setError(data.error ?? "Couldn't delete that question.");
+      }
+    } catch {
+      setError("Something went wrong reaching the server. Please try again.");
+    } finally {
+      setDeleting(null);
     }
   }
 
@@ -254,7 +351,12 @@ export default function ForumAdmin() {
           {questions.length > 0 && (
             <ul className="space-y-6">
               {questions.map((q) => (
-                <QuestionCard key={q.questionId} q={q} />
+                <QuestionCard
+                  key={q.questionId}
+                  q={q}
+                  onDelete={(x) => { void onDelete(x); }}
+                  busy={deleting === q.sk}
+                />
               ))}
             </ul>
           )}
@@ -271,7 +373,12 @@ export default function ForumAdmin() {
               </p>
               <ul className="space-y-6">
                 {held.map((q) => (
-                  <QuestionCard key={q.questionId} q={q} />
+                  <QuestionCard
+                    key={q.questionId}
+                    q={q}
+                    onDelete={(x) => { void onDelete(x); }}
+                    busy={deleting === q.sk}
+                  />
                 ))}
               </ul>
             </section>

@@ -91,6 +91,7 @@ Reuse the API rather than standing up a new one: its CORS allowlist is already e
 | `POST /forum/verify` | `{ code, confirm_url }` | `200 {ok, token, expiresAt}` / `400` / `401` / `403` closed / `429` |
 | `POST /forum/question` | `{ token, anonymous, name?, email?, question, confirm_url }` | `200 {ok, id}` / `400` / `401` expired → re-gate / `403` closed / `500` |
 | `POST /forum/admin/questions` | `Authorization: Bearer <Cognito ID token>`, empty body | `200 {ok, count, questions, held}` / `401` no or bad token / `403` not the owner / `429` / `500` |
+| `POST /forum/admin/delete` | `Authorization: Bearer <Cognito ID token>`, `{ sk }` | `200 {ok, deleted}` / `400` malformed key / `401` / `403` / `404` already gone / `429` / `500` |
 
 Plus `OPTIONS` on each, following the `ContactPost` / `ContactOptions` pair at `template.yaml:170-181`. Admin listing stays a **POST, not a GET** (it predates Cognito, and a GET would invite caching of a response that holds every disclosure). Admin responses carry `Cache-Control: no-store`.
 
@@ -464,3 +465,28 @@ phone signed in at church, and the sign-out button is the counterweight.
 Fallback if sign-in ever fails on the day: `npx tsx scripts/forum-questions.ts`
 reads straight from DynamoDB with aws-cli credentials and does not depend on
 Cognito, the API, or the browser.
+
+## Per-item delete from the admin page (2026-10-21)
+
+`/forum-admin` can now delete a single question, for the three cases that
+otherwise sit in the stack being read aloud: hostile or abusive submissions,
+test entries, and the second of two near-identical questions.
+
+- **Hard delete, not a hidden flag.** Retention was promised as "kept until
+  Tony deletes them", and a soft-deleted row is still a kept disclosure. The
+  item goes.
+- **Two clicks, on the card.** "Delete" reveals "Delete for good" / "Keep it"
+  and says the delete cannot be undone. No `window.confirm`: it blocks the page
+  and reads as a browser warning rather than a decision about someone's words.
+- **The key is validated, not trusted.** The handler requires the sort key to
+  match `<ISO submittedAt>#<8 hex>` and takes the partition from its own
+  config, so a request cannot reach another forum's items.
+- **`attribute_exists(sk)` condition**, so deleting something already gone is a
+  404 rather than a silent success. The page drops the item on a 404 too — it
+  should agree with the table, not keep showing a question that is no longer
+  there.
+- **IAM widens by exactly one action:** `dynamodb:Query` + `dynamodb:DeleteItem`
+  on that table. Still no `PutItem`, so this role cannot alter what anyone
+  wrote, and still no `Scan`.
+- `scripts/forum-questions.ts --delete-all` remains the way to clear the whole
+  table after the event.

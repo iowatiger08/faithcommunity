@@ -4,8 +4,10 @@
  *
  * This is the preferred way to read submissions: it goes straight to DynamoDB
  * with your own aws-cli credentials and exposes no public endpoint to the
- * data. The /forum-admin page exists for reading from a phone at church; this
- * is for everything else — and it is the only way to delete.
+ * data. The /forum-admin page exists for reading from a phone at church, and
+ * for deleting one question at a time (hostile submissions, tests,
+ * near-duplicates); this is for everything else, and --delete-all here is the
+ * only way to clear the table in one go.
  *
  * Retention is deliberately manual: the table has no TTL, so nothing expires
  * on its own. Once the forum is done and you have what you need, run

@@ -340,7 +340,11 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-forum-intake"
       RetentionInDays: 14
 
-  # Read-only: Query and nothing else. No PutItem, and no Scan.
+  # The owner's function: Query and DeleteItem, nothing else. No PutItem, so it
+  # cannot alter what somebody wrote, and no Scan. Deletion is here rather than
+  # in a third function because this is already the Cognito-gated role that can
+  # see every submission; splitting it would add infrastructure without
+  # narrowing what a compromise of this gate would reach.
   ForumAdminFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -364,6 +368,7 @@ Resources:
           - Effect: Allow
             Action:
               - dynamodb:Query
+              - dynamodb:DeleteItem
             Resource: !GetAtt ForumQuestionsTable.Arn
       Events:
         # The gateway verifies the Cognito signature, so an unsigned or expired
@@ -383,6 +388,21 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /forum/admin/questions
+            Method: options
+            ApiId: !Ref ContactHttpApi
+        # Per-item delete, for hostile submissions, tests, and near-duplicates.
+        ForumAdminDeletePost:
+          Type: HttpApi
+          Properties:
+            Path: /forum/admin/delete
+            Method: post
+            ApiId: !Ref ContactHttpApi
+            Auth:
+              Authorizer: CognitoAdminAuthorizer
+        ForumAdminDeleteOptions:
+          Type: HttpApi
+          Properties:
+            Path: /forum/admin/delete
             Method: options
             ApiId: !Ref ContactHttpApi
 

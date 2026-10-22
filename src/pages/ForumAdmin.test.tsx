@@ -47,6 +47,7 @@ const PASSWORD = "not-the-real-password";
 const questions = [
   {
     questionId: "aaaaaaaa",
+    sk: "2026-10-23T10:00:00.000Z#aaaaaaaa",
     submittedAt: "2026-10-23T10:00:00.000Z",
     anonymous: false,
     name: "Jane Doe",
@@ -56,6 +57,7 @@ const questions = [
   },
   {
     questionId: "bbbbbbbb",
+    sk: "2026-10-22T09:00:00.000Z#bbbbbbbb",
     submittedAt: "2026-10-22T09:00:00.000Z",
     anonymous: true,
     question: "Am I still loved by God?",
@@ -66,6 +68,7 @@ const questions = [
 const held = [
   {
     questionId: "cccccccc",
+    sk: "2026-10-21T08:00:00.000Z#cccccccc",
     submittedAt: "2026-10-21T08:00:00.000Z",
     anonymous: true,
     question: "A flagged message.",
@@ -219,6 +222,105 @@ describe("the session", () => {
     for (const leak of [/webtop/i, /deutsch/i, /cognito/i, /iowatiger/i, /tigersndragons/i, /signed in on this device/i]) {
       expect(text, `leaked: ${String(leak)}`).not.toMatch(leak);
     }
+  });
+});
+
+describe("deleting a question", () => {
+  /** Sign in with the default listing, then act on the first question. */
+  async function signedInWithList(body: unknown = { ok: true, count: 2, questions, held }) {
+    renderAdmin();
+    await waitFor(() => expect(screen.getByLabelText(/email/i)).toBeTruthy());
+    await signIn(body);
+    await waitFor(() => expect(screen.getByText(/How do I support my daughter/)).toBeTruthy());
+  }
+
+  const deleteButtons = () => screen.getAllByRole("button", { name: /^delete$/i });
+
+  it("offers a delete on every question, held ones included", async () => {
+    await signedInWithList();
+    // Two in the main list, one held.
+    expect(deleteButtons()).toHaveLength(3);
+  });
+
+  it("asks for confirmation before deleting anything", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+
+    // A question is gone for good once this goes through, so one click is not
+    // enough. Nothing is sent until the second.
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: /delete for good/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /keep it/i })).toBeTruthy();
+  });
+
+  it("backs out cleanly when the delete is not confirmed", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+    fireEvent.click(screen.getByRole("button", { name: /keep it/i }));
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(/How do I support my daughter/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /delete for good/i })).toBeNull();
+  });
+
+  it("sends the question's key with the ID token, and drops it from the list", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, deleted: questions[0].sk }));
+    fireEvent.click(screen.getByRole("button", { name: /delete for good/i }));
+
+    await waitFor(() => expect(screen.queryByText(/How do I support my daughter/)).toBeNull());
+    const [url, init] = mockFetch.mock.calls[1] as [string, RequestInit];
+    expect(url).toMatch(/\/admin\/delete$/);
+    expect(init.method).toBe("POST");
+    expect((init.headers as Record<string, string>).Authorization).toBe(`Bearer ${TOKEN}`);
+    expect(JSON.parse(init.body as string)).toEqual({ sk: questions[0].sk });
+
+    // The rest of the listing is untouched, and no reload was needed.
+    expect(screen.getByText(/Am I still loved by God/)).toBeTruthy();
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("deletes a held question too, and empties that section when it was the last", async () => {
+    await signedInWithList();
+    const heldButton = deleteButtons()[2];
+    fireEvent.click(heldButton);
+    mockFetch.mockResolvedValueOnce(okJson({ ok: true, deleted: held[0].sk }));
+    fireEvent.click(screen.getByRole("button", { name: /delete for good/i }));
+
+    await waitFor(() => expect(screen.queryByText("A flagged message.")).toBeNull());
+    expect(screen.queryByText(/held for review/i)).toBeNull();
+  });
+
+  it("keeps the question and says what happened when the server refuses", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+    mockFetch.mockResolvedValueOnce(
+      okJson({ ok: false, error: "Couldn't delete that question." }, 500)
+    );
+    fireEvent.click(screen.getByRole("button", { name: /delete for good/i }));
+
+    await waitFor(() => expect(screen.getByText(/couldn't delete that question/i)).toBeTruthy());
+    expect(screen.getByText(/How do I support my daughter/)).toBeTruthy();
+  });
+
+  it("drops a question that the server says has already gone", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+    mockFetch.mockResolvedValueOnce(
+      okJson({ ok: false, error: "That question is no longer there." }, 404)
+    );
+    fireEvent.click(screen.getByRole("button", { name: /delete for good/i }));
+
+    // Deleted elsewhere, or twice. Either way the page should agree with the
+    // server rather than keep showing it.
+    await waitFor(() => expect(screen.queryByText(/How do I support my daughter/)).toBeNull());
+  });
+
+  it("says plainly that a delete cannot be undone", async () => {
+    await signedInWithList();
+    fireEvent.click(deleteButtons()[0]);
+    expect(screen.getByText(/cannot be undone/i)).toBeTruthy();
   });
 });
 
