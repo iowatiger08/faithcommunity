@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 import { signIn, signOut, getIdToken, currentAllowedUser } from "~/lib/auth";
 
@@ -383,18 +382,6 @@ export default function ForumAdmin() {
               </ul>
             </section>
           )}
-
-          <p className="text-xs text-ink/50 mt-16 pt-8 border-t border-ink/10">
-            These are confidential. Raise them in the forum without names
-            attached, and delete them once the forum is done &mdash;{" "}
-            <code className="text-ink/60">
-              npx tsx scripts/forum-questions.ts --delete-all
-            </code>.{" "}
-            <Link to="/forum" className={linkClass}>
-              The public page
-            </Link>{" "}
-            is where people submit.
-          </p>
         </>
       )}
     </div>

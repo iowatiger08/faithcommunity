@@ -379,7 +379,7 @@ Both `.env` and `lambda/samconfig.toml` are **tracked in git** (`.gitignore` cov
 9. Confirm the notification email arrived with a content-free subject.
 10. Submit a plainly threatening test question and confirm it lands in the held section rather than the main list; submit a question containing "queer" and a quoted slur and confirm it is **not** held.
 11. Just before the forum: confirm the cutoff by temporarily setting `ForumClosesAt` to a past instant, checking both routes return 403, then restoring it.
-12. After the forum: read everything, then delete deliberately with `scripts/forum-questions.ts --delete-all`, and rotate or retire the member code.
+12. After the forum: read everything, then delete deliberately with `npx tsx scripts/forum-questions.ts --delete-all`, and rotate or retire the member code. The submissions are confidential: raise them in the forum without names attached. (This reminder used to sit at the foot of `/forum-admin`; it lives here now.)
 
 ## Source URLs for the citations
 
