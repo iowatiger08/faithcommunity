@@ -179,8 +179,11 @@ describe("the public part of the page", () => {
     const targets = Array.from(nav!.querySelectorAll("a")).map((a) =>
       (a.getAttribute("href") ?? "").replace("#", "")
     );
-    expect(targets.length).toBeGreaterThan(8);
+    expect(targets.length).toBeGreaterThan(5);
     expect(targets.every((id) => id.length > 0)).toBe(true);
+    // The statistics are grouped under three headings rather than listed as
+    // ten separate entries.
+    expect(targets).toEqual(expect.arrayContaining(["risk", "lifetime", "church-faith"]));
     for (const id of targets) {
       expect(container.querySelector(`section#${id}`), `no section #${id}`).toBeTruthy();
     }
@@ -188,6 +191,45 @@ describe("the public part of the page", () => {
     // ...and every one of those sections offers a way back.
     expect(container.querySelectorAll('a[href="#top"]').length).toBe(targets.length);
     expect(container.querySelector("#top")).toBeTruthy();
+  });
+
+  it("leads each group of figures with a plain one-line takeaway", () => {
+    renderForum();
+    expect(screen.getByText(/one accepting adult is linked to 40% lower odds/i)).toBeTruthy();
+    expect(screen.getByText(/least likely to be out in their faith community/i)).toBeTruthy();
+  });
+
+  it("shows each figure on a card that flips to reveal its details", () => {
+    renderForum();
+    const card = screen.getByRole("button", { name: /more likely to have attempted suicide/ });
+    expect(card.getAttribute("aria-pressed")).toBe("false");
+    // The details stay in the DOM on the back face, so screen readers and
+    // search engines get them without flipping.
+    expect(card.textContent).toMatch(/family rejection/);
+    fireEvent.click(card);
+    expect(card.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(card);
+    expect(card.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("flips at most four figures per section and lists the rest compactly", () => {
+    const { container } = renderForum();
+    const flips = (id: string) => container.querySelectorAll(`#${id} button[aria-pressed]`).length;
+    const listed = (id: string) => container.querySelectorAll(`#${id} [data-stat-row]`).length;
+    // Four figures: a 2×2 square, nothing listed.
+    expect([flips("acceptance"), listed("acceptance")]).toEqual([4, 0]);
+    // More than four: the first four flip, the rest are listed beneath.
+    expect([flips("coming-out"), listed("coming-out")]).toEqual([4, 2]);
+    expect([flips("older"), listed("older")]).toEqual([4, 1]);
+    // Fewer than four: listed only.
+    expect([flips("faith"), listed("faith")]).toEqual([0, 2]);
+  });
+
+  it("keeps the old section anchors, so existing links still land", () => {
+    const { container } = renderForum();
+    for (const id of ["acceptance", "rejection", "reality", "coming-out", "work", "older", "church", "faith", "marriage"]) {
+      expect(container.querySelector(`section#${id}`), `no section #${id}`).toBeTruthy();
+    }
   });
 
   it("says plainly that the page is still a work in progress", () => {

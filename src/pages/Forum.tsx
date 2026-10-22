@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 import ReflectionList from "~/components/ReflectionList";
@@ -375,15 +375,9 @@ const marriage: Stat[] = [
 const SECTIONS: Array<{ id: string; label: string }> = [
   { id: "ask", label: "Ask a question" },
   { id: "research", label: "What the research says" },
-  { id: "acceptance", label: "What acceptance does" },
-  { id: "rejection", label: "What rejection does" },
-  { id: "reality", label: "Reality is" },
-  { id: "coming-out", label: "Coming out" },
-  { id: "work", label: "At work" },
-  { id: "older", label: "Growing older" },
-  { id: "church", label: "What young people say about church" },
-  { id: "faith", label: "Faith importance?" },
-  { id: "marriage", label: "Marriage" },
+  { id: "risk", label: "Acceptance and risk" },
+  { id: "lifetime", label: "Across a lifetime" },
+  { id: "church-faith", label: "Church, faith, and marriage" },
   { id: "elca", label: "ELCA stance" },
   { id: "reading", label: "Reading and resources" },
 ];
@@ -419,17 +413,123 @@ function BackToTop() {
   );
 }
 
-function StatList({ items }: { items: Stat[] }) {
+// Both faces stay in the DOM, so screen readers and search engines get the
+// details without flipping. They share one grid cell, which sizes the card to
+// the taller face rather than clipping a long detail on a small screen.
+const face =
+  "[grid-area:1/1] [backface-visibility:hidden] rounded-lg border border-ink/10 p-4";
+
+function StatCard({ stat }: { stat: Stat }) {
+  const [flipped, setFlipped] = useState(false);
   return (
-    <ul className="space-y-6 mt-6">
-      {items.map((s) => (
-        <li key={s.figure + s.source} className="border border-ink/10 rounded-lg p-6">
-          <p className="font-serif text-2xl text-accent leading-tight">{s.figure}</p>
-          <p className="text-ink/80 mt-2 leading-relaxed">{s.detail}</p>
-          <p className="text-xs text-ink/50 mt-3">{s.source}</p>
-        </li>
-      ))}
-    </ul>
+    <li className="[perspective:1000px] sm:aspect-square">
+      <button
+        type="button"
+        aria-pressed={flipped}
+        onClick={() => setFlipped((f) => !f)}
+        className="h-full w-full text-left rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+      >
+        <div
+          className={`grid h-full transition-transform duration-500 motion-reduce:transition-none [transform-style:preserve-3d] ${
+            flipped ? "[transform:rotateY(180deg)]" : ""
+          }`}
+        >
+          <div className={`${face} flex flex-col items-center justify-center text-center bg-accent/5`}>
+            <p
+              aria-hidden="true"
+              className="font-serif text-2xl sm:text-3xl text-accent leading-tight"
+            >
+              {stat.figure}
+            </p>
+            <p aria-hidden="true" className="text-xs text-ink/50 mt-3">
+              Tap for details
+            </p>
+          </div>
+          <div className={`${face} [transform:rotateY(180deg)] bg-paper flex flex-col`}>
+            <p className="text-[13px] text-ink/80 leading-snug">
+              {/* Drawn from the data attribute so the figure is in the text
+                  only once; this is the copy a screen reader announces. */}
+              <span
+                data-figure={stat.figure}
+                className="mr-1 font-semibold text-accent before:content-[attr(data-figure)]"
+              />
+              {stat.detail}
+            </p>
+            <p className="text-[11px] text-ink/50 mt-auto pt-2">{stat.source}</p>
+          </div>
+        </div>
+      </button>
+    </li>
+  );
+}
+
+/** A compact row for figures outside the 2×2 square: figure on the left,
+ *  detail and source beside it. */
+function StatRow({ stat }: { stat: Stat }) {
+  return (
+    <li data-stat-row className="flex gap-4 py-3">
+      <p className="w-28 shrink-0 font-serif text-lg text-accent leading-tight">
+        {stat.figure}
+      </p>
+      <div>
+        <p className="text-sm text-ink/80 leading-snug">{stat.detail}</p>
+        <p className="text-[11px] text-ink/50 mt-1">{stat.source}</p>
+      </div>
+    </li>
+  );
+}
+
+/** Sections with four or more figures lead with a 2×2 square of flip cards;
+ *  anything past four, or a section with fewer than four, is listed in rows. */
+function StatList({ items }: { items: Stat[] }) {
+  const square = items.length >= 4 ? items.slice(0, 4) : [];
+  const rest = items.length >= 4 ? items.slice(4) : items;
+  return (
+    <>
+      {square.length > 0 && (
+        <ul className="mt-4 grid grid-cols-2 gap-3 max-w-xl">
+          {square.map((s) => (
+            <StatCard key={s.figure + s.source} stat={s} />
+          ))}
+        </ul>
+      )}
+      {rest.length > 0 && (
+        <ul className="mt-4 max-w-xl divide-y divide-ink/10 border-y border-ink/10">
+          {rest.map((s) => (
+            <StatRow key={s.figure + s.source} stat={s} />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+/** One topic inside a group: a heading, the point in a single sentence, any
+ *  caveats the figures need, then the figures themselves. */
+function StatSection({
+  id,
+  title,
+  takeaway,
+  items,
+  children,
+}: {
+  id: string;
+  title: string;
+  takeaway: string;
+  items: Stat[];
+  children?: ReactNode;
+}) {
+  return (
+    <section id={id} className="mt-10">
+      <h4 className="font-serif text-lg">{title}</h4>
+      <p className="mt-1 font-medium text-ink/90 max-w-prose">{takeaway}</p>
+      {children !== undefined && (
+        <div className="space-y-3 text-sm text-ink/70 max-w-prose leading-relaxed mt-3">
+          {children}
+        </div>
+      )}
+      <StatList items={items} />
+    </section>
   );
 }
 
@@ -873,62 +973,76 @@ export default function Forum() {
         <BackToTop />
       </section>
 
-      <section id="acceptance" className="mt-14">
-        <h3 className="font-serif text-xl">What acceptance does</h3>
-        <StatList items={acceptance} />
-        <BackToTop />
-      </section>
-
-      <section id="rejection" className="mt-14">
-        <h3 className="font-serif text-xl">What rejection does</h3>
-        <StatList items={rejection} />
-        <BackToTop />
-      </section>
-
-      <section id="reality" className="mt-14">
-        <h3 className="font-serif text-xl">Reality is</h3>
-        <StatList items={scale} />
-        <BackToTop />
-      </section>
-
-      {/* Crisis resources sit in the same part of the page as the risk figures,
-          deliberately — not buried at the bottom. */}
-      <section className="mt-12 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
-        <h3 className="font-serif text-xl mb-2">
-          If you or someone you love is in crisis
+      <section id="risk" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Acceptance and risk
         </h3>
-        <ul className="space-y-2 text-ink/80">
-          <li>
-            <span className="font-semibold">Call or text 988</span> &mdash; Suicide
-            &amp; Crisis Lifeline, 24/7, free and confidential.
-          </li>
-          <li>
-            <span className="font-semibold">The Trevor Project</span> &mdash; for LGBTQ+
-            young people. Call 1-866-488-7386 or text START to 678-678.
-          </li>
-          <li>
-            <span className="font-semibold">LGBT National Youth Talkline</span> &mdash;
-            1-800-246-7743.
-          </li>
-        </ul>
-        <p className="text-sm text-ink/70 mt-4">
-          More, including recovery and family support, on the{" "}
-          <Link to="/care#crisis" className={linkClass}>
-            care &amp; support page
-          </Link>
-          .
-        </p>
-      </section>
+        <StatSection
+          id="acceptance"
+          title="What acceptance does"
+          takeaway="One accepting adult is linked to 40% lower odds of a suicide attempt."
+          items={acceptance}
+        />
+        <StatSection
+          id="rejection"
+          title="What rejection does"
+          takeaway="Family rejection is linked to much higher rates of suicide attempts, depression, and drug use."
+          items={rejection}
+        />
+        <StatSection
+          id="reality"
+          title="Reality is"
+          takeaway="More than a third of LGBTQ+ young people seriously considered suicide in the past year, nationally and in Iowa."
+          items={scale}
+        />
 
-      <section id="coming-out" className="mt-14">
-        <h3 className="font-serif text-xl">Coming out</h3>
-        <StatList items={comingOut} />
+        {/* Crisis resources sit in the same part of the page as the risk figures,
+            deliberately — not buried at the bottom. */}
+        <div className="mt-10 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
+          <h4 className="font-serif text-lg mb-2">
+            If you or someone you love is in crisis
+          </h4>
+          <ul className="space-y-2 text-ink/80">
+            <li>
+              <span className="font-semibold">Call or text 988</span> &mdash; Suicide
+              &amp; Crisis Lifeline, 24/7, free and confidential.
+            </li>
+            <li>
+              <span className="font-semibold">The Trevor Project</span> &mdash; for LGBTQ+
+              young people. Call 1-866-488-7386 or text START to 678-678.
+            </li>
+            <li>
+              <span className="font-semibold">LGBT National Youth Talkline</span> &mdash;
+              1-800-246-7743.
+            </li>
+          </ul>
+          <p className="text-sm text-ink/70 mt-4">
+            More, including recovery and family support, on the{" "}
+            <Link to="/care#crisis" className={linkClass}>
+              care &amp; support page
+            </Link>
+            .
+          </p>
+        </div>
         <BackToTop />
       </section>
 
-      <section id="work" className="mt-14">
-        <h3 className="font-serif text-xl">At work</h3>
-        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
+      <section id="lifetime" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Across a lifetime
+        </h3>
+        <StatSection
+          id="coming-out"
+          title="Coming out"
+          takeaway="Nearly all LGBTQ adults have told someone. Fewer than half say all of their parents are accepting."
+          items={comingOut}
+        />
+        <StatSection
+          id="work"
+          title="At work"
+          takeaway="Nearly half of LGBTQ workers have faced discrimination or harassment at work, and those who are out report it more often."
+          items={work}
+        >
           <p>
             Since 2020 this has been settled federal law. In{" "}
             <em>Bostock v. Clayton County</em> the Supreme Court held that Title
@@ -947,27 +1061,31 @@ export default function Forum() {
             Iowans, the state-level protections covering housing, wages, and
             public accommodations are gone.
           </p>
-        </div>
-        <StatList items={work} />
-        <BackToTop />
-      </section>
-
-      <section id="older" className="mt-14">
-        <h3 className="font-serif text-xl">Growing older</h3>
-        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
+        </StatSection>
+        <StatSection
+          id="older"
+          title="Growing older"
+          takeaway="LGBT adults over 50 are twice as likely to live alone, and more than half report feeling isolated."
+          items={older}
+        >
           <p>
             Almost all of the research on this subject is about young people. The
-            figures
-            below are about adults over 50.
+            figures below are about adults over 50.
           </p>
-        </div>
-        <StatList items={older} />
+        </StatSection>
         <BackToTop />
       </section>
 
-      <section id="church" className="mt-14">
-        <h3 className="font-serif text-xl">What young people say about church</h3>
-        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed mt-4">
+      <section id="church-faith" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Church, faith, and marriage
+        </h3>
+        <StatSection
+          id="church"
+          title="What young people say about church"
+          takeaway="The Black LGBTQ+ young people surveyed are least likely to be out in their faith community: 20.1%, fewer than are out to family, friends, or people at school."
+          items={church}
+        >
           <p>
             Two limits on these figures, which matter for how they are used. They come
             from HRC surveys of Black and Latine LGBTQ+ young people, so they
@@ -977,20 +1095,19 @@ export default function Forum() {
             nothing about any particular church, denomination, or community, and
             should not be quoted as though they did.
           </p>
-        </div>
-        <StatList items={church} />
-        <BackToTop />
-      </section>
-
-      <section id="faith" className="mt-14">
-        <h3 className="font-serif text-xl">Faith importance?</h3>
-        <StatList items={faith} />
-        <BackToTop />
-      </section>
-
-      <section id="marriage" className="mt-14">
-        <h3 className="font-serif text-xl">Marriage</h3>
-        <StatList items={marriage} />
+        </StatSection>
+        <StatSection
+          id="faith"
+          title="Faith importance?"
+          takeaway="Valuing religion showed no link to suicide risk in either direction."
+          items={faith}
+        />
+        <StatSection
+          id="marriage"
+          title="Marriage"
+          takeaway="Support for same-sex marriage stands at 65%, down from 71% in 2022 and 2023."
+          items={marriage}
+        />
         <BackToTop />
       </section>
 
