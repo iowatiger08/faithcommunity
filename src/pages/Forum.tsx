@@ -1160,7 +1160,7 @@ export default function Forum() {
 
       <div className="mt-16 pt-8 border-t border-ink/10">
         <p className="font-serif text-2xl text-ink/80 mb-4">
-          You are welcome here. All of you.
+          All God's children are welcome here.
         </p>
         <p className="text-ink/70 max-w-prose leading-relaxed text-sm">
           Figures on this page are drawn from The Trevor Project&apos;s national
