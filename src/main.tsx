@@ -16,7 +16,6 @@ import Meditations from "./pages/Meditations";
 import CommunitySitting from "./pages/CommunitySitting";
 import FourNobleTruths from "./pages/FourNobleTruths";
 import Forum from "./pages/Forum";
-import ForumAdmin from "./pages/ForumAdmin";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
@@ -78,11 +77,9 @@ const routes: RouteRecord[] = [
       { path: "four-noble-truths", Component: FourNobleTruths },
       { path: "terms", Component: Terms },
       { path: "privacy", Component: Privacy },
-      // Unlisted on purpose — no nav or footer entry, and both are noindex.
-      // The forum is over; its page stays so the shared link explains where the
-      // research went. The admin view is private to the pastor.
+      // Unlisted and noindex. The forum is over; its page stays so the shared
+      // link explains where the research went.
       { path: "forum", Component: Forum },
-      { path: "forum-admin", Component: ForumAdmin },
       { path: "*", Component: NotFound },
     ],
   },

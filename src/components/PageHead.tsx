@@ -20,8 +20,8 @@ interface Props {
   /** Whether this is the home page (skip site-name suffix in title). */
   isHome?: boolean;
   /**
-   * Keep this page out of search results. For unlisted pages (e.g. the forum
-   * Q&A intake and its admin view). Note we deliberately do NOT add a
+   * Keep this page out of search results. For unlisted pages (e.g. the
+   * retired forum page). Note we deliberately do NOT add a
    * robots.txt for these — a `Disallow:` line would advertise the very paths
    * we want left alone, and robots.txt is the first thing a scanner fetches.
    */

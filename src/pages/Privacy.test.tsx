@@ -23,20 +23,22 @@ function renderPrivacy() {
 afterEach(cleanup);
 
 describe("the promises the page makes", () => {
-  it("states that anonymous submissions never carry a name or email", () => {
+  it("states that forum questions are no longer collected and were deleted", () => {
     renderPrivacy();
-    expect(screen.getByText(/Anonymous means anonymous/i)).toBeTruthy();
-    expect(screen.getByText(/ignore those fields entirely/i)).toBeTruthy();
+    expect(screen.getByText(/no longer collects anything/i)).toBeTruthy();
+    expect(screen.getByText(/every question submitted through it has been deleted/i)).toBeTruthy();
+  });
+
+  it("makes no promises about the retired forum form", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).not.toMatch(/Anonymous means anonymous/i);
+    expect(container.textContent).not.toMatch(/Unticked is the default/i);
+    expect(container.textContent).not.toMatch(/Not every question can be used/i);
   });
 
   it("states that no IP address is stored with a submission", () => {
     renderPrivacy();
     expect(screen.getByText(/No IP address is stored with any submission/i)).toBeTruthy();
-  });
-
-  it("states that forum notification emails carry no question text", () => {
-    renderPrivacy();
-    expect(screen.getByText(/contains no question text at all/i)).toBeTruthy();
   });
 
   it("states that nothing expires automatically and deletion is on request", () => {
@@ -48,13 +50,6 @@ describe("the promises the page makes", () => {
   it("states that submissions are not used to train AI models", () => {
     renderPrivacy();
     expect(screen.getByText(/used to train AI models/i)).toBeTruthy();
-  });
-
-  it("states that a name is withheld unless permission is given", () => {
-    renderPrivacy();
-    expect(screen.getAllByText(/without your name attached/i).length).toBeGreaterThan(0);
-    // Unticked must be the default, so that doing nothing is the safe choice.
-    expect(screen.getByText(/Unticked is the default/i)).toBeTruthy();
   });
 
   it("discloses that page visits are counted", () => {
@@ -85,13 +80,12 @@ describe("the honest limits", () => {
 });
 
 describe("terms for what is submitted", () => {
-  it("covers ownership, third parties, harassment, and non-use", () => {
+  it("covers ownership, third parties, and harassment", () => {
     renderPrivacy();
     expect(screen.getByText(/Terms for what you submit/i)).toBeTruthy();
     expect(screen.getByText(/What you write stays yours/i)).toBeTruthy();
     expect(screen.getByText(/Please write about yourself/i)).toBeTruthy();
     expect(screen.getByText(/Nothing harassing or threatening/i)).toBeTruthy();
-    expect(screen.getByText(/Not every question can be used/i)).toBeTruthy();
   });
 
   it("distinguishes a hard question from a harassing one", () => {

@@ -56,9 +56,8 @@ node_modules
 .env.local
 .env.*.local
 
-# Forum Q&A deploy secrets — member code, admin code, HMAC secret.
-# Never commit: samconfig.toml and .env are both tracked, so this is the only
-# safe home for them. See lambda/forum-params.env.example.
+# Retired forum Q&A deploy secrets. Kept ignored so a leftover local copy
+# can never be committed.
 /lambda/forum-params.env
 
 # Legacy Angular artifacts (kept under legacy/ for reference, not built here)

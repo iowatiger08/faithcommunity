@@ -12,10 +12,8 @@ const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
  * Every claim here has to stay true to what the code actually does. If you
  * change what is collected, stored, logged, or how long it is kept, change
  * this page in the same commit. The specifics it commits to today:
- *   - forum anonymity omits name/email server-side (lambda/forum-intake)
+ *   - the forum question form is retired and every submission was deleted
  *   - no IP address is stored with any submission
- *   - forum notification emails are content-free by default
- *   - no TTL: forum questions persist until deleted deliberately
  *   - page visits ARE counted via /_beacon in CloudFront access logs
  */
 export default function Privacy() {
@@ -68,19 +66,12 @@ export default function Privacy() {
 
             <div>
               <h3 className="font-semibold text-ink/90 mb-2">
-                The forum question form
+                Forum questions
               </h3>
               <p>
-                Your question, and &mdash; unless you choose to ask
-                anonymously &mdash; your name and email address.
-              </p>
-              <p className="mt-4">
-                <strong className="text-ink/90">Anonymous means anonymous.</strong>{" "}
-                When that box is ticked, your name and email are not sent from
-                your browser, and the server is written to ignore those fields entirely.
-                There is no hidden copy. If
-                you are not out, or not out to everyone, that option exists for
-                exactly this reason and you should feel free to use it.
+                In October 2026 this site collected questions for a forum on
+                coming out. That form is closed and no longer collects anything,
+                and every question submitted through it has been deleted.
               </p>
             </div>
 
@@ -133,29 +124,15 @@ export default function Privacy() {
           </p>
           <p className="mt-4">
             Messages are delivered and stored using Amazon Web Services in the
-            United States, encrypted in transit and at rest. For forum
-            questions, the notification email sent to Tony deliberately
-            contains no question text at all &mdash; just a reference number
-            &mdash; so that the only copy of what you wrote stays in one place
-            rather than living indefinitely in an inbox.
-          </p>
-          <p className="mt-4">
-            Forum questions are raised{" "}
-            <strong className="text-ink/90">without your name attached</strong>{" "}
-            unless you tick the box on the form giving permission to use it.
-            Unticked is the default, so doing nothing keeps you unattributed.
-            Submitting anonymously means there is no name to attach in the
-            first place.
+            United States, encrypted in transit and at rest.
           </p>
         </section>
 
         <section>
           <h2 className="font-serif text-2xl mb-4">How long it is kept</h2>
           <p>
-            Nothing expires automatically. Forum questions are kept until they
-            are deliberately deleted, which happens once the forum they were
-            submitted for is over. Contact messages are kept as long as they
-            are useful for replying and following up, and no longer.
+            Nothing expires automatically. Contact messages are kept as long
+            as they are useful for replying and following up, and no longer.
           </p>
           <p className="mt-4">
             <strong className="text-ink/90">
@@ -166,9 +143,7 @@ export default function Privacy() {
               contact page
             </Link>
             . You never have to explain why, and asking is a perfectly ordinary thing to
-            do. If you submitted a forum question anonymously there is
-            nothing linking it to you, so say roughly what it was about and it
-            will be found and removed.
+            do.
           </p>
         </section>
 
@@ -226,9 +201,8 @@ export default function Privacy() {
           <ul className="list-disc pl-6 space-y-3">
             <li>
               <strong>What you write stays yours.</strong> You are giving
-              permission for it to be read, and for a forum question to be
-              raised and discussed without your name attached &mdash; You keep ownership
-              of your words.
+              permission for it to be read, and you keep ownership of your
+              words.
             </li>
             <li>
               <strong>Please write about yourself.</strong> Leave out private details
@@ -244,11 +218,6 @@ export default function Privacy() {
               sharply-put questions, and questions that quote something cruel
               said to you are all welcome &mdash; that is a different thing
               entirely, and the difference is understood.
-            </li>
-            <li>
-              <strong>Not every question can be used.</strong> There is limited
-              time in a forum and some questions are better answered privately.
-              If yours is not raised, it has still been read and it still counts.
             </li>
           </ul>
         </section>

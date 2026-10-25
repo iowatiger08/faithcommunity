@@ -206,8 +206,7 @@ export default function Terms() {
           <p>
             Everything above governs this ministry&apos;s own writing and how
             you may use it. It does not cover the other direction &mdash; what
-            happens to a prayer request, a message, or a forum question that
-            you send to us.
+            happens to a prayer request or a message that you send to us.
           </p>
           <p className="mt-4">
             That is set out separately, in plain language, on the{" "}
