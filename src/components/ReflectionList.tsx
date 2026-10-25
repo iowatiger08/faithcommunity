@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { getComingOutReflections } from "~/lib/content";
 
 /**
- * The two coming-out reflections, listed identically on the forum page and the
- * queer resources page — title, byline, teaser — so the two cannot drift apart.
+ * The two coming-out reflections — title, byline, teaser — as listed on the
+ * queer resources page.
  */
 export default function ReflectionList() {
   return (

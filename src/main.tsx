@@ -79,8 +79,8 @@ const routes: RouteRecord[] = [
       { path: "terms", Component: Terms },
       { path: "privacy", Component: Privacy },
       // Unlisted on purpose — no nav or footer entry, and both are noindex.
-      // The forum page is shared by link with one congregation; the admin view
-      // is private to the pastor behind its own code.
+      // The forum is over; its page stays so the shared link explains where the
+      // research went. The admin view is private to the pastor.
       { path: "forum", Component: Forum },
       { path: "forum-admin", Component: ForumAdmin },
       { path: "*", Component: NotFound },

@@ -1,6 +1,68 @@
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 import ReflectionList from "~/components/ReflectionList";
+import { StatList, StatSection } from "~/components/research/StatList";
+import {
+  acceptance,
+  church,
+  comingOut,
+  faith,
+  marriage,
+  older,
+  rejection,
+  scale,
+  work,
+} from "~/components/research/stats";
+
+// Repeated on every inline link; named so the JSX stays readable.
+const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
+
+// Section anchors, in page order. Used for the jump list at the top and to
+// give every section an id to return to.
+const SECTIONS: Array<{ id: string; label: string }> = [
+  { id: "meaning", label: "What it means" },
+  { id: "coming-out", label: "Coming out" },
+  { id: "research", label: "What the research says" },
+  { id: "risk", label: "Acceptance and risk" },
+  { id: "lifetime", label: "Across a lifetime" },
+  { id: "church-faith", label: "Church, faith, and marriage" },
+  { id: "organizations", label: "Affirming organizations" },
+  { id: "community", label: "Community resources" },
+  { id: "iowa", label: "In Iowa" },
+  { id: "youth", label: "Youth resources" },
+  { id: "reading", label: "Further reading" },
+];
+
+function JumpList() {
+  return (
+    <nav aria-label="On this page" className="mt-10 border-t border-ink/10 pt-6">
+      <p className="text-xs uppercase tracking-widest text-ink/50 mb-3">
+        On this page
+      </p>
+      <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        {SECTIONS.map((sec) => (
+          <li key={sec.id}>
+            <a href={`#${sec.id}`} className={linkClass}>
+              {sec.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+/** Anchors back to the jump list rather than the raw top of the document, so
+ *  the reader lands somewhere they can navigate from. */
+function BackToTop() {
+  return (
+    <p className="mt-6 text-xs">
+      <a href="#top" className="text-ink/50 hover:text-accent">
+        &uarr; Return to top
+      </a>
+    </p>
+  );
+}
 
 export default function QueerResources() {
   return (
@@ -13,10 +75,10 @@ export default function QueerResources() {
           style={{ maxHeight: "380px" }}
         />
       </div>
-    <div className="max-w-3xl mx-auto px-6 py-16">
+    <div id="top" className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Queer Resources"
-        description="Affirming faith resources for LGBTQ+ people and families — welcoming organizations, support for coming out, community and youth resources, and further reading."
+        description="Affirming faith resources for LGBTQ+ people and families — support for coming out, sourced research on acceptance and risk, welcoming organizations, community and youth resources, and further reading."
         path="/queer-resources/"
       />
 
@@ -48,7 +110,9 @@ export default function QueerResources() {
         </p>
       </div>
 
-      <section className="mt-12">
+      <JumpList />
+
+      <section id="meaning" className="mt-12">
         <h2 className="font-serif text-2xl mb-3">
           What does it mean to be LGBTQ+?
         </h2>
@@ -70,10 +134,10 @@ export default function QueerResources() {
             take your time. Coming to terms with the self &mdash; that needs no hurry.
           </p>
         </div>
-
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="coming-out" className="mt-14">
         <h2 className="font-serif text-2xl mb-3">Coming out</h2>
         <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
           <p>
@@ -102,9 +166,169 @@ export default function QueerResources() {
             every step.
           </p>
         </div>
+        <p className="mt-8 font-medium text-ink/90 max-w-prose">
+          Nearly all LGBTQ adults have told someone. Fewer than half say all of
+          their parents are accepting.
+        </p>
+        <StatList items={comingOut} />
+        <BackToTop />
       </section>
 
-      <section className="mt-16">
+      {/* ── Research ───────────────────────────────────────────────────────────── */}
+      <section id="research" className="mt-16">
+        <h2 className="font-serif text-2xl mb-3">What the research says</h2>
+        <div className="space-y-4 text-ink/80 max-w-prose leading-relaxed">
+          <p>
+            One consideration before these statistics: LGBTQ+ young people are not at
+            higher risk because of who they are. They are at higher risk because of
+            how they are treated. That is the framing the researchers themselves
+            use, and it matters, because it means the risk can change. People and
+            environment can change.
+          </p>
+
+          <p>
+            Coming out happens over a lifetime rather than in a single moment: a
+            teenager deciding whether to tell their parents, an adult deciding
+            whether to tell a manager, someone in their eighties deciding whether
+            it is safe to be known in a care home.
+          </p>
+        </div>
+        <BackToTop />
+      </section>
+
+      <section id="risk" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Acceptance and risk
+        </h3>
+        <StatSection
+          id="acceptance"
+          title="What acceptance does"
+          takeaway="One accepting adult is linked to 40% lower odds of a suicide attempt."
+          items={acceptance}
+        />
+        <StatSection
+          id="rejection"
+          title="What rejection does"
+          takeaway="Family rejection is linked to much higher rates of suicide attempts, depression, and drug use."
+          items={rejection}
+        />
+        <StatSection
+          id="reality"
+          title="Reality is"
+          takeaway="More than a third of LGBTQ+ young people seriously considered suicide in the past year, nationally and in Iowa."
+          items={scale}
+        />
+
+        {/* Crisis resources sit in the same part of the page as the risk figures,
+            deliberately — not buried at the bottom. */}
+        <div className="mt-10 rounded-lg border-2 border-accent/40 bg-accent/5 p-6">
+          <h4 className="font-serif text-lg mb-2">
+            If you or someone you love is in crisis
+          </h4>
+          <ul className="space-y-2 text-ink/80">
+            <li>
+              <span className="font-semibold">Call or text 988</span> &mdash; Suicide
+              &amp; Crisis Lifeline, 24/7, free and confidential.
+            </li>
+            <li>
+              <span className="font-semibold">The Trevor Project</span> &mdash; for LGBTQ+
+              young people. Call 1-866-488-7386 or text START to 678-678.
+            </li>
+            <li>
+              <span className="font-semibold">LGBT National Youth Talkline</span> &mdash;
+              1-800-246-7743.
+            </li>
+          </ul>
+          <p className="text-sm text-ink/70 mt-4">
+            More, including recovery and family support, on the{" "}
+            <Link to="/care#crisis" className={linkClass}>
+              care &amp; support page
+            </Link>
+            .
+          </p>
+        </div>
+        <BackToTop />
+      </section>
+
+      <section id="lifetime" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Across a lifetime
+        </h3>
+        <StatSection
+          id="work"
+          title="At work"
+          takeaway="Nearly half of LGBTQ workers have faced discrimination or harassment at work, and those who are out report it more often."
+          items={work}
+        >
+          <p>
+            Since 2020 this has been settled federal law. In{" "}
+            <em>Bostock v. Clayton County</em> the Supreme Court held that Title
+            VII&apos;s ban on sex discrimination covers sexual orientation and
+            gender identity, which means firing someone for being gay or
+            transgender is illegal employment discrimination nationwide. Every
+            figure below was gathered after that ruling.
+          </p>
+          <p>
+            In Iowa, efforts have reversed acceptance gains recently. In February
+            2025, the state removed gender identity from the Iowa Civil Rights
+            Act, effective that July &mdash; the first state in the country to
+            repeal a protection of that kind rather than simply never having had
+            one. Sexual orientation remains protected under Iowa law, and the
+            federal employment protection still stands. For transgender
+            Iowans, the state-level protections covering housing, wages, and
+            public accommodations are gone.
+          </p>
+        </StatSection>
+        <StatSection
+          id="older"
+          title="Growing older"
+          takeaway="LGBT adults over 50 are twice as likely to live alone, and more than half report feeling isolated."
+          items={older}
+        >
+          <p>
+            Almost all of the research on this subject is about young people. The
+            figures below are about adults over 50.
+          </p>
+        </StatSection>
+        <BackToTop />
+      </section>
+
+      <section id="church-faith" className="mt-14">
+        <h3 className="font-serif text-xl border-b border-ink/10 pb-2">
+          Church, faith, and marriage
+        </h3>
+        <StatSection
+          id="church"
+          title="What young people say about church"
+          takeaway="The Black LGBTQ+ young people surveyed are least likely to be out in their faith community: 20.1%, fewer than are out to family, friends, or people at school."
+          items={church}
+        >
+          <p>
+            Two limits on these figures, which matter for how they are used. They come
+            from HRC surveys of Black and Latine LGBTQ+ young people, so they
+            describe those groups rather than all young people. And the surveys
+            asked each respondent about their own religious upbringing without
+            recording a denomination or tradition &mdash; so the figures say
+            nothing about any particular church, denomination, or community, and
+            should not be quoted as though they did.
+          </p>
+        </StatSection>
+        <StatSection
+          id="faith"
+          title="Faith importance?"
+          takeaway="Valuing religion showed no link to suicide risk in either direction."
+          items={faith}
+        />
+        <StatSection
+          id="marriage"
+          title="Marriage"
+          takeaway="Support for same-sex marriage stands at 65%, down from 71% in 2022 and 2023."
+          items={marriage}
+        />
+        <BackToTop />
+      </section>
+
+      <section id="organizations" className="mt-16">
         <h2 className="font-serif text-2xl mb-8">Affirming organizations</h2>
         <ul className="space-y-6">
           <li className="border border-ink/10 rounded-lg p-6">
@@ -155,9 +379,10 @@ export default function QueerResources() {
             </p>
           </li>
         </ul>
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="community" className="mt-14">
         <h2 className="font-serif text-2xl mb-3">Community resources</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
           Beyond churches, these organizations offer support, connection, and
@@ -211,9 +436,10 @@ export default function QueerResources() {
             </p>
           </li>
         </ul>
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="iowa" className="mt-14">
         <h2 className="font-serif text-2xl mb-3">In Iowa</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
           Statewide and Des Moines organizations for LGBTQ+ Iowans, their
@@ -273,9 +499,10 @@ export default function QueerResources() {
             </p>
           </li>
         </ul>
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="youth" className="mt-14">
         <h2 className="font-serif text-2xl mb-3">Youth resources</h2>
         <p className="text-ink/80 max-w-prose leading-relaxed mb-8">
           For LGBTQ+ youth and their families &mdash; safe, affirming spaces and
@@ -331,9 +558,10 @@ export default function QueerResources() {
             </p>
           </li>
         </ul>
+        <BackToTop />
       </section>
 
-      <section className="mt-14">
+      <section id="reading" className="mt-14">
         <h2 className="font-serif text-2xl mb-8">Further reading</h2>
 
         <div className="mb-10">
@@ -397,9 +625,19 @@ export default function QueerResources() {
           </a>
           .
         </p>
+        <BackToTop />
       </section>
 
-      <div className="mt-16 pt-8 border-t border-ink/10">
+      <div className="mt-16 pt-8 border-t border-ink/10 space-y-4">
+        <p className="text-ink/70 max-w-prose leading-relaxed text-sm">
+          Figures on this page are drawn from The Trevor Project&apos;s national
+          and state surveys and research briefs, the Human Rights Campaign
+          Foundation&apos;s LGBTQ+ Youth Reports and Community Insights surveys,
+          the Family Acceptance Project at San Francisco State University, Pew
+          Research Center, the Williams Institute at UCLA School of Law, SAGE and
+          the National Resource Center on LGBT Aging, Gallup, and PRRI&apos;s
+          American Values Atlas. Each is named with its year beside the figure.
+        </p>
         <p className="text-ink/70 max-w-prose leading-relaxed text-sm">
           Looking for someone to talk with? You&apos;ll find pastoral care and
           support on our{" "}
