@@ -35,7 +35,7 @@ const SECTIONS: Array<{ id: string; label: string }> = [
 
 function JumpList() {
   return (
-    <nav aria-label="On this page" className="mt-10 border-t border-ink/10 pt-6">
+    <nav id="top" aria-label="On this page" className="mt-10 border-t border-ink/10 pt-6">
       <p className="text-xs uppercase tracking-widest text-ink/50 mb-3">
         On this page
       </p>
@@ -75,7 +75,7 @@ export default function QueerResources() {
           style={{ maxHeight: "380px" }}
         />
       </div>
-    <div id="top" className="max-w-3xl mx-auto px-6 py-16">
+    <div className="max-w-3xl mx-auto px-6 py-16">
       <PageHead
         title="Queer Resources"
         description="Affirming faith resources for LGBTQ+ people and families — support for coming out, sourced research on acceptance and risk, welcoming organizations, community and youth resources, and further reading."

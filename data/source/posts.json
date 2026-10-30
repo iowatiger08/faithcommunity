@@ -22630,14 +22630,14 @@
         {
           "book": "Philippians",
           "chapter": 2,
-          "verses": null,
-          "ref": "Philippians 2"
+          "verses": "1-13",
+          "ref": "Philippians 2:1-13"
         },
         {
           "book": "Psalms",
           "chapter": 25,
-          "verses": null,
-          "ref": "Psalms 25"
+          "verses": "1-9",
+          "ref": "Psalms 25:1-9"
         }
       ],
       "scripture_in_title": [
@@ -22692,8 +22692,8 @@
         {
           "book": "1 Thessalonians",
           "chapter": 2,
-          "verses": null,
-          "ref": "1 Thessalonians 2"
+          "verses": "1-8",
+          "ref": "1 Thessalonians 2:1-8"
         }
       ],
       "scripture_in_title": [
@@ -22741,14 +22741,14 @@
         {
           "book": "Matthew",
           "chapter": 22,
-          "verses": null,
-          "ref": "Matthew 22"
+          "verses": "1-14",
+          "ref": "Matthew 22:1-14"
         },
         {
           "book": "Isaiah",
           "chapter": 25,
-          "verses": null,
-          "ref": "Isaiah 25"
+          "verses": "1-9",
+          "ref": "Isaiah 25:1-9"
         }
       ],
       "scripture_in_title": [
@@ -22796,14 +22796,14 @@
         {
           "book": "Matthew",
           "chapter": 21,
-          "verses": null,
-          "ref": "Matthew 21"
+          "verses": "33-46",
+          "ref": "Matthew 21:33-46"
         },
         {
           "book": "Psalms",
           "chapter": 80,
-          "verses": null,
-          "ref": "Psalms 80"
+          "verses": "7-15",
+          "ref": "Psalms 80:7-15"
         },
         {
           "book": "Isaiah",

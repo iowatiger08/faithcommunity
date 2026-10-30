@@ -67,8 +67,8 @@ describe("the research", () => {
   it("shows the research section and its figures", () => {
     renderPage();
     expect(screen.getByRole("heading", { name: /what the research says/i })).toBeTruthy();
-    expect(screen.getByText("8.4×")).toBeTruthy();
-    expect(screen.getByText(/34% in Iowa/)).toBeTruthy();
+    expect(screen.getAllByText("8.4×")).not.toHaveLength(0);
+    expect(screen.getAllByText(/34% in Iowa/)).not.toHaveLength(0);
   });
 
   it("names a source and year for every statistic", () => {
@@ -83,10 +83,10 @@ describe("the research", () => {
   it("shows the HRC figures on faith communities", () => {
     renderPage();
     expect(screen.getByRole("heading", { name: /what young people say about church/i })).toBeTruthy();
-    expect(screen.getByText("63.1%")).toBeTruthy();
-    expect(screen.getByText("54.5%")).toBeTruthy();
-    expect(screen.getByText("20.1%")).toBeTruthy();
-    expect(screen.getByText("25.9%")).toBeTruthy();
+    expect(screen.getAllByText("63.1%")).not.toHaveLength(0);
+    expect(screen.getAllByText("54.5%")).not.toHaveLength(0);
+    expect(screen.getAllByText("20.1%")).not.toHaveLength(0);
+    expect(screen.getAllByText("25.9%")).not.toHaveLength(0);
   });
 
   it("is explicit that the HRC faith figures describe Black and Latine youth", () => {
@@ -111,8 +111,8 @@ describe("the research", () => {
   it("covers work, including what Iowa law still protects", () => {
     renderPage();
     expect(screen.getByRole("heading", { name: /^At work$/ })).toBeTruthy();
-    expect(screen.getByText("47%")).toBeTruthy();
-    expect(screen.getByText("39% vs. 12%")).toBeTruthy();
+    expect(screen.getAllByText("47%")).not.toHaveLength(0);
+    expect(screen.getAllByText("39% vs. 12%")).not.toHaveLength(0);
     expect(screen.getAllByText(/Williams Institute/).length).toBeGreaterThan(2);
     expect(screen.getByText(/Bostock v. Clayton County/)).toBeTruthy();
     expect(screen.getByText(/removed gender identity from the Iowa Civil Rights/i)).toBeTruthy();
@@ -122,19 +122,19 @@ describe("the research", () => {
   it("covers growing older", () => {
     renderPage();
     expect(screen.getByRole("heading", { name: /^Growing older$/ })).toBeTruthy();
-    expect(screen.getByText(/3 million/)).toBeTruthy();
-    expect(screen.getByText(/2× and 4×/)).toBeTruthy();
-    expect(screen.getByText("82%")).toBeTruthy();
+    expect(screen.getAllByText(/3 million/)).not.toHaveLength(0);
+    expect(screen.getAllByText("2×")).not.toHaveLength(0);
+    expect(screen.getAllByText("82%")).not.toHaveLength(0);
     expect(screen.getAllByText(/SAGE/).length).toBeGreaterThan(2);
   });
 
   it("covers marriage acceptance, including that it can move backwards", () => {
     renderPage();
     expect(screen.getByRole("heading", { name: /^Marriage$/ })).toBeTruthy();
-    expect(screen.getByText("65%")).toBeTruthy();
-    expect(screen.getByText("87% / 67% / 37%")).toBeTruthy();
+    expect(screen.getAllByText("65%")).not.toHaveLength(0);
+    expect(screen.getAllByText("87% / 67% / 37%")).not.toHaveLength(0);
     expect(screen.getAllByText(/Gallup/).length).toBeGreaterThan(2);
-    expect(screen.getAllByText("76%")).toHaveLength(1);
+    expect(screen.getAllByText("76%", { ignore: "[aria-hidden=true]" })).toHaveLength(1);
   });
 
   it("puts crisis resources alongside the risk figures", () => {
@@ -195,7 +195,7 @@ describe("navigation", () => {
       expect(container.querySelector(`section#${id}`), `no section #${id}`).toBeTruthy();
     }
     expect(container.querySelectorAll('a[href="#top"]').length).toBe(targets.length);
-    expect(container.querySelector("#top")).toBeTruthy();
+    expect(container.querySelector("#top")).toBe(nav);
   });
 
   it("gives every section an id, and no id appears twice", () => {

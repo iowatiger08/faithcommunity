@@ -36,12 +36,9 @@ function StatCard({ stat }: { stat: Stat }) {
           </div>
           <div className={`${face} [transform:rotateY(180deg)] bg-paper flex flex-col`}>
             <p className="text-[13px] text-ink/80 leading-snug">
-              {/* Drawn from the data attribute so the figure is in the text
-                  only once; this is the copy a screen reader announces. */}
-              <span
-                data-figure={stat.figure}
-                className="mr-1 font-semibold text-accent before:content-[attr(data-figure)]"
-              />
+              {/* The front-face figure is aria-hidden; this is the copy a
+                  screen reader announces. */}
+              <span className="mr-1 font-semibold text-accent">{stat.figure}</span>
               {stat.detail}
             </p>
             <p className="text-[11px] text-ink/50 mt-auto pt-2">{stat.source}</p>
@@ -77,15 +74,15 @@ export function StatList({ items }: { items: Stat[] }) {
     <>
       {square.length > 0 && (
         <ul className="mt-4 grid grid-cols-2 gap-3 max-w-xl">
-          {square.map((s) => (
-            <StatCard key={s.figure + s.source} stat={s} />
+          {square.map((s, i) => (
+            <StatCard key={i} stat={s} />
           ))}
         </ul>
       )}
       {rest.length > 0 && (
         <ul className="mt-4 max-w-xl divide-y divide-ink/10 border-y border-ink/10">
-          {rest.map((s) => (
-            <StatRow key={s.figure + s.source} stat={s} />
+          {rest.map((s, i) => (
+            <StatRow key={i} stat={s} />
           ))}
         </ul>
       )}

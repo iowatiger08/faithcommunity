@@ -78,6 +78,7 @@ echo "=== syncing HTML files (no cache, so updates show up immediately) ==="
 # on every request so site updates aren't stuck behind a stale cache.
 run "${aws_cmd[@]}" s3 sync "$DIST_DIR/" "s3://$BUCKET/" \
   --region "$AWS_REGION" \
+  --delete \
   --exclude "*" \
   --include "*.html" \
   --cache-control "no-cache, no-store, must-revalidate" \

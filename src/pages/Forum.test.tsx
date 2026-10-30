@@ -2,7 +2,7 @@
  * Tests for the retired forum page. The link went out to a congregation, so
  * it stays a real route that explains where the material went.
  */
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect } from "vitest";
 import Forum from "./Forum";
@@ -28,6 +28,14 @@ describe("the retired forum page", () => {
     const hrefs = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
     expect(hrefs).toContain("/queer-resources");
     expect(hrefs).toContain("/");
+  });
+
+  it("carries an old section link through to the same section", async () => {
+    window.location.hash = "#church";
+    renderForum();
+    const link = await screen.findByRole("link", { name: "Queer Resources" });
+    await waitFor(() => expect(link.getAttribute("href")).toBe("/queer-resources#church"));
+    window.location.hash = "";
   });
 
   it("has no form or code field", () => {

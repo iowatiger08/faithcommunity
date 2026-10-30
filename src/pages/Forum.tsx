@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 
@@ -7,6 +8,13 @@ import PageHead from "~/components/PageHead";
  * 200) with a short explanation rather than falling through to an S3 error.
  */
 export default function Forum() {
+  // Old links like /forum#church still circulate; Queer Resources kept those
+  // anchors. The prerendered HTML has no hash, so React reads it after hydration.
+  const hash = useSyncExternalStore(
+    () => () => {},
+    () => window.location.hash,
+    () => ""
+  );
   return (
     <div className="max-w-3xl mx-auto px-6 py-24 text-center">
       <PageHead
@@ -20,7 +28,7 @@ export default function Forum() {
       </h1>
       <p className="text-ink/70 mb-6">
         The forum has finished. The research from this page is now on{" "}
-        <Link to="/queer-resources" className="text-accent underline">
+        <Link to={`/queer-resources${hash}`} className="text-accent underline">
           Queer Resources
         </Link>
         .

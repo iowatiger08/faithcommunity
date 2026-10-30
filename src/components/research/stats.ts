@@ -269,8 +269,8 @@ export const older: Stat[] = [
     source: "SAGE and the National Resource Center on LGBT Aging, Facts on LGBT Aging",
   },
   {
-    figure: "2× and 4×",
-    detail: "as likely to live alone, and four times less likely to have children.",
+    figure: "2×",
+    detail: "as likely to live alone, and a quarter as likely to have children.",
     source: "SAGE and the National Resource Center on LGBT Aging",
   },
   {
