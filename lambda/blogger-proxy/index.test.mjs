@@ -3,7 +3,7 @@
  * Secrets Manager and fetch are mocked so tests run without credentials.
  * Focus: CORS, preflight, secret parsing, upstream errors.
  */
-import { vi, describe, it, expect, beforeEach, afterAll } from "vitest";
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 
 const { secretsSend } = vi.hoisted(() => ({ secretsSend: vi.fn() }));
 vi.mock("@aws-sdk/client-secrets-manager", () => ({
@@ -16,11 +16,6 @@ vi.mock("@aws-sdk/client-secrets-manager", () => ({
 import { handler } from "./index.mjs";
 
 const mockFetch = vi.fn();
-const realFetch = global.fetch;
-global.fetch = mockFetch;
-afterAll(() => {
-  global.fetch = realFetch;
-});
 
 vi.spyOn(console, "log").mockImplementation(() => {});
 vi.spyOn(console, "error").mockImplementation(() => {});
@@ -39,9 +34,17 @@ const fakeSecret = (value) => ({ SecretString: value });
 beforeEach(() => {
   secretsSend.mockReset();
   mockFetch.mockReset();
+  vi.stubGlobal("fetch", mockFetch);
   secretsSend.mockResolvedValue(fakeSecret(JSON.stringify({ api_key: "k1" })));
   mockFetch.mockResolvedValue(okResponse({ items: [{ id: "1" }, { id: "2" }] }));
 });
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+// The public body names no internal service or upstream detail.
+const genericError = { error: "Failed to fetch blogger posts" };
 
 describe("CORS", () => {
   it("echoes an allowed origin", async () => {
@@ -102,8 +105,26 @@ describe("secret parsing", () => {
     secretsSend.mockResolvedValue(fakeSecret(JSON.stringify({ other: "x" })));
     const res = await handler(makeEvent());
     expect(res.statusCode).toBe(500);
-    expect(JSON.parse(res.body).message).toBe("API key not found in secret");
+    expect(JSON.parse(res.body)).toEqual(genericError);
     expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it.each(["12345", "true", "null"])(
+    "uses a plain-text secret that parses as JSON (%s) as the key",
+    async (value) => {
+      secretsSend.mockResolvedValue(fakeSecret(value));
+      const res = await handler(makeEvent());
+      expect(res.statusCode).toBe(200);
+      expect(mockFetch.mock.calls[0][0]).toContain(`key=${value}&`);
+    },
+  );
+
+  it("encodes a key with URL-reserved characters", async () => {
+    secretsSend.mockResolvedValue(fakeSecret("a&b#c+d=e"));
+    await handler(makeEvent());
+    const url = new URL(mockFetch.mock.calls[0][0]);
+    expect(url.searchParams.get("key")).toBe("a&b#c+d=e");
+    expect(url.searchParams.get("maxResults")).toBe("5");
   });
 
   it("returns 500 when the secret has no string value", async () => {
@@ -116,10 +137,7 @@ describe("secret parsing", () => {
     secretsSend.mockRejectedValue(new Error("AccessDenied"));
     const res = await handler(makeEvent());
     expect(res.statusCode).toBe(500);
-    expect(JSON.parse(res.body)).toEqual({
-      error: "Failed to fetch blogger posts",
-      message: "AccessDenied",
-    });
+    expect(JSON.parse(res.body)).toEqual(genericError);
   });
 });
 
@@ -145,6 +163,6 @@ describe("Blogger fetch", () => {
     mockFetch.mockResolvedValue({ ok: false, status: 403, text: async () => "quota" });
     const res = await handler(makeEvent());
     expect(res.statusCode).toBe(500);
-    expect(JSON.parse(res.body).message).toBe("Blogger API returned 403: quota");
+    expect(JSON.parse(res.body)).toEqual(genericError);
   });
 });

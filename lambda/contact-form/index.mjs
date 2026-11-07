@@ -128,6 +128,9 @@ export const handler = async (event) => {
   if (method === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
+  if (method !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
 
   // Origin enforcement — reject a cross-site browser POST (Origin present but not
   // in the allowlist). A *missing* Origin is allowed through: some privacy tools

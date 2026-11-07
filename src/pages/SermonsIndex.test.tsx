@@ -63,9 +63,13 @@ describe("SermonsIndex", () => {
     expect(screen.queryByText(/Matthew/)).toBeNull();
   });
 
-  it("files an undated sermon under 'unkn'", () => {
-    getSermons.mockReturnValue([makePost({ published_date: null })]);
+  it("files an undated sermon under 'Undated', after the dated years", () => {
+    getSermons.mockReturnValue([
+      makePost({ slug: "a", published_date: null }),
+      makePost({ slug: "b", published_date: "2019-05-01" }),
+    ]);
     renderIndex();
-    expect(screen.getByRole("heading", { level: 2, name: "unkn" })).toBeTruthy();
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings).toEqual(["2019", "Undated"]);
   });
 });

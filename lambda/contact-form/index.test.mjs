@@ -316,9 +316,14 @@ describe("event shapes", () => {
     expect(res.body).toBe("");
   });
 
-  it("handles an event with no method at all", async () => {
-    const res = await handler({ headers: {}, body: JSON.stringify(validBody) });
-    expect(res.statusCode).toBe(200);
+  it.each([
+    ["GET", { requestContext: { http: { method: "GET" } } }],
+    ["PUT (v1)", { httpMethod: "PUT" }],
+    ["no method", {}],
+  ])("rejects a %s request without sending email", async (_label, shape) => {
+    const res = await handler({ ...shape, headers: {}, body: JSON.stringify(validBody) });
+    expect(res.statusCode).toBe(405);
+    expect(sesSend).not.toHaveBeenCalled();
   });
 
   it("rejects a disallowed capitalised Origin header", async () => {

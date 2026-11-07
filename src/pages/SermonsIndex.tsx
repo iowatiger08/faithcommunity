@@ -2,16 +2,23 @@ import { Link } from "react-router-dom";
 import { getSermons, formatDate } from "~/lib/content";
 import PageHead from "~/components/PageHead";
 
+const UNDATED = "Undated";
+
 export default function SermonsIndex() {
   const sermons = getSermons();
   // Group by year
   const byYear = new Map<string, typeof sermons>();
   for (const s of sermons) {
-    const y = (s.published_date ?? "unknown").slice(0, 4);
+    const y = s.published_date?.slice(0, 4) ?? UNDATED;
     if (!byYear.has(y)) byYear.set(y, []);
     byYear.get(y)!.push(s);
   }
-  const years = [...byYear.keys()].sort().reverse();
+  // Newest year first; undated sermons go last.
+  const years = [...byYear.keys()]
+    .filter((y) => y !== UNDATED)
+    .sort()
+    .reverse();
+  if (byYear.has(UNDATED)) years.push(UNDATED);
 
   return (
     <>
