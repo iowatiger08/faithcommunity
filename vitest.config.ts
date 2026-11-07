@@ -19,6 +19,8 @@ export default defineConfig({
       exclude: ["src/**/*.test.{ts,tsx}", "src/test-setup.ts", "src/vite-env.d.ts"],
       reporter: ["text-summary", "text", "html"],
       reportsDirectory: "coverage/js",
+      // Floor, not target: set just under current coverage. Raise as tests land.
+      thresholds: { lines: 93, statements: 92, functions: 89, branches: 89 },
     },
   },
   resolve: {
