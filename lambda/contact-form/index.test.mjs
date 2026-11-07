@@ -5,17 +5,18 @@
  */
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
+// Shared send spies so tests can control toxicity results and assert whether
+// an email was actually sent.
+const { sesSend, comprehendSend } = vi.hoisted(() => ({
+  sesSend: vi.fn(),
+  comprehendSend: vi.fn(),
+}));
 vi.mock("@aws-sdk/client-comprehend", () => ({
   ComprehendClient: class {
-    send = vi.fn().mockResolvedValue({
-      ResultList: [{ Labels: [{ Score: 0.1, Name: "HATE_SPEECH" }] }],
-    });
+    send = comprehendSend;
   },
   DetectToxicContentCommand: class {},
 }));
-
-// Shared SES send spy so tests can assert whether an email was actually sent.
-const { sesSend } = vi.hoisted(() => ({ sesSend: vi.fn() }));
 vi.mock("@aws-sdk/client-ses", () => ({
   SESClient: class {
     send = sesSend;
@@ -23,9 +24,13 @@ vi.mock("@aws-sdk/client-ses", () => ({
   SendEmailCommand: class {},
 }));
 
+const cleanToxicity = { ResultList: [{ Labels: [{ Score: 0.1, Name: "HATE_SPEECH" }] }] };
+
 beforeEach(() => {
   sesSend.mockReset();
   sesSend.mockResolvedValue({});
+  comprehendSend.mockReset();
+  comprehendSend.mockResolvedValue(cleanToxicity);
 });
 
 import { handler } from "./index.mjs";
@@ -264,5 +269,94 @@ describe("spam phrase filtering", () => {
     );
     expect(res.statusCode).toBe(200);
     expect(sesSend).not.toHaveBeenCalled();
+  });
+});
+
+describe("toxicity check", () => {
+  it("silently discards a toxic message", async () => {
+    comprehendSend.mockResolvedValue({ ResultList: [{ Labels: [{ Score: 0.95, Name: "INSULT" }] }] });
+    const res = await handler(makeEvent(validBody));
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body).ok).toBe(true);
+    expect(sesSend).not.toHaveBeenCalled();
+  });
+
+  it("lets the message through when Comprehend fails", async () => {
+    comprehendSend.mockRejectedValue(new Error("throttled"));
+    await handler(makeEvent(validBody));
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ["no result list", {}],
+    ["a label with no score", { ResultList: [{ Labels: [{ Name: "INSULT" }] }] }],
+  ])("treats %s as clean", async (_label, result) => {
+    comprehendSend.mockResolvedValue(result);
+    await handler(makeEvent(validBody));
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("email delivery failure", () => {
+  it("returns 500 when SES fails", async () => {
+    sesSend.mockRejectedValue(new Error("SES down"));
+    const res = await handler(makeEvent(validBody));
+    expect(res.statusCode).toBe(500);
+    expect(JSON.parse(res.body).error).toBe("Failed to send");
+  });
+});
+
+describe("event shapes", () => {
+  it("reads the method from a REST API (v1) event", async () => {
+    const res = await handler({
+      httpMethod: "OPTIONS",
+      headers: { origin: "https://hopeandtruthministry.com" },
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe("");
+  });
+
+  it("handles an event with no method at all", async () => {
+    const res = await handler({ headers: {}, body: JSON.stringify(validBody) });
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("rejects a disallowed capitalised Origin header", async () => {
+    const event = makeEvent(validBody);
+    event.headers = { Origin: "https://evil.example" };
+    const res = await handler(event);
+    expect(res.statusCode).toBe(403);
+  });
+
+  it("reads the source IP from a REST API (v1) identity", async () => {
+    const event = {
+      httpMethod: "POST",
+      requestContext: { identity: { sourceIp: "10.9.9.9" } },
+      headers: {},
+      body: JSON.stringify(validBody),
+    };
+    const res = await handler(event);
+    expect(res.statusCode).toBe(200);
+    expect(sesSend).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("malformed body", () => {
+  it("returns 400 for a body that is not JSON", async () => {
+    const event = makeEvent(validBody);
+    event.body = "not json";
+    const res = await handler(event);
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body).error).toBe("Invalid JSON");
+  });
+});
+
+describe("missing body", () => {
+  it("rejects a request with no body as invalid input", async () => {
+    const event = makeEvent(validBody);
+    delete event.body;
+    const res = await handler(event);
+    expect(res.statusCode).toBe(400);
+    expect(JSON.parse(res.body).error).toBe("Invalid input");
   });
 });

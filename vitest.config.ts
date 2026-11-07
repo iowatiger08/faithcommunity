@@ -16,11 +16,18 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}", "lambda/*/index.mjs"],
-      exclude: ["src/**/*.test.{ts,tsx}", "src/test-setup.ts", "src/vite-env.d.ts"],
+      // main.tsx only wires routes for the SSG build; src/test/ holds test helpers.
+      exclude: [
+        "src/**/*.test.{ts,tsx}",
+        "src/test-setup.ts",
+        "src/vite-env.d.ts",
+        "src/main.tsx",
+        "src/test/**",
+      ],
       reporter: ["text-summary", "text", "html"],
       reportsDirectory: "coverage/js",
       // Floor, not target: set just under current coverage. Raise as tests land.
-      thresholds: { lines: 93, statements: 92, functions: 89, branches: 89 },
+      thresholds: { lines: 99, statements: 99, functions: 100, branches: 97 },
     },
   },
   resolve: {

@@ -115,6 +115,11 @@ describe("SermonDetail", () => {
     expect(lastHead().path).toBe(path);
   });
 
+  it("falls back to the sermons link for an unrecognised section", () => {
+    renderPost(makePost({ section: "other" as PublishedPost["section"] }));
+    expect(screen.getByRole("link", { name: /All sermons/ }).getAttribute("href")).toBe("/sermons");
+  });
+
   it("shows not found for an unknown slug", () => {
     renderPost(undefined, "/sermons/missing");
     expect(screen.getByRole("heading", { level: 1, name: "Not found" })).toBeTruthy();
