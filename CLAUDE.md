@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Deploy workflow
+
+- "Deploy" means: commit, push, deploy to S3/CloudFront, then load the live page and check that the changed text or content appears.
+- Unless told otherwise, do commit, push and deploy together as one step when the user asks to "commit and deploy" or "push and deploy".
+
+## UI copy
+
+- Use plain, neutral, direct wording. Do not use flowery language, double negatives or wording that implies blame.
+- Never name sibling systems, internal infrastructure or auth details in UI text, hints or error messages.
+- If the user gives exact wording, use it verbatim.
+
 ## Commands
 
 ```bash
@@ -71,3 +82,22 @@ The `legacy/` directory contains an old Angular version of the site — it is no
 
 - Author name is **Tony E Hansen** — never use "Tony Dillon Hansen"
 - Scripture citations must use specific verse references (e.g., Proverbs 18:13, Matthew 15:14), not vague labels
+
+## Security
+
+### Secrets
+
+- Never print admin codes, tokens or secrets to the transcript. When scanning logs, filter them out or redact them, for example with `grep -v` or by masking.
+
+## Content / Blog sync
+
+### Blogger sync
+
+- The importer only handles new slugs. Edits to existing posts need a manual refresh of the JSON entry.
+- Post order comes from dates. If the user asks for a specific order, rearrange the JSON entries rather than explaining why the current order is correct.
+- Always check for other unsynced posts before deploying.
+
+## AWS notes
+
+- Treat notes older than about 2 weeks as possibly stale. Verify deploy state against the live stack (for example with `aws cloudformation describe-stacks`) before reporting work as pending.
+- The AWS account has Basic support, so the Health API is not available. For AWS notification reviews, ask the user to paste the email body first.
