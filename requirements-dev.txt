@@ -1,0 +1,7 @@
+# Python dev tools for scripts/. Install with `npm run setup:py`.
+pytest==9.2.0
+pytest-cov==7.1.0
+pytest-mock==3.17.0
+ruff==0.17.4
+# boto3 ships in the Lambda runtime; needed locally to import analytics_lambda.
+boto3==1.43.126

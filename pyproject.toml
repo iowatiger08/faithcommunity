@@ -16,3 +16,18 @@ ignore = [
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["scripts"]
+
+[tool.coverage.run]
+source = ["scripts"]
+omit = ["scripts/test_*.py"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.coverage.html]
+directory = "coverage/py"

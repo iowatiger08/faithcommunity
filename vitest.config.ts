@@ -13,6 +13,13 @@ export default defineConfig({
       ["lambda/**", "node"],
       ["src/**", "jsdom"],
     ],
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}", "lambda/*/index.mjs"],
+      exclude: ["src/**/*.test.{ts,tsx}", "src/test-setup.ts", "src/vite-env.d.ts"],
+      reporter: ["text-summary", "text", "html"],
+      reportsDirectory: "coverage/js",
+    },
   },
   resolve: {
     alias: {

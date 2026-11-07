@@ -10,11 +10,14 @@ npm run build        # SSG build → dist/
 npm run preview      # Preview dist/ locally
 npm run typecheck    # tsc --noEmit
 
+npm run setup:py     # One-time: create .venv with pytest, ruff, etc. (requirements-dev.txt)
+
 npm test             # Run all tests (vitest + pytest)
+npm run test:coverage  # Tests with coverage → terminal + HTML in coverage/js, coverage/py
 npm run test:watch   # Vitest in watch mode
 npm run test:py      # Python tests only (scripts/)
 
-npm run lint         # ESLint (src/) + ruff (scripts/)
+npm run lint         # ESLint (src/, lambda/, scripts/*.ts) + ruff (scripts/)
 npm run lint:fix     # Auto-fix both
 npm run lint:ts      # ESLint only
 npm run lint:py      # ruff only
