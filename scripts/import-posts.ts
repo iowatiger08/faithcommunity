@@ -410,7 +410,9 @@ async function main() {
     if (!t) continue;
     try {
       classifiedSlugs.add(JSON.parse(t).slug as string);
-    } catch {}
+    } catch {
+      // skip malformed lines
+    }
   }
 
   // Fetch feed

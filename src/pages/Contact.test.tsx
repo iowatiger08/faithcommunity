@@ -76,6 +76,21 @@ describe("Contact page", () => {
     expect(honeypot?.closest('[aria-hidden="true"]')).toBeTruthy();
   });
 
+  it("sends whatever a bot types into the honeypot", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: true });
+    renderContact();
+    fillForm();
+    fireEvent.change(document.querySelector('input[name="website"]')!, {
+      target: { value: "http://spam.example" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /send message/i }));
+    await waitFor(() => expect(screen.getByText("Thank you.")).toBeTruthy());
+
+    const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(init.body as string) as { website: string };
+    expect(body.website).toBe("http://spam.example");
+  });
+
   it("subscribe checkbox is disabled", () => {
     renderContact();
     const checkbox = document.querySelector(

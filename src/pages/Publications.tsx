@@ -160,20 +160,14 @@ function TrackBanner({
   title,
   pull,
   items,
-  flip = false,
 }: {
   title: string;
   pull: string;
   items: Item[];
-  flip?: boolean;
 }) {
   return (
     <section className="border-b border-ink/10 last:border-0">
-      <div
-        className={`max-w-6xl mx-auto px-6 py-14 grid lg:grid-cols-2 gap-12 items-start ${
-          flip ? "lg:[&>*:first-child]:order-last" : ""
-        }`}
-      >
+      <div className="max-w-6xl mx-auto px-6 py-14 grid lg:grid-cols-2 gap-12 items-start">
         <div>
           <h2 className="font-serif text-3xl mb-5">{title}</h2>
           <blockquote className="border-l-2 border-accent/40 pl-5 font-serif italic text-ink/70 leading-relaxed text-lg">
@@ -221,13 +215,14 @@ export default function Publications() {
       />
 
       {/* TEMPORARILY HIDDEN — ministry resources are being reworked.
-          Restore this track when ready.
+          Restore this track when ready. It used a `flip` prop (removed as
+          unused) that added "lg:[&>*:first-child]:order-last" to mirror the
+          layout; bring that back with it.
       Track 2 — Resources
       <TrackBanner
         title="Resources"
         pull="Ministry is built on what it provides. These tools are here to be used and adapted to build your purpose."
         items={RESOURCES}
-        flip
       />
       */}
 

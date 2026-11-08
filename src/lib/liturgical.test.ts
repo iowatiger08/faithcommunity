@@ -5,6 +5,7 @@ import {
   lectionaryYear,
   liturgicalSeason,
   seasonKey,
+  seasonLabel,
   currentSeason,
   parseDate,
   today,
@@ -109,5 +110,13 @@ describe("today", () => {
     expect(d.getUTCFullYear()).toBe(2025);
     expect(d.getUTCMonth() + 1).toBe(6);
     expect(d.getUTCDate()).toBe(15);
+  });
+});
+
+describe("seasonLabel", () => {
+  it("gives the display name for each season key", () => {
+    expect(seasonLabel("christmas")).toBe("Christmastide");
+    expect(seasonLabel("easter")).toBe("Eastertide");
+    expect(seasonLabel("ordinary")).toBe("Ordinary Time");
   });
 });

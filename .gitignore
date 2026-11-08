@@ -67,3 +67,9 @@ node_modules
 
 # Sensitive business documents
 Hope-and-Truth-Ministry-Business-Plan.docx
+
+# Python dev venv and coverage output (JS + Python reports land in /coverage)
+/.venv
+.coverage
+.pytest_cache/
+__pycache__/

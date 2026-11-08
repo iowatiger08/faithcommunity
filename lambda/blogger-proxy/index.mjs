@@ -60,14 +60,18 @@ export const handler = async (event) => {
 
     let apiKey;
     if (secretResponse.SecretString) {
+      let secret;
       try {
         // Try to parse as JSON first
-        const secret = JSON.parse(secretResponse.SecretString);
-        apiKey = secret.api_key || secret.key || secret.apiKey;
+        secret = JSON.parse(secretResponse.SecretString);
       } catch {
-        // If not JSON, use as plain text
-        apiKey = secretResponse.SecretString;
+        // Not JSON; handled as plain text below
       }
+      // Only a JSON object holds named fields. Anything else ("12345", "null",
+      // or text that isn't JSON) is the key itself.
+      apiKey = secret !== null && typeof secret === 'object'
+        ? secret.api_key || secret.key || secret.apiKey
+        : secretResponse.SecretString;
     }
 
     if (!apiKey) {
@@ -76,7 +80,7 @@ export const handler = async (event) => {
 
     // Fetch recent posts from Blogger API
     console.log('Fetching posts from Blogger API...');
-    const bloggerUrl = `${BLOGGER_API_URL}/${BLOG_ID}/posts?key=${apiKey}&maxResults=5&orderBy=published`;
+    const bloggerUrl = `${BLOGGER_API_URL}/${BLOG_ID}/posts?key=${encodeURIComponent(apiKey)}&maxResults=5&orderBy=published`;
 
     const response = await fetch(bloggerUrl);
 
@@ -96,14 +100,12 @@ export const handler = async (event) => {
     };
 
   } catch (error) {
+    // Details stay in the logs; the public response carries no internal detail.
     console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        error: 'Failed to fetch blogger posts',
-        message: error.message
-      })
+      body: JSON.stringify({ error: 'Failed to fetch blogger posts' })
     };
   }
 };
