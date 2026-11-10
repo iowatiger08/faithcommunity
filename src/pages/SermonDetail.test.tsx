@@ -72,7 +72,7 @@ describe("SermonDetail", () => {
   it("drops the year from the lectionary line when there is none", () => {
     renderPost(makePost({ lectionary_year: null }));
     expect(lastHead().description).toMatch(/Lent 4B\.$/);
-    expect(screen.queryByText(/Year /)).toBeNull();
+    expect(screen.getByText(/· Lent 4B · Lent$/)).toBeTruthy();
   });
 
   it("falls back to the title when there is nothing to describe", () => {
@@ -88,7 +88,7 @@ describe("SermonDetail", () => {
     }));
     expect(lastHead().description).toBe("Love of Neighbor");
     expect(screen.queryByText(/^By /)).toBeNull();
-    expect(screen.queryByText("Scripture:")).toBeNull();
+    expect(screen.queryByText("Texts in this sermon")).toBeNull();
   });
 
   it("hides an empty author", () => {
@@ -96,12 +96,45 @@ describe("SermonDetail", () => {
     expect(screen.queryByText(/^By /)).toBeNull();
   });
 
-  it("shows at most five scripture references", () => {
-    const refs = ["A 1:1", "B 2:2", "C 3:3", "D 4:4", "E 5:5", "F 6:6"].map((ref) => ({
+  it("links to the RCL readings for the post's Sunday", () => {
+    renderPost(makePost());
+    const aside = screen.getByRole("complementary", { name: "Readings" });
+    expect(aside.textContent).toContain("Fourth Sunday in Lent, Year B");
+    const link = screen.getByRole("link", { name: /Read this Sunday's readings \(NRSVue\)/ });
+    expect(link.getAttribute("href")).toBe(
+      "https://lectionary.library.vanderbilt.edu/texts/?y=18921&z=l&d=28",
+    );
+    expect(link.getAttribute("target")).toBe("rcl-readings");
+    expect(screen.getByRole("link", { name: /Today's daily readings/ }).getAttribute("href")).toBe(
+      "https://lectionary.library.vanderbilt.edu/daily-readings/",
+    );
+  });
+
+  it("follows a hand-set RCL day", () => {
+    renderPost(makePost({ rcl_day: "Good Friday" }));
+    expect(screen.getByRole("complementary", { name: "Readings" }).textContent).toContain(
+      "Good Friday, Year B",
+    );
+  });
+
+  it("lists every scripture reference once", () => {
+    const refs = ["A 1:1", "B 2:2", "C 3:3", "D 4:4", "E 5:5", "F 6:6", "A 1:1"].map((ref) => ({
       book: ref[0], chapter: 1, verses: null, ref,
     }));
     renderPost(makePost({ scripture_refs: refs }));
-    expect(screen.getByText("A 1:1 · B 2:2 · C 3:3 · D 4:4 · E 5:5")).toBeTruthy();
+    const items = screen.getAllByRole("listitem").map((li) => li.textContent);
+    expect(items).toEqual(["A 1:1", "B 2:2", "C 3:3", "D 4:4", "E 5:5", "F 6:6"]);
+  });
+
+  it("shows only the texts when there is no RCL day", () => {
+    renderPost(makePost({ rcl_day: "none" }));
+    expect(screen.queryByRole("link", { name: /Read this Sunday's readings/ })).toBeNull();
+    expect(screen.getByText("Matthew 22:37-39")).toBeTruthy();
+  });
+
+  it("leaves out the readings box when there is nothing to show", () => {
+    renderPost(makePost({ rcl_day: "none", scripture_refs: [] }));
+    expect(screen.queryByRole("complementary")).toBeNull();
   });
 
   it.each([

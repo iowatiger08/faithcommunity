@@ -193,3 +193,68 @@ export function currentSeason(now: Date = new Date()): CurrentSeason {
   const key = seasonKey(season);
   return { season, key, label: SEASON_LABEL[key], year: lectionaryYear(d) };
 }
+
+const ORDINAL = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth"];
+
+export interface RclSunday {
+  /** Day name as the Vanderbilt RCL site spells it, e.g. "Proper 27 (32)". */
+  name: string;
+  year: RclYear;
+}
+
+/**
+ * The RCL Sunday a post dated `date` was written for: the date itself if it's
+ * a Sunday, otherwise the next Sunday. Weekday feasts (Ash Wednesday, Good
+ * Friday, Christmas Eve…) are not guessed; posts set those by hand.
+ */
+export function rclSunday(date: Date): RclSunday {
+  const sunday = addDays(date, (7 - date.getUTCDay()) % 7);
+  const year = lectionaryYear(sunday);
+  const t = sunday.getTime();
+
+  const civilYear = sunday.getUTCFullYear();
+  const advent1 =
+    t >= firstSundayOfAdvent(civilYear).getTime()
+      ? firstSundayOfAdvent(civilYear)
+      : firstSundayOfAdvent(civilYear - 1);
+  const adventYear = advent1.getUTCFullYear();
+  const christmas = utc(adventYear, 12, 25);
+  const epiphany = utc(adventYear + 1, 1, 6);
+  const easterDay = easter(adventYear + 1);
+  const ashWednesday = addDays(easterDay, -46);
+  const pentecost = addDays(easterDay, 49);
+  const reignOfChrist = addDays(firstSundayOfAdvent(adventYear + 1), -7);
+  const weeks = (from: Date) => Math.round(daysBetween(sunday, from) / 7);
+
+  let name: string;
+  if (t < christmas.getTime()) {
+    name = `${ORDINAL[weeks(advent1)]} Sunday of Advent`;
+  } else if (t === christmas.getTime()) {
+    name = "Nativity of the Lord - Proper III";
+  } else if (t < epiphany.getTime()) {
+    name = t <= utc(adventYear + 1, 1, 1).getTime()
+      ? "First Sunday after Christmas Day"
+      : "Second Sunday after Christmas Day";
+  } else if (t === epiphany.getTime()) {
+    name = "Epiphany of the Lord";
+  } else if (t < ashWednesday.getTime()) {
+    const baptism = addDays(epiphany, 7 - epiphany.getUTCDay());
+    if (t === addDays(ashWednesday, -3).getTime()) name = "Transfiguration Sunday";
+    else if (t === baptism.getTime()) name = "Baptism of the Lord";
+    else name = `${ORDINAL[weeks(baptism)]} Sunday after the Epiphany`;
+  } else if (t < easterDay.getTime()) {
+    const lent = weeks(addDays(ashWednesday, 4)); // 0 = First Sunday in Lent
+    name = lent === 5 ? "Liturgy of the Palms" : `${ORDINAL[lent]} Sunday in Lent`;
+  } else if (t < pentecost.getTime()) {
+    const n = weeks(easterDay);
+    name = n === 0 ? "Resurrection of the Lord" : `${ORDINAL[n]} Sunday of Easter`;
+  } else if (t === pentecost.getTime()) {
+    name = "Day of Pentecost";
+  } else if (t === addDays(pentecost, 7).getTime()) {
+    name = "Trinity Sunday";
+  } else {
+    const proper = 29 - Math.round(daysBetween(reignOfChrist, sunday) / 7);
+    name = proper === 29 ? "Reign of Christ - Proper 29 (34)" : `Proper ${proper} (${proper + 5})`;
+  }
+  return { name, year };
+}

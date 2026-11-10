@@ -24,6 +24,9 @@
 import { readFileSync, writeFileSync, mkdirSync, statSync } from "node:fs";
 import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nrsvueLinks } from "../src/lib/nrsvue-links";
+import { parseDate, rclSunday } from "../src/lib/liturgical";
+import { rclDayLabel } from "../src/lib/rcl";
 
 const DEFAULT_POSTS = "data/source/posts.json";
 const DEFAULT_CLASSIFIED = "data/source/classified.jsonl";
@@ -60,6 +63,8 @@ interface Classification {
   summary: string;
   confidence: "high" | "medium" | "low";
   notes?: string[];
+  /** Hand-set RCL day (Vanderbilt spelling) or "none"; overrides the date. */
+  rcl_day?: string;
 }
 
 interface ClassifiedRecord {
@@ -118,9 +123,37 @@ interface PublishedPost {
   lectionary_year: string | null;
   lectionary_code: unknown;
   series: unknown;
+  rcl_day: string | null;
   blogger_labels: string[];
   html_content: string;
   text_length: number;
+}
+
+const ORDINAL = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth"];
+
+/** The RCL day a title code like "Lent 4A" or "Proper 6 Year A" names, if we can tell. */
+function titleDay(code: unknown): string | null {
+  const c = code as { day_name?: string; week?: number | null } | null;
+  if (!c?.day_name || !c.week) return null;
+  const n = c.week;
+  if (c.day_name.startsWith("Proper")) return `Proper ${n}`;
+  if (c.day_name === "Advent") return `${ORDINAL[n - 1]} Sunday of Advent`;
+  if (c.day_name === "Lent") return `${ORDINAL[n - 1]} Sunday in Lent`;
+  if (c.day_name === "Easter") return n === 1 ? "Easter Day" : `${ORDINAL[n - 1]} Sunday of Easter`;
+  if (c.day_name === "Epiphany") return n === 1 ? "Baptism of the Lord" : `${ORDINAL[n - 1]} Sunday after the Epiphany`;
+  return null;
+}
+
+/** Posts whose title names a different RCL day than their date does. */
+function rclMismatches(published: PublishedPost[]): string[] {
+  const out: string[] = [];
+  for (const p of published) {
+    const fromTitle = titleDay(p.lectionary_code);
+    if (p.rcl_day || !fromTitle || !p.published_date) continue;
+    const fromDate = rclDayLabel(rclSunday(parseDate(p.published_date)).name);
+    if (fromDate !== fromTitle) out.push(`${p.slug} (${p.published_date}): title ${fromTitle}, date ${fromDate}`);
+  }
+  return out;
 }
 
 function buildPublished(
@@ -160,8 +193,9 @@ function buildPublished(
       lectionary_year: post.lectionary_year_computed ?? null,
       lectionary_code: post.lectionary_code_title ?? null,
       series: post.series ?? null,
+      rcl_day: cls.rcl_day ?? null,
       blogger_labels: post.blogger_labels ?? [],
-      html_content: post.html_content ?? "",
+      html_content: nrsvueLinks(post.html_content ?? ""),
       text_length: post.text_length ?? 0,
     });
   }
@@ -222,6 +256,14 @@ function main(): number {
     for (const { title, reason } of excluded) {
       console.log(`  - ${JSON.stringify(title)}  (matched: ${JSON.stringify(reason)})`);
     }
+  }
+  const mismatches = rclMismatches(published);
+  if (mismatches.length) {
+    console.log(
+      `\n${mismatches.length} post(s) where the title and the date name different RCL days.` +
+        ` The readings link follows the date; set classification.rcl_day in classified.jsonl to change it:`,
+    );
+    for (const m of mismatches) console.log(`  - ${m}`);
   }
   return 0;
 }

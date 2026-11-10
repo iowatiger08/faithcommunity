@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { getPostBySlug, formatDate } from "~/lib/content";
 import PageHead from "~/components/PageHead";
+import Readings from "~/components/Readings";
 
 export default function SermonDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -45,7 +46,7 @@ export default function SermonDetail() {
     .join(" ");
 
   return (
-    <article className="max-w-3xl mx-auto px-6 py-12">
+    <article className="max-w-3xl lg:max-w-5xl mx-auto px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-x-10">
       <PageHead
         title={post.title}
         description={meta || post.title}
@@ -70,17 +71,6 @@ export default function SermonDetail() {
         {post.summary && (
           <p className="text-lg text-ink/80 mt-4 max-w-prose">{post.summary}</p>
         )}
-        {post.scripture_refs.length > 0 && (
-          <p className="text-sm text-ink/60 mt-4">
-            <span className="uppercase tracking-wide text-xs mr-2">
-              Scripture:
-            </span>
-            {post.scripture_refs
-              .slice(0, 5)
-              .map((s) => s.ref)
-              .join(" · ")}
-          </p>
-        )}
         {post.themes.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4">
             {post.themes.map((t) => (
@@ -94,6 +84,8 @@ export default function SermonDetail() {
           </div>
         )}
       </header>
+
+      <Readings post={post} />
 
       <div
         className="sermon-body"

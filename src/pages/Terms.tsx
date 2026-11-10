@@ -186,6 +186,18 @@ export default function Terms() {
               Common Lectionary, Copyright &copy; 1992 Consultation on Common
               Texts. Used by permission.
             </p>
+            <p>
+              Readings links open the NRSVue text at The Revised Common
+              Lectionary, Vanderbilt Divinity Library,{" "}
+              <a
+                href="https://lectionary.library.vanderbilt.edu/"
+                className="text-accent underline underline-offset-2 hover:no-underline"
+              >
+                lectionary.library.vanderbilt.edu
+              </a>
+              . Daily readings are from Revised Common Lectionary Daily
+              Readings, copyright &copy; 2005 Consultation on Common Texts.
+            </p>
           </div>
         </section>
 

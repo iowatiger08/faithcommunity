@@ -55,3 +55,20 @@ describe("Home recent posts", () => {
     expect(withoutCode.textContent).not.toContain("·");
   });
 });
+
+describe("Home lectionary links", () => {
+  it("links this Sunday's readings and today's daily readings", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-10T12:00:00"));
+    getAllPosts.mockReturnValue([]);
+    renderHome();
+    vi.useRealTimers();
+    const sunday = screen.getByRole("link", { name: /This Sunday's readings: Proper 28, Year A/ });
+    expect(sunday.getAttribute("href")).toBe(
+      "https://lectionary.library.vanderbilt.edu/texts/?y=17134&z=p&d=85",
+    );
+    expect(screen.getByRole("link", { name: /Today's daily readings/ }).getAttribute("href")).toBe(
+      "https://lectionary.library.vanderbilt.edu/daily-readings/",
+    );
+  });
+});

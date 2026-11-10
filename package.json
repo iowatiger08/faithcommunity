@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "sync-content": "tsx scripts/sync-content.ts",
+    "rcl-map": "tsx scripts/rcl-vanderbilt.ts",
+    "check:rcl": "tsx scripts/rcl-vanderbilt.ts --check",
     "import-posts": "tsx scripts/import-posts.ts",
     "validate-extract": "tsx scripts/validate-extract.ts",
     "test": "vitest run && sh scripts/py.sh -m pytest -q",

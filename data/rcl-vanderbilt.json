@@ -1,0 +1,337 @@
+{
+  "years": {
+    "A": 17134,
+    "B": 18921,
+    "C": 19342
+  },
+  "days": {
+    "First Sunday of Advent": {
+      "z": "a",
+      "d": 1
+    },
+    "Second Sunday of Advent": {
+      "z": "a",
+      "d": 2
+    },
+    "Third Sunday of Advent": {
+      "z": "a",
+      "d": 3
+    },
+    "Fourth Sunday of Advent": {
+      "z": "a",
+      "d": 4
+    },
+    "Nativity of the Lord - Proper I": {
+      "z": "c",
+      "d": 5
+    },
+    "Nativity of the Lord - Proper II": {
+      "z": "c",
+      "d": 6
+    },
+    "Nativity of the Lord - Proper III": {
+      "z": "c",
+      "d": 7
+    },
+    "First Sunday after Christmas Day": {
+      "z": "c",
+      "d": 8
+    },
+    "Holy Name of Jesus": {
+      "z": "c",
+      "d": 9
+    },
+    "New Year's Day": {
+      "z": "c",
+      "d": 10
+    },
+    "Second Sunday after Christmas Day": {
+      "z": "c",
+      "d": 11
+    },
+    "Epiphany of the Lord": {
+      "z": "e",
+      "d": 12
+    },
+    "Baptism of the Lord": {
+      "z": "e",
+      "d": 13
+    },
+    "Second Sunday after the Epiphany": {
+      "z": "e",
+      "d": 14
+    },
+    "Third Sunday after the Epiphany": {
+      "z": "e",
+      "d": 15
+    },
+    "Fourth Sunday after the Epiphany": {
+      "z": "e",
+      "d": 16
+    },
+    "Presentation of the Lord": {
+      "z": "e",
+      "d": 17
+    },
+    "Fifth Sunday after the Epiphany": {
+      "z": "e",
+      "d": 18
+    },
+    "Sixth Sunday after the Epiphany": {
+      "z": "e",
+      "d": 19
+    },
+    "Seventh Sunday after the Epiphany": {
+      "z": "e",
+      "d": 20
+    },
+    "Eighth Sunday after the Epiphany": {
+      "z": "e",
+      "d": 21
+    },
+    "Ninth Sunday after the Epiphany": {
+      "z": "e",
+      "d": 22
+    },
+    "Transfiguration Sunday": {
+      "z": "e",
+      "d": 23
+    },
+    "Ash Wednesday": {
+      "z": "l",
+      "d": 24
+    },
+    "First Sunday in Lent": {
+      "z": "l",
+      "d": 25
+    },
+    "Second Sunday in Lent": {
+      "z": "l",
+      "d": 26
+    },
+    "Third Sunday in Lent": {
+      "z": "l",
+      "d": 27
+    },
+    "Fourth Sunday in Lent": {
+      "z": "l",
+      "d": 28
+    },
+    "Fifth Sunday in Lent": {
+      "z": "l",
+      "d": 29
+    },
+    "Annunciation of the Lord": {
+      "z": "l",
+      "d": 32
+    },
+    "Liturgy of the Palms": {
+      "z": "l",
+      "d": 33
+    },
+    "Liturgy of the Passion": {
+      "z": "l",
+      "d": 34
+    },
+    "Monday of Holy Week": {
+      "z": "h",
+      "d": 35
+    },
+    "Tuesday of Holy Week": {
+      "z": "h",
+      "d": 36
+    },
+    "Wednesday of Holy Week": {
+      "z": "h",
+      "d": 37
+    },
+    "Maundy Thursday": {
+      "z": "h",
+      "d": 38
+    },
+    "Good Friday": {
+      "z": "h",
+      "d": 39
+    },
+    "Holy Saturday": {
+      "z": "h",
+      "d": 40
+    },
+    "Easter Vigil": {
+      "z": "s",
+      "d": 41
+    },
+    "Resurrection of the Lord": {
+      "z": "s",
+      "d": 42
+    },
+    "Easter Evening": {
+      "z": "s",
+      "d": 43
+    },
+    "Second Sunday of Easter": {
+      "z": "s",
+      "d": 44
+    },
+    "Third Sunday of Easter": {
+      "z": "s",
+      "d": 45
+    },
+    "Fourth Sunday of Easter": {
+      "z": "s",
+      "d": 46
+    },
+    "Fifth Sunday of Easter": {
+      "z": "s",
+      "d": 47
+    },
+    "Sixth Sunday of Easter": {
+      "z": "s",
+      "d": 48
+    },
+    "Ascension of the Lord": {
+      "z": "s",
+      "d": 49
+    },
+    "Seventh Sunday of Easter": {
+      "z": "s",
+      "d": 50
+    },
+    "Day of Pentecost": {
+      "z": "s",
+      "d": 51
+    },
+    "Trinity Sunday": {
+      "z": "p",
+      "d": 52
+    },
+    "Visitation of Mary to Elizabeth": {
+      "z": "p",
+      "d": 56
+    },
+    "Proper 3 (8)": {
+      "z": "p",
+      "d": 57
+    },
+    "Proper 4 (9)": {
+      "z": "p",
+      "d": 58
+    },
+    "Proper 5 (10)": {
+      "z": "p",
+      "d": 59
+    },
+    "Proper 6 (11)": {
+      "z": "p",
+      "d": 60
+    },
+    "Proper 7 (12)": {
+      "z": "p",
+      "d": 61
+    },
+    "Proper 8 (13)": {
+      "z": "p",
+      "d": 62
+    },
+    "Proper 9 (14)": {
+      "z": "p",
+      "d": 63
+    },
+    "Proper 10 (15)": {
+      "z": "p",
+      "d": 64
+    },
+    "Proper 11 (16)": {
+      "z": "p",
+      "d": 65
+    },
+    "Proper 12 (17)": {
+      "z": "p",
+      "d": 66
+    },
+    "Proper 13 (18)": {
+      "z": "p",
+      "d": 67
+    },
+    "Proper 14 (19)": {
+      "z": "p",
+      "d": 68
+    },
+    "Proper 15 (20)": {
+      "z": "p",
+      "d": 69
+    },
+    "Proper 16 (21)": {
+      "z": "p",
+      "d": 70
+    },
+    "Proper 17 (22)": {
+      "z": "p",
+      "d": 71
+    },
+    "Proper 18 (23)": {
+      "z": "p",
+      "d": 72
+    },
+    "Holy Cross": {
+      "z": "p",
+      "d": 74
+    },
+    "Proper 19 (24)": {
+      "z": "p",
+      "d": 75
+    },
+    "Proper 20 (25)": {
+      "z": "p",
+      "d": 76
+    },
+    "Proper 21 (26)": {
+      "z": "p",
+      "d": 77
+    },
+    "Proper 22 (27)": {
+      "z": "p",
+      "d": 78
+    },
+    "Proper 23 (28)": {
+      "z": "p",
+      "d": 79
+    },
+    "Proper 24 (29)": {
+      "z": "p",
+      "d": 80
+    },
+    "Proper 25 (30)": {
+      "z": "p",
+      "d": 81
+    },
+    "Proper 26 (31)": {
+      "z": "p",
+      "d": 82
+    },
+    "All Saints Day": {
+      "z": "p",
+      "d": 83
+    },
+    "Proper 27 (32)": {
+      "z": "p",
+      "d": 84
+    },
+    "Proper 28 (33)": {
+      "z": "p",
+      "d": 85
+    },
+    "Reign of Christ - Proper 29 (34)": {
+      "z": "p",
+      "d": 86
+    },
+    "Thanksgiving Day, USA": {
+      "z": "p",
+      "d": 88
+    },
+    "Canadian Thanksgiving Day": {
+      "z": "p",
+      "d": 90
+    }
+  }
+}

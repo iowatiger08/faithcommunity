@@ -9,6 +9,7 @@ import { MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect } from "vitest";
 import SeasonBadge from "~/components/SeasonBadge";
 import Forum from "~/pages/Forum";
+import Home from "~/pages/Home";
 
 vi.mock("~/components/PageHead", () => ({ default: () => null }));
 
@@ -29,5 +30,15 @@ describe("server render", () => {
     );
     expect(html).toMatch(/doesn.*t exist anymore/);
     expect(html).toContain('href="/queer-resources"');
+  });
+
+  it("leaves this Sunday's readings out of the home page HTML", () => {
+    const html = renderToString(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
+    expect(html).toContain("Today&#x27;s daily readings");
+    expect(html).not.toContain("This Sunday");
   });
 });

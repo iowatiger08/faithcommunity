@@ -9,6 +9,7 @@ import {
   currentSeason,
   parseDate,
   today,
+  rclSunday,
 } from "./liturgical";
 
 describe("easter", () => {
@@ -118,5 +119,51 @@ describe("seasonLabel", () => {
     expect(seasonLabel("christmas")).toBe("Christmastide");
     expect(seasonLabel("easter")).toBe("Eastertide");
     expect(seasonLabel("ordinary")).toBe("Ordinary Time");
+  });
+});
+
+describe("rclSunday", () => {
+  const day = (iso: string) => rclSunday(parseDate(iso));
+
+  it.each([
+    ["2025-11-30", "First Sunday of Advent", "A"],
+    ["2025-12-21", "Fourth Sunday of Advent", "A"],
+    ["2022-12-25", "Nativity of the Lord - Proper III", "A"],
+    ["2025-12-28", "First Sunday after Christmas Day", "A"],
+    ["2023-01-01", "First Sunday after Christmas Day", "A"],
+    ["2026-01-04", "Second Sunday after Christmas Day", "A"],
+    ["2019-01-06", "Epiphany of the Lord", "C"],
+    ["2026-01-11", "Baptism of the Lord", "A"],
+    ["2026-01-18", "Second Sunday after the Epiphany", "A"],
+    ["2026-02-08", "Fifth Sunday after the Epiphany", "A"],
+    ["2026-02-15", "Transfiguration Sunday", "A"],
+    ["2026-02-22", "First Sunday in Lent", "A"],
+    ["2026-03-22", "Fifth Sunday in Lent", "A"],
+    ["2026-03-29", "Liturgy of the Palms", "A"],
+    ["2026-04-05", "Resurrection of the Lord", "A"],
+    ["2026-04-12", "Second Sunday of Easter", "A"],
+    ["2026-05-17", "Seventh Sunday of Easter", "A"],
+    ["2026-05-24", "Day of Pentecost", "A"],
+    ["2026-05-31", "Trinity Sunday", "A"],
+    ["2026-06-07", "Proper 5 (10)", "A"],
+    ["2026-11-08", "Proper 27 (32)", "A"],
+    ["2026-11-22", "Reign of Christ - Proper 29 (34)", "A"],
+    ["2024-06-02", "Proper 4 (9)", "B"],
+  ])("%s is %s, Year %s", (iso, name, year) => {
+    expect(day(iso)).toEqual({ name, year });
+  });
+
+  it("moves a Saturday or weekday forward to the next Sunday", () => {
+    expect(day("2026-11-07")).toEqual({ name: "Proper 27 (32)", year: "A" });
+    expect(day("2026-11-04")).toEqual({ name: "Proper 27 (32)", year: "A" });
+  });
+
+  it("picks up the new church year when the next Sunday is Advent 1", () => {
+    expect(day("2026-11-28")).toEqual({ name: "First Sunday of Advent", year: "B" });
+  });
+
+  it("treats Proper 3 as the Sunday after Trinity in a year with an early Easter", () => {
+    // Easter 2008 was March 23, so Trinity fell on May 18 and May 25 was Proper 3.
+    expect(day("2008-05-25")).toEqual({ name: "Proper 3 (8)", year: "A" });
   });
 });

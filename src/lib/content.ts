@@ -54,6 +54,8 @@ export interface PublishedPost {
   lectionary_year: "A" | "B" | "C" | null;
   lectionary_code: LectionaryCode | null;
   series: Series | null;
+  /** Hand-set RCL day name (Vanderbilt spelling), or "none" for no readings link. */
+  rcl_day?: string | null;
   blogger_labels: string[];
   html_content: string;
   text_length: number;

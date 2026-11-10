@@ -1,10 +1,19 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllPosts, formatDate } from "~/lib/content";
 import PageHead from "~/components/PageHead";
 import { VANDERBILT_RCL } from "~/components/SeasonBadge";
+import { rclReadingsForDate, VANDERBILT_RCL_DAILY, type RclReadings } from "~/lib/rcl";
+import { today } from "~/lib/liturgical";
 
 export default function Home() {
   const recent = getAllPosts().slice(0, 3);
+  // "This Sunday" depends on the visitor's date, so it's computed on the
+  // client only (as in SeasonBadge) and left out of the static HTML.
+  const [sunday] = useState<RclReadings | null>(() =>
+    typeof window !== "undefined" ? rclReadingsForDate(today()) : null,
+  );
+  const linkClass = "text-accent underline underline-offset-2 hover:no-underline";
 
   return (
     <>
@@ -74,7 +83,7 @@ export default function Home() {
           <h2 className="font-serif text-3xl mb-3">
             Recent reflections
           </h2>
-          <p className="text-ink/70 mb-10 max-w-prose">
+          <p className="text-ink/70 mb-4 max-w-prose">
             Sermons and reflections in keeping with the{" "}
             <a
               href={VANDERBILT_RCL}
@@ -85,6 +94,16 @@ export default function Home() {
               Revised Common Lectionary
             </a>
             . Check weekly for new material.
+          </p>
+          <p className="text-sm text-ink/70 mb-10 flex flex-wrap gap-x-6 gap-y-2">
+            {sunday && (
+              <a href={sunday.url} target="rcl-readings" rel="noopener" className={linkClass}>
+                This Sunday&apos;s readings: {sunday.label}
+              </a>
+            )}
+            <a href={VANDERBILT_RCL_DAILY} target="rcl-readings" rel="noopener" className={linkClass}>
+              Today&apos;s daily readings
+            </a>
           </p>
           <ul className="space-y-8">
             {recent.map((p) => (
