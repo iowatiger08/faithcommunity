@@ -3,6 +3,11 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 
 export default defineConfig({
+  // amazon-cognito-identity-js (the /moderation/ sign-in) pulls in `buffer`,
+  // which references the Node global `global`. Without this every page throws
+  // "global is not defined" on load and renders blank. The Deutsch app carries
+  // the same define. Do not remove it while that library is a dependency.
+  define: { global: "globalThis" },
   plugins: [react()],
   resolve: {
     alias: {
