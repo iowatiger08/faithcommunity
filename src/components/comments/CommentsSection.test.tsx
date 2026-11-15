@@ -8,11 +8,13 @@ import CommentsSection from "./CommentsSection";
 const auth = vi.hoisted(() => ({
   state: { loading: false, token: null as string | null },
   signIn: vi.fn(),
+  createAccount: vi.fn(),
   signOut: vi.fn(),
 }));
 vi.mock("~/lib/auth", () => ({
   useAuth: () => auth.state,
   signIn: auth.signIn,
+  createAccount: auth.createAccount,
   signOut: auth.signOut,
 }));
 
@@ -63,7 +65,7 @@ const signedIn = () => {
 
 beforeEach(() => {
   auth.state = { loading: false, token: null };
-  for (const fn of [...Object.values(api), auth.signIn, auth.signOut]) fn.mockReset();
+  for (const fn of [...Object.values(api), auth.signIn, auth.createAccount, auth.signOut]) fn.mockReset();
   api.thread.mockResolvedValue(thread([comment()]));
   api.me.mockResolvedValue({ displayName: "Sam", suspended: false, comments: [] });
 });
@@ -79,6 +81,8 @@ describe("signed out", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
     expect(auth.signIn).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Create an account" }));
+    expect(auth.createAccount).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: /Amen/ }));
     expect(auth.signIn).toHaveBeenCalledTimes(2);
     expect(api.react).not.toHaveBeenCalled();

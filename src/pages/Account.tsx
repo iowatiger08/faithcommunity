@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
 import DisplayNameForm from "~/components/comments/DisplayNameForm";
-import { forgetUser, signIn, signOut, useAuth } from "~/lib/auth";
+import { createAccount, forgetUser, signIn, signOut, useAuth } from "~/lib/auth";
 import { api, errorMessage } from "~/lib/commentsApi";
 import type { Me } from "~/lib/commentsApi";
 
@@ -43,9 +43,14 @@ export default function Account() {
       ) : auth.loading ? null : auth.token === null ? (
         <>
           <p className="text-ink/80 mb-4">Sign in to change your display name, see your comments, or delete your account.</p>
-          <button type="button" className={primaryClass} onClick={() => void signIn()}>
-            Sign in
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button type="button" className={primaryClass} onClick={() => void signIn()}>
+              Sign in
+            </button>
+            <button type="button" className="text-sm text-accent hover:underline" onClick={() => void createAccount()}>
+              Create an account
+            </button>
+          </div>
         </>
       ) : !me ? (
         error !== "" ? <p className="text-red-700">{error}</p> : <p className="text-ink/70">Loading…</p>

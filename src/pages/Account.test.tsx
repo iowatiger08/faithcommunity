@@ -7,12 +7,14 @@ import Account from "./Account";
 const auth = vi.hoisted(() => ({
   state: { loading: false, token: null as string | null },
   signIn: vi.fn(),
+  createAccount: vi.fn(),
   signOut: vi.fn(),
   forgetUser: vi.fn(),
 }));
 vi.mock("~/lib/auth", () => ({
   useAuth: () => auth.state,
   signIn: auth.signIn,
+  createAccount: auth.createAccount,
   signOut: auth.signOut,
   forgetUser: auth.forgetUser,
 }));
@@ -33,7 +35,7 @@ const renderPage = () =>
 
 beforeEach(() => {
   auth.state = { loading: false, token: "tok" };
-  for (const fn of [...Object.values(api), auth.signIn, auth.signOut, auth.forgetUser]) fn.mockReset();
+  for (const fn of [...Object.values(api), auth.signIn, auth.createAccount, auth.signOut, auth.forgetUser]) fn.mockReset();
   api.me.mockResolvedValue({
     displayName: "Ruth",
     suspended: false,
@@ -60,6 +62,8 @@ describe("Account", () => {
     renderPage();
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
     expect(auth.signIn).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Create an account" }));
+    expect(auth.createAccount).toHaveBeenCalled();
   });
 
   it("renders nothing extra while sign-in state loads", () => {

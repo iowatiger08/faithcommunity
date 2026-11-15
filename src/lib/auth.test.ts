@@ -81,6 +81,17 @@ describe("sign-in flow", () => {
     expect(oidc.um.signinRedirect).toHaveBeenCalledWith({ state: { returnTo: "/sermons/a-post/" } });
   });
 
+  it("opens the sign-up screen for a new account, with the same callback", async () => {
+    window.history.pushState({}, "", "/sermons/b-post/");
+    const auth = await load();
+    await auth.createAccount();
+    expect(oidc.um.settings).toMatchObject({
+      redirect_uri: `${window.location.origin}/auth/callback/`,
+      metadataSeed: { authorization_endpoint: "https://login.example/signup" },
+    });
+    expect(oidc.um.signinRedirect).toHaveBeenCalledWith({ state: { returnTo: "/sermons/b-post/" } });
+  });
+
   it("returns to a same-site path after the callback and nowhere else", async () => {
     const auth = await load();
     oidc.um.signinRedirectCallback.mockResolvedValue({ state: { returnTo: "/sermons/x/" } });

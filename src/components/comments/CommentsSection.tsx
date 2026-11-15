@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { signIn, signOut, useAuth } from "~/lib/auth";
+import { createAccount, signIn, signOut, useAuth } from "~/lib/auth";
 import { api, errorMessage } from "~/lib/commentsApi";
 import DisplayNameForm from "./DisplayNameForm";
 import type { Comment, PostThread, ReactionKind, Reactions } from "~/lib/commentsApi";
@@ -94,9 +94,14 @@ export default function CommentsSection({ slug, section }: Props) {
           <p className="text-ink/80 mb-3">
             Sign in with your email to comment or react. Your email address is never shown.
           </p>
-          <button type="button" className={primaryClass} onClick={() => void signIn()}>
-            Sign in
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button type="button" className={primaryClass} onClick={() => void signIn()}>
+              Sign in
+            </button>
+            <button type="button" className="text-sm text-accent hover:underline" onClick={() => void createAccount()}>
+              Create an account
+            </button>
+          </div>
         </div>
       ) : displayName === null ? (
         <DisplayNameForm token={auth.token} onSaved={setDisplayName} />

@@ -13,9 +13,10 @@ export const commentsEnabled =
   );
 
 let manager: Promise<UserManager> | null = null;
+let signupManager: Promise<UserManager> | null = null;
 
-export function getManager(): Promise<UserManager> {
-  manager ??= import("oidc-client-ts").then(({ UserManager, WebStorageStateStore }) => {
+function createManager(authorizationEndpoint?: string): Promise<UserManager> {
+  return import("oidc-client-ts").then(({ UserManager, WebStorageStateStore }) => {
     const origin = window.location.origin;
     return new UserManager({
       authority: `https://cognito-idp.us-west-2.amazonaws.com/${env.VITE_AUTH_POOL_ID}`,
@@ -27,13 +28,31 @@ export function getManager(): Promise<UserManager> {
       // Keeps people signed in across tabs and visits until they sign out.
       userStore: new WebStorageStateStore({ store: window.localStorage }),
       automaticSilentRenew: true,
+      ...(authorizationEndpoint === undefined ? {} : { metadataSeed: { authorization_endpoint: authorizationEndpoint } }),
     });
   });
+}
+
+export function getManager(): Promise<UserManager> {
+  manager ??= createManager();
   return manager;
 }
 
 export async function signIn(): Promise<void> {
   const um = await getManager();
+  await um.signinRedirect({ state: { returnTo: window.location.pathname } });
+}
+
+/**
+ * Starts on the sign-up screen. The sign-in screen can't tell a new email from
+ * an existing one (by design), so a first-time visitor who uses it waits for a
+ * code that never comes. The sign-up screen takes the same request, and the
+ * request state is shared through localStorage, so /auth/callback/ finishes it
+ * with the regular manager.
+ */
+export async function createAccount(): Promise<void> {
+  signupManager ??= createManager(`${env.VITE_AUTH_DOMAIN}/signup`);
+  const um = await signupManager;
   await um.signinRedirect({ state: { returnTo: window.location.pathname } });
 }
 
