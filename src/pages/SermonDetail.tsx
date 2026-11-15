@@ -1,7 +1,13 @@
+import { lazy, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ClientOnly } from "vite-react-ssg";
 import { getPostBySlug, formatDate } from "~/lib/content";
 import PageHead from "~/components/PageHead";
 import Readings from "~/components/Readings";
+import { commentsEnabled } from "~/lib/auth";
+
+// Loaded in the browser only, after the pre-rendered page is on screen.
+const CommentsSection = lazy(() => import("~/components/comments/CommentsSection"));
 
 export default function SermonDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -91,6 +97,16 @@ export default function SermonDetail() {
         className="sermon-body"
         dangerouslySetInnerHTML={{ __html: post.html_content }}
       />
+
+      {commentsEnabled && (
+        <ClientOnly>
+          {() => (
+            <Suspense fallback={null}>
+              <CommentsSection slug={post.slug} section={sectionSlug} />
+            </Suspense>
+          )}
+        </ClientOnly>
+      )}
     </article>
   );
 }

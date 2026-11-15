@@ -18,6 +18,17 @@ vi.mock("~/lib/content", async (importOriginal) => ({
   ...(await importOriginal<typeof import("~/lib/content")>()),
   getPostBySlug,
 }));
+const comments = vi.hoisted(() => ({ enabled: false }));
+vi.mock("~/lib/auth", () => ({
+  get commentsEnabled() {
+    return comments.enabled;
+  },
+}));
+vi.mock("~/components/comments/CommentsSection", () => ({
+  default: ({ slug, section }: { slug: string; section: string }) => (
+    <p>Comments for {section}/{slug}</p>
+  ),
+}));
 vi.mock("~/components/PageHead", () => ({
   default: (props: Record<string, unknown>) => {
     headProps.push(props);
@@ -151,6 +162,19 @@ describe("SermonDetail", () => {
   it("falls back to the sermons link for an unrecognised section", () => {
     renderPost(makePost({ section: "other" as PublishedPost["section"] }));
     expect(screen.getByRole("link", { name: /All sermons/ }).getAttribute("href")).toBe("/sermons");
+  });
+
+  it("leaves comments out when they are turned off", () => {
+    comments.enabled = false;
+    renderPost(makePost());
+    expect(screen.queryByText(/Comments for/)).not.toBeInTheDocument();
+  });
+
+  it("loads comments in the browser when they are turned on", async () => {
+    comments.enabled = true;
+    renderPost(makePost({ section: "worship_resources" }));
+    expect(await screen.findByText("Comments for worship-resources/love-of-neighbor")).toBeInTheDocument();
+    comments.enabled = false;
   });
 
   it("shows not found for an unknown slug", () => {

@@ -208,7 +208,437 @@ Resources:
           - OPTIONS
         MaxAge: 300
 
+  # ── Comments and reactions ────────────────────────────────────────────────
+  # Commenter accounts live in their own pool, separate from every other site's
+  # users, so a token from another pool can never pass this API's authorizer.
+  # Tables have no TTL: nothing expires; deletion is always an explicit action
+  # (a person deleting their comment or account, or a moderator removing one).
+  CommentersUserPool:
+    Type: AWS::Cognito::UserPool
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      UserPoolName: !Sub "${AWS::StackName}-commenters"
+      UserPoolTier: ESSENTIALS
+      DeletionProtection: ACTIVE
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      UsernameConfiguration:
+        CaseSensitive: false
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+        # Email one-time codes are the main way in. The service requires
+        # PASSWORD to stay in the list.
+        SignInPolicy:
+          AllowedFirstAuthFactors:
+            - PASSWORD
+            - EMAIL_OTP
+      EmailConfiguration:
+        EmailSendingAccount: DEVELOPER
+        SourceArn: !Sub "arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${SenderDomain}"
+        From: !Sub "Hope & Truth Ministry <noreply@${SenderDomain}>"
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Required: true
+          Mutable: true
+
+  CommentersUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId: !Ref CommentersUserPool
+      Domain: hopeandtruthministry
+      ManagedLoginVersion: 2
+
+  CommentersUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref CommentersUserPool
+      ClientName: site
+      GenerateSecret: false
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - openid
+        - email
+      SupportedIdentityProviders:
+        - COGNITO
+      CallbackURLs:
+        - https://hopeandtruthministry.com/auth/callback/
+        - https://www.hopeandtruthministry.com/auth/callback/
+        - http://localhost:5173/auth/callback/
+      LogoutURLs:
+        - https://hopeandtruthministry.com/
+        - https://www.hopeandtruthministry.com/
+        - http://localhost:5173/
+      ExplicitAuthFlows:
+        - ALLOW_USER_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: ENABLED
+      EnableTokenRevocation: true
+      AccessTokenValidity: 60
+      IdTokenValidity: 60
+      RefreshTokenValidity: 30
+      TokenValidityUnits:
+        AccessToken: minutes
+        IdToken: minutes
+        RefreshToken: days
+
+  CommentersManagedLoginBranding:
+    Type: AWS::Cognito::ManagedLoginBranding
+    Properties:
+      UserPoolId: !Ref CommentersUserPool
+      ClientId: !Ref CommentersUserPoolClient
+      UseCognitoProvidedValues: true
+
+  CommentersAdminGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref CommentersUserPool
+      GroupName: admin
+      Description: Can review held comments and suspend accounts
+
+  CommentProfilesTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-comment-profiles"
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: sub
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sub
+          KeyType: HASH
+
+  CommentsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-comments"
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: commentId
+          AttributeType: S
+        - AttributeName: postSlug
+          AttributeType: S
+        - AttributeName: authorSub
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: commentId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: byPost
+          KeySchema:
+            - AttributeName: postSlug
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: byAuthor
+          KeySchema:
+            - AttributeName: authorSub
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: byStatus
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  CommentReactionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-comment-reactions"
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: postSlug
+          AttributeType: S
+        - AttributeName: reactionKey
+          AttributeType: S
+        - AttributeName: sub
+          AttributeType: S
+      KeySchema:
+        - AttributeName: postSlug
+          KeyType: HASH
+        - AttributeName: reactionKey
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: bySub
+          KeySchema:
+            - AttributeName: sub
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  CommentReportsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-comment-reports"
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: commentId
+          AttributeType: S
+        - AttributeName: reporterSub
+          AttributeType: S
+      KeySchema:
+        - AttributeName: commentId
+          KeyType: HASH
+        - AttributeName: reporterSub
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: byReporter
+          KeySchema:
+            - AttributeName: reporterSub
+              KeyType: HASH
+          Projection:
+            ProjectionType: KEYS_ONLY
+
+  CommentAuditTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${AWS::StackName}-comment-audit"
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: day
+          AttributeType: S
+        - AttributeName: entryKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: day
+          KeyType: HASH
+        - AttributeName: entryKey
+          KeyType: RANGE
+
+  CommentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-comments"
+      CodeUri: comments/
+      Handler: index.handler
+      MemorySize: 256
+      Timeout: 15
+      LoggingConfig:
+        LogGroup: !Ref CommentsLogGroup
+      Environment:
+        Variables:
+          PROFILES_TABLE: !Ref CommentProfilesTable
+          COMMENTS_TABLE: !Ref CommentsTable
+          REACTIONS_TABLE: !Ref CommentReactionsTable
+          REPORTS_TABLE: !Ref CommentReportsTable
+          AUDIT_TABLE: !Ref CommentAuditTable
+          USER_POOL_ID: !Ref CommentersUserPool
+          SITE_ORIGIN: !Sub "https://${SenderDomain}"
+          RECIPIENT_EMAIL: hopeandtruthministry@gmail.com
+          SENDER_EMAIL: !Sub "noreply@${SenderDomain}"
+          TOXICITY_THRESHOLD: "0.7"
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CommentProfilesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CommentsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CommentReactionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CommentReportsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !GetAtt CommentAuditTable.Arn
+            - Effect: Allow
+              Action:
+                - comprehend:DetectToxicContent
+                - ses:SendEmail
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - cognito-idp:AdminDeleteUser
+              Resource: !GetAtt CommentersUserPool.Arn
+      Events:
+        ReadPost:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /posts/{slug}
+            Method: get
+            Auth:
+              Authorizer: NONE
+        ReadPostMine:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /posts/{slug}/mine
+            Method: get
+        CreateComment:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /posts/{slug}/comments
+            Method: post
+        EditComment:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /comments/{id}
+            Method: patch
+        DeleteComment:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /comments/{id}
+            Method: delete
+        AddReaction:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /posts/{slug}/reactions/{kind}
+            Method: put
+        RemoveReaction:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /posts/{slug}/reactions/{kind}
+            Method: delete
+        ReportComment:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /comments/{id}/report
+            Method: post
+        GetMe:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /me
+            Method: get
+        PutMe:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /me
+            Method: put
+        DeleteMe:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /me
+            Method: delete
+        AdminHeld:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /admin/held
+            Method: get
+        AdminComment:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /admin/comments/{id}
+            Method: put
+        AdminUser:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CommentsHttpApi
+            Path: /admin/users/{sub}
+            Method: put
+
+  CommentsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-comments"
+      RetentionInDays: 14
+
+  CommentsHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 20
+        ThrottlingBurstLimit: 40
+      Auth:
+        DefaultAuthorizer: CommentersJwt
+        Authorizers:
+          CommentersJwt:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${CommentersUserPool}"
+              audience:
+                - !Ref CommentersUserPoolClient
+      CorsConfiguration:
+        AllowOrigins:
+          - "https://hopeandtruthministry.com"
+          - "https://www.hopeandtruthministry.com"
+          - "http://localhost:5173"
+          - "http://localhost:4173"
+        AllowHeaders:
+          - Authorization
+          - Content-Type
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        MaxAge: 300
+
 Outputs:
+  CommentsApiUrl:
+    Description: "Comments API base URL — set as VITE_COMMENTS_API_URL"
+    Value: !Sub "https://${CommentsHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  CommentersUserPoolId:
+    Description: "Commenter pool id — set as VITE_AUTH_POOL_ID"
+    Value: !Ref CommentersUserPool
+  CommentersClientId:
+    Description: "Commenter SPA client id — set as VITE_AUTH_CLIENT_ID"
+    Value: !Ref CommentersUserPoolClient
+  CommentersAuthDomain:
+    Description: "Managed login domain — set as VITE_AUTH_DOMAIN"
+    Value: !Sub "https://${CommentersUserPoolDomain}.auth.${AWS::Region}.amazoncognito.com"
   BloggerApiUrl:
     Description: "API Gateway endpoint URL for Blogger proxy"
     Value: !Sub "https://${BloggerApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/blogger/posts"

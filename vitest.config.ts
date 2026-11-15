@@ -15,7 +15,7 @@ export default defineConfig({
     ],
     coverage: {
       provider: "v8",
-      include: ["src/**/*.{ts,tsx}", "lambda/*/index.mjs"],
+      include: ["src/**/*.{ts,tsx}", "lambda/*/index.mjs", "lambda/comments/shared/*.mjs"],
       // main.tsx only wires routes for the SSG build; src/test/ holds test helpers.
       exclude: [
         "src/**/*.test.{ts,tsx}",
@@ -23,6 +23,7 @@ export default defineConfig({
         "src/vite-env.d.ts",
         "src/main.tsx",
         "src/test/**",
+        "lambda/**/*.test.mjs",
       ],
       reporter: ["text-summary", "text", "html"],
       reportsDirectory: "coverage/js",

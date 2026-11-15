@@ -19,6 +19,9 @@ import Forum from "./pages/Forum";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
+import AuthCallback from "./pages/AuthCallback";
+import Account from "./pages/Account";
+import Moderation from "./pages/Moderation";
 import { getAllPosts } from "./lib/content";
 import { currentSeason } from "./lib/liturgical";
 import "./styles.css";
@@ -80,6 +83,10 @@ const routes: RouteRecord[] = [
       // Unlisted and noindex. The forum is over; its page stays so the shared
       // link explains where the research went.
       { path: "forum", Component: Forum },
+      // Comment sign-in and account pages. Unlisted and noindex.
+      { path: "auth/callback", Component: AuthCallback },
+      { path: "account", Component: Account },
+      { path: "moderation", Component: Moderation },
       { path: "*", Component: NotFound },
     ],
   },

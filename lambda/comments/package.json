@@ -1,0 +1,17 @@
+{
+  "name": "comments-lambda",
+  "version": "1.0.0",
+  "description": "Comments and reactions API with screening, reports and moderation",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.0.0",
+    "@aws-sdk/client-comprehend": "^3.0.0",
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/client-ses": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

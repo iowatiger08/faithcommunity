@@ -41,6 +41,7 @@ run() {
 echo "=== installing Lambda dependencies ==="
 run npm install --prefix "$LAMBDA_DIR/contact-form" --omit=dev
 run npm install --prefix "$LAMBDA_DIR/blogger-proxy" --omit=dev
+run npm install --prefix "$LAMBDA_DIR/comments" --omit=dev
 echo
 
 # A CLI --parameter-overrides REPLACES samconfig.toml's parameter_overrides

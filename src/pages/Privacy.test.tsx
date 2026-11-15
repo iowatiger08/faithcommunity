@@ -7,10 +7,17 @@
  */
 import { render, screen, cleanup } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { vi, describe, it, expect, afterEach } from "vitest";
+import { vi, describe, it, expect, afterEach, beforeEach } from "vitest";
 import Privacy from "./Privacy";
 
 vi.mock("~/components/PageHead", () => ({ default: () => null }));
+
+const flags = vi.hoisted(() => ({ comments: false }));
+vi.mock("~/lib/auth", () => ({
+  get commentsEnabled() {
+    return flags.comments;
+  },
+}));
 
 function renderPrivacy() {
   return render(
@@ -109,5 +116,54 @@ describe("navigation", () => {
     expect(hrefs).toContain("/contact");
     expect(hrefs).toContain("/terms");
     expect(hrefs).toContain("/care#crisis");
+  });
+});
+
+describe("before comments are turned on", () => {
+  it("keeps the promises that are true without comments", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).toMatch(/no accounts to create/);
+    expect(container.textContent).toMatch(/Last updated: October 2026/);
+    expect(container.textContent).not.toMatch(/Comments and reactions/);
+  });
+});
+
+describe("with comments turned on", () => {
+  beforeEach(() => {
+    flags.comments = true;
+  });
+  afterEach(() => {
+    flags.comments = false;
+  });
+
+  it("drops the no-accounts promise and dates the revision", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).not.toMatch(/no accounts to create/);
+    expect(container.textContent).toMatch(/Last updated: November 2026/);
+  });
+
+  it("says what an account holds and that email is never shown", () => {
+    renderPrivacy();
+    expect(screen.getByText(/The account holds your email/)).toBeTruthy();
+    expect(screen.getByText(/Your email address is never shown/)).toBeTruthy();
+  });
+
+  it("says comments are public and screened, and that flagged ones are held", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).toMatch(/Comments are public/);
+    expect(container.textContent).toMatch(/held until Tony reviews/);
+  });
+
+  it("explains deletion, the account page and backups", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).toMatch(/kept until you delete them/);
+    expect(container.textContent).toMatch(/Backups are kept for 35 days/);
+    const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/account/");
+  });
+
+  it("states the age limit", () => {
+    const { container } = renderPrivacy();
+    expect(container.textContent).toMatch(/13 and older/);
   });
 });

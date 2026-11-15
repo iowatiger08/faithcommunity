@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PageHead from "~/components/PageHead";
+import { commentsEnabled } from "~/lib/auth";
 
 export default function Terms() {
   return (
@@ -17,7 +18,7 @@ export default function Terms() {
         Using this ministry&apos;s content
       </h1>
       <p className="text-ink/60 text-sm mb-12">
-        Last updated: October 2026
+        Last updated: {commentsEnabled ? "November 2026" : "October 2026"}
       </p>
 
       <div className="space-y-12 text-ink/80 leading-relaxed">
@@ -213,6 +214,49 @@ export default function Terms() {
           </p>
         </section>
 
+        {commentsEnabled && (
+          <section>
+            <h2 className="font-serif text-2xl mb-4">Comments</h2>
+            <p>
+              Posts on this site have a comments section. Comments are public and
+              appear under the display name you choose. Accounts are for people 13
+              and older.
+            </p>
+            <h3 className="font-semibold text-ink/90 mt-6 mb-2">Community guidelines</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Be kind, and stay on the subject of the post.</li>
+              <li>
+                No harassment, threats, hate speech, sexually explicit content, or
+                spam.
+              </li>
+              <li>
+                Leave out private details about other people, including whether
+                someone is out. That is theirs to share.
+              </li>
+              <li>Hard questions and disagreement are welcome when they are respectful.</li>
+            </ul>
+            <h3 className="font-semibold text-ink/90 mt-6 mb-2">Your comments</h3>
+            <p>
+              You keep ownership of what you write. By posting a comment, you give
+              Hope and Truth Ministry permission to show it on this site with your
+              display name until you delete it. Comments may not be used to train
+              AI models, by this ministry or anyone else.
+            </p>
+            <h3 className="font-semibold text-ink/90 mt-6 mb-2">Moderation</h3>
+            <p>
+              Comments are checked automatically when they are posted, and readers
+              can report a comment. A flagged or reported comment is held until it
+              is reviewed. A comment that breaks these guidelines may be removed,
+              and an account that keeps breaking them may be suspended. You can
+              delete your own comments, or your whole account, at any time from your{" "}
+              <Link to="/account/" className="text-accent underline">
+                account page
+              </Link>
+              .
+            </p>
+          </section>
+        )}
+
         <section>
           <h2 className="font-serif text-2xl mb-4">Information you send us</h2>
           <p>
@@ -229,6 +273,8 @@ export default function Terms() {
             have it deleted, and the terms that apply to what you submit. In
             short, it goes to Tony and no one else, it is never published or
             sold, and you can ask for it to be removed at any time.
+            {commentsEnabled &&
+              " Comments are the exception: they are public, as described above."}
           </p>
         </section>
 
