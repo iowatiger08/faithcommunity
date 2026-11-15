@@ -138,13 +138,13 @@ describe("shouldAutoHold", () => {
 describe("canModify", () => {
   const comment = { authorSub: "author-1" };
 
-  it("lets the author or an admin change a comment", () => {
-    expect(canModify(comment, { sub: "author-1", isAdmin: false })).toBe(true);
-    expect(canModify(comment, { sub: "someone", isAdmin: true })).toBe(true);
+  it("lets only the author change a comment", () => {
+    expect(canModify(comment, { sub: "author-1" })).toBe(true);
+    expect(canModify(comment, { sub: "someone", isAdmin: true })).toBe(false);
   });
 
   it("refuses anyone else", () => {
-    expect(canModify(comment, { sub: "someone", isAdmin: false })).toBe(false);
+    expect(canModify(comment, { sub: "someone" })).toBe(false);
     expect(canModify(comment, null)).toBe(false);
   });
 });

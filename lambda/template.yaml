@@ -11,6 +11,18 @@ Parameters:
     Type: String
     Default: hopeandtruthministry.com
     Description: Domain used for SES sending identity and DKIM records
+  OwnerUserPoolId:
+    Type: String
+    Default: us-west-2_OMwj6Yfpn
+    Description: Shared owner sign-in pool (tigersndragons-users) used for comment moderation
+  OwnerClientId:
+    Type: String
+    Default: 5p01qepq8kh9qfuji1occiud19
+    Description: Public SPA client in the owner pool
+  OwnerSub:
+    Type: String
+    Default: c831f380-7071-7082-6ecc-6110e068d744
+    Description: The only account in the owner pool allowed to moderate comments
 
 Globals:
   Function:
@@ -306,13 +318,6 @@ Resources:
       ClientId: !Ref CommentersUserPoolClient
       UseCognitoProvidedValues: true
 
-  CommentersAdminGroup:
-    Type: AWS::Cognito::UserPoolGroup
-    Properties:
-      UserPoolId: !Ref CommentersUserPool
-      GroupName: admin
-      Description: Can review held comments and suspend accounts
-
   CommentProfilesTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
@@ -473,6 +478,7 @@ Resources:
           AUDIT_TABLE: !Ref CommentAuditTable
           USER_POOL_ID: !Ref CommentersUserPool
           SITE_ORIGIN: !Sub "https://${SenderDomain}"
+          OWNER_SUB: !Ref OwnerSub
           RECIPIENT_EMAIL: hopeandtruthministry@gmail.com
           SENDER_EMAIL: !Sub "noreply@${SenderDomain}"
           TOXICITY_THRESHOLD: "0.7"
@@ -574,18 +580,24 @@ Resources:
             ApiId: !Ref CommentsHttpApi
             Path: /admin/held
             Method: get
+            Auth:
+              Authorizer: OwnerJwt
         AdminComment:
           Type: HttpApi
           Properties:
             ApiId: !Ref CommentsHttpApi
             Path: /admin/comments/{id}
             Method: put
+            Auth:
+              Authorizer: OwnerJwt
         AdminUser:
           Type: HttpApi
           Properties:
             ApiId: !Ref CommentsHttpApi
             Path: /admin/users/{sub}
             Method: put
+            Auth:
+              Authorizer: OwnerJwt
 
   CommentsLogGroup:
     Type: AWS::Logs::LogGroup
@@ -608,6 +620,14 @@ Resources:
               issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${CommentersUserPool}"
               audience:
                 - !Ref CommentersUserPoolClient
+          # Moderation signs in with the owner's existing account; the Lambda
+          # also requires OWNER_SUB, since that pool has other users.
+          OwnerJwt:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${OwnerUserPoolId}"
+              audience:
+                - !Ref OwnerClientId
       CorsConfiguration:
         AllowOrigins:
           - "https://hopeandtruthministry.com"

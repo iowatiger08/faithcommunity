@@ -20,7 +20,7 @@ Decisions you made:
 - `HopeAndTruthCommentersPool`. The username is the email address. Sign-in is **email one-time code** (passwordless, Essentials tier, no passwords to store or reset). Cognito sends its email through the SES identity that already exists for the domain (`SesEmailIdentity`).
 - Managed login on a custom domain, `auth.hopeandtruthministry.com`. This needs an ACM certificate in us-east-1 and a Route 53 alias in the existing hosted zone parameter. A public SPA client with PKCE, with callback `/auth/callback/` on the apex and www domains, plus localhost for dev.
 - **Phase 2: Google.** Add a Google identity provider to the same pool. You create the OAuth client in Google Cloud Console, and the client secret goes in as a `NoEcho` stack parameter. No code changes in the site beyond the button.
-- A Cognito group `admin`, with your account as its only member. Every admin Lambda checks the group claim server-side.
+- Moderation uses the owner's existing account in the shared `tigersndragons-users` pool (changed 2026-11-15, replacing an `admin` group in the commenter pool). The `/admin/*` routes have their own JWT authorizer for that pool, and the Lambda also requires `OWNER_SUB`, because the pool has other users. `/moderation/` signs in on the page with email and password (SRP, `src/lib/ownerAuth.ts`).
 - Front end: `react-oidc-context` plus `oidc-client-ts`, the same pattern as webtop's hosted UI. Sign-in loads only on the client, so SSG output stays static.
 
 ### 2. Data (DynamoDB, on-demand, PITR on, **no TTL attribute**)
@@ -46,7 +46,7 @@ Handlers go in `lambda/comments/` as `.mjs` files, matching `lambda/contact-form
 | `POST /comments/{id}/report` | user | One report per person. At 3 reports the comment is auto-held and you're emailed |
 | `GET/PUT /me` | user | Read or set display name (screened, 2–40 characters, unique not required) |
 | `DELETE /me` | user | **Explicit self-serve account deletion**: their comments, reactions, reports and profile, then `AdminDeleteUser` |
-| `GET /admin/held`, `PUT /admin/comments/{id}` (hold, restore, remove), `PUT /admin/users/{sub}` (suspend, unsuspend) | admin group | Moderation. Each action writes to `Audit` |
+| `GET /admin/held`, `PUT /admin/comments/{id}` (hold, restore, remove), `PUT /admin/users/{sub}` (suspend, unsuspend) | owner account | Moderation. Each action writes to `Audit` |
 
 Screening means porting `shared/moderation.mjs` (`checkContent`, Comprehend `DetectToxicContent`) and changing the outcome. A flagged comment is saved with `status: held` and shown only to its author, marked "awaiting review". It still fails open on a Comprehend outage, as the neighborhood version does. Held and reported comments trigger an SES email to you, sending the link only, never the comment text.
 
@@ -56,7 +56,7 @@ Screening means porting `shared/moderation.mjs` (`checkContent`, Comprehend `Det
 - New routes in `src/main.tsx`:
   - `/auth/callback/` (noindex)
   - `/account/` for display name, "my comments" and delete account (noindex)
-  - `/moderation/` for the held queue and suspend controls, admin group only (noindex)
+  - `/moderation/` for the held queue and suspend controls, owner account only (noindex)
 - The first time someone comments they're asked for a display name, with the community guidelines shown above the form.
 - UI copy is plain and never names Cognito, AWS, Comprehend or other infrastructure. A held comment reads "Your comment is awaiting review."
 
@@ -118,6 +118,6 @@ Both pages get "Last updated: November 2026". Wording stays plain and neutral, a
   9. restore it from `/moderation/`
   10. suspend a test account: posting returns an error
   11. delete a test account from `/account/`: its rows and the Cognito user are gone
-- Check that a non-admin token gets 403 on every `/admin/*` route, and that a token from the neighborhood pool is rejected by the authorizer.
+- Check that a commenter token is rejected on every `/admin/*` route, a token for another user in the shared pool gets 403, and a token from the shared pool is rejected on commenter routes.
 - `npm run build`: the pre-rendered sermon HTML has no comment markup and no auth code in the critical path.
 - After deploy, load a live sermon page. Comments and reactions load, and the Privacy and Terms pages show the new sections.

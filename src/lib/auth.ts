@@ -69,17 +69,15 @@ export async function forgetUser(): Promise<void> {
 export interface AuthState {
   loading: boolean;
   token: string | null;
-  isAdmin: boolean;
 }
 
 function stateFrom(user: User | null): AuthState {
-  if (user === null || user.expired === true) return { loading: false, token: null, isAdmin: false };
-  const groups = (user.profile["cognito:groups"] as string[] | undefined) ?? [];
-  return { loading: false, token: user.access_token, isAdmin: groups.includes("admin") };
+  if (user === null || user.expired === true) return { loading: false, token: null };
+  return { loading: false, token: user.access_token };
 }
 
 export function useAuth(): AuthState {
-  const [state, setState] = useState<AuthState>({ loading: true, token: null, isAdmin: false });
+  const [state, setState] = useState<AuthState>({ loading: true, token: null });
 
   useEffect(() => {
     let active = true;

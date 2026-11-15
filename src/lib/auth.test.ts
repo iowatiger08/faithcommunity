@@ -119,10 +119,10 @@ describe("useAuth", () => {
 
     act(() => {
       oidc.listeners.loaded.forEach((fn) =>
-        fn({ expired: false, access_token: "tok", profile: { "cognito:groups": ["admin"] } }),
+        fn({ expired: false, access_token: "tok", profile: {} }),
       );
     });
-    expect(result.current).toEqual({ loading: false, token: "tok", isAdmin: true });
+    expect(result.current).toEqual({ loading: false, token: "tok" });
 
     act(() => {
       oidc.listeners.unloaded.forEach((fn) => fn());
@@ -133,7 +133,7 @@ describe("useAuth", () => {
     expect(oidc.listeners.loaded).toHaveLength(0);
   });
 
-  it("treats an expired session as signed out and a plain user as not admin", async () => {
+  it("treats an expired session as signed out", async () => {
     oidc.um.getUser.mockResolvedValue({ expired: true, access_token: "old", profile: {} });
     const { useAuth } = await load();
     const { result } = renderHook(() => useAuth());
@@ -143,7 +143,7 @@ describe("useAuth", () => {
     act(() => {
       oidc.listeners.loaded.forEach((fn) => fn({ expired: false, access_token: "t", profile: {} }));
     });
-    expect(result.current).toEqual({ loading: false, token: "t", isAdmin: false });
+    expect(result.current).toEqual({ loading: false, token: "t" });
   });
 
   it("can unmount before the sign-in client has loaded", async () => {

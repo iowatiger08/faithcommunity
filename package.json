@@ -24,6 +24,7 @@
     "setup:py": "python3 -m venv .venv && sh scripts/py.sh -m pip install -q -r requirements-dev.txt"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "^6.3.22",
     "lucide-react": "^0.460.0",
     "oidc-client-ts": "^3.5.0",
     "react": "^18.3.1",

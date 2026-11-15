@@ -76,7 +76,7 @@ export function shouldAutoHold(comment) {
 }
 
 export function canModify(comment, user) {
-  return Boolean(user) && (user.isAdmin || comment.authorSub === user.sub);
+  return Boolean(user) && comment.authorSub === user.sub;
 }
 
 /** Public shape of a comment for a viewer, or null when they may not see it. */

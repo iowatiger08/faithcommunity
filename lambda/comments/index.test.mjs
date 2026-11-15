@@ -62,6 +62,8 @@ const services = vi.hoisted(() => ({
 }));
 vi.mock("./shared/services.mjs", () => services);
 
+process.env.OWNER_SUB = "owner-sub";
+
 import { handler } from "./index.mjs";
 
 const SLUG = "fear-of-talents-matthew-25-proper-28a";
@@ -78,7 +80,7 @@ function call(routeKey, { user, params = {}, body } = {}) {
               claims: {
                 sub: user.sub,
                 username: user.username ?? user.sub,
-                ...(user.admin ? { "cognito:groups": "[admin]" } : {}),
+                ...(user.groups ? { "cognito:groups": user.groups } : {}),
               },
             },
           },
@@ -89,7 +91,7 @@ function call(routeKey, { user, params = {}, body } = {}) {
 
 const ruth = { sub: "ruth-sub" };
 const sam = { sub: "sam-sub" };
-const owner = { sub: "owner-sub", admin: true };
+const owner = { sub: "owner-sub" };
 
 function postComment(user, text = "Thank you for this.", extra = {}) {
   return call("POST /posts/{slug}/comments", {
@@ -128,22 +130,21 @@ describe("routing and auth", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  it("keeps admin routes to the admin group", async () => {
+  it("keeps admin routes to the owner account", async () => {
     expect((await call("GET /admin/held", { user: ruth })).status).toBe(403);
     expect((await call("GET /admin/held", { user: owner })).status).toBe(200);
   });
 
-  it("does not trust an admin claim sent in the body", async () => {
-    const res = await call("GET /admin/held", { user: ruth, body: { isAdmin: true } });
-    expect(res.status).toBe(403);
+  it("does not trust an admin claim sent in the body or a group claim", async () => {
+    expect((await call("GET /admin/held", { user: ruth, body: { isAdmin: true } })).status).toBe(403);
+    expect((await call("GET /admin/held", { user: { sub: "x", groups: "[admin]" } })).status).toBe(403);
   });
 
-  it("accepts the groups claim as a real array too", async () => {
-    const res = await handler({
-      routeKey: "GET /admin/held",
-      requestContext: { authorizer: { jwt: { claims: { sub: "o", "cognito:groups": ["admin"] } } } },
-    });
-    expect(res.statusCode).toBe(200);
+  it("lets no one in when the owner is not configured", async () => {
+    const saved = process.env.OWNER_SUB;
+    delete process.env.OWNER_SUB;
+    expect((await call("GET /admin/held", { user: owner })).status).toBe(403);
+    process.env.OWNER_SUB = saved;
   });
 });
 

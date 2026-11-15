@@ -5,7 +5,7 @@ import { ApiError } from "~/lib/commentsApi";
 import Account from "./Account";
 
 const auth = vi.hoisted(() => ({
-  state: { loading: false, token: null as string | null, isAdmin: false },
+  state: { loading: false, token: null as string | null },
   signIn: vi.fn(),
   signOut: vi.fn(),
   forgetUser: vi.fn(),
@@ -32,7 +32,7 @@ const renderPage = () =>
   );
 
 beforeEach(() => {
-  auth.state = { loading: false, token: "tok", isAdmin: false };
+  auth.state = { loading: false, token: "tok" };
   for (const fn of [...Object.values(api), auth.signIn, auth.signOut, auth.forgetUser]) fn.mockReset();
   api.me.mockResolvedValue({
     displayName: "Ruth",
@@ -56,14 +56,14 @@ beforeEach(() => {
 
 describe("Account", () => {
   it("asks a signed-out visitor to sign in", () => {
-    auth.state = { loading: false, token: null, isAdmin: false };
+    auth.state = { loading: false, token: null };
     renderPage();
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
     expect(auth.signIn).toHaveBeenCalled();
   });
 
   it("renders nothing extra while sign-in state loads", () => {
-    auth.state = { loading: true, token: null, isAdmin: false };
+    auth.state = { loading: true, token: null };
     renderPage();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });

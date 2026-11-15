@@ -36,10 +36,7 @@ const json = (statusCode, body) => ({
 function userFrom(event) {
   const claims = event.requestContext?.authorizer?.jwt?.claims;
   if (!claims?.sub) return null;
-  const raw = claims["cognito:groups"] ?? [];
-  // HTTP APIs flatten array claims to a "[a b]" string.
-  const groups = Array.isArray(raw) ? raw : String(raw).replace(/^\[|\]$/g, "").split(/[\s,]+/);
-  return { sub: claims.sub, username: claims.username ?? claims.sub, isAdmin: groups.includes("admin") };
+  return { sub: claims.sub, username: claims.username ?? claims["cognito:username"] ?? claims.sub };
 }
 
 function requireUser(event) {
@@ -48,9 +45,11 @@ function requireUser(event) {
   return user;
 }
 
+// Admin routes sit behind the owner's sign-in pool, and only the owner's
+// account passes, so a valid token from that shared pool is not enough.
 function requireAdmin(event) {
   const user = requireUser(event);
-  if (!user.isAdmin) throw new HttpError(403, "forbidden");
+  if (!process.env.OWNER_SUB || user.sub !== process.env.OWNER_SUB) throw new HttpError(403, "forbidden");
   return user;
 }
 

@@ -1,14 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import { ApiError } from "~/lib/commentsApi";
 import type { HeldComment } from "~/lib/commentsApi";
 import Moderation from "./Moderation";
 
-const auth = vi.hoisted(() => ({
-  state: { loading: false, token: null as string | null, isAdmin: false },
-  signIn: vi.fn(),
-}));
-vi.mock("~/lib/auth", () => ({ useAuth: () => auth.state, signIn: auth.signIn }));
+const auth = vi.hoisted(() => ({ signIn: vi.fn(), signOut: vi.fn(), getIdToken: vi.fn() }));
+vi.mock("~/lib/ownerAuth", () => auth);
 vi.mock("~/components/PageHead", () => ({ default: () => null }));
 
 const api = vi.hoisted(() => ({ held: vi.fn(), moderate: vi.fn(), suspend: vi.fn() }));
@@ -38,31 +36,64 @@ const renderPage = () =>
   );
 
 beforeEach(() => {
-  auth.state = { loading: false, token: "tok", isAdmin: true };
-  for (const fn of [...Object.values(api), auth.signIn]) fn.mockReset();
+  for (const fn of [...Object.values(api), ...Object.values(auth)]) fn.mockReset();
+  auth.getIdToken.mockResolvedValue("tok");
   api.held.mockResolvedValue({ comments: [heldComment()] });
   api.moderate.mockResolvedValue({});
   api.suspend.mockResolvedValue({});
 });
 
 describe("Moderation", () => {
-  it("asks for sign-in and hides the queue from non-moderators", () => {
-    auth.state = { loading: false, token: null, isAdmin: false };
-    const { unmount } = renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
-    expect(auth.signIn).toHaveBeenCalled();
-    unmount();
-
-    auth.state = { loading: false, token: "tok", isAdmin: false };
+  it("asks for email and password when there is no session, then loads the queue", async () => {
+    auth.getIdToken.mockResolvedValueOnce(null);
+    auth.signIn.mockResolvedValue(undefined);
     renderPage();
-    expect(screen.getByText("This page is for moderators.")).toBeInTheDocument();
+    fireEvent.change(await screen.findByLabelText("Email"), { target: { value: "me@example.com" } });
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "pw" } });
     expect(api.held).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    expect(auth.signIn).toHaveBeenCalledWith("me@example.com", "pw");
+    expect(await screen.findByText("Held words")).toBeInTheDocument();
   });
 
-  it("shows nothing while sign-in state loads", () => {
-    auth.state = { loading: true, token: null, isAdmin: false };
+  it("shows why a sign-in failed", async () => {
+    auth.getIdToken.mockResolvedValue(null);
+    auth.signIn.mockRejectedValue(new Error("This page is for moderators."));
+    renderPage();
+    fireEvent.click(await screen.findByRole("button", { name: "Sign in" }));
+    expect(await screen.findByText("This page is for moderators.")).toBeInTheDocument();
+    auth.signIn.mockRejectedValue("odd");
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    expect(await screen.findByText("Sign-in didn't work. Please try again.")).toBeInTheDocument();
+  });
+
+  it("shows nothing while checking for a session", () => {
+    auth.getIdToken.mockReturnValue(new Promise(() => {}));
     renderPage();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("returns to the sign-in form when the server refuses the session", async () => {
+    api.held.mockRejectedValue(new ApiError(403, "forbidden"));
+    renderPage();
+    expect(await screen.findByLabelText("Password")).toBeInTheDocument();
+    expect(auth.signOut).toHaveBeenCalled();
+  });
+
+  it("returns to the sign-in form when the session ends before an action", async () => {
+    renderPage();
+    const restore = await screen.findByRole("button", { name: "Restore" });
+    auth.getIdToken.mockResolvedValue(null);
+    fireEvent.click(restore);
+    expect(await screen.findByLabelText("Password")).toBeInTheDocument();
+    expect(api.moderate).not.toHaveBeenCalled();
+  });
+
+  it("signs out", async () => {
+    renderPage();
+    fireEvent.click(await screen.findByRole("button", { name: "Sign out" }));
+    expect(auth.signOut).toHaveBeenCalled();
+    expect(await screen.findByLabelText("Password")).toBeInTheDocument();
   });
 
   it("lists held comments with the reason and a link to the post", async () => {

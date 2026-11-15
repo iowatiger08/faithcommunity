@@ -6,7 +6,7 @@ import { ApiError } from "~/lib/commentsApi";
 import CommentsSection from "./CommentsSection";
 
 const auth = vi.hoisted(() => ({
-  state: { loading: false, token: null as string | null, isAdmin: false },
+  state: { loading: false, token: null as string | null },
   signIn: vi.fn(),
   signOut: vi.fn(),
 }));
@@ -58,11 +58,11 @@ function renderSection() {
 }
 
 const signedIn = () => {
-  auth.state = { loading: false, token: "tok", isAdmin: false };
+  auth.state = { loading: false, token: "tok" };
 };
 
 beforeEach(() => {
-  auth.state = { loading: false, token: null, isAdmin: false };
+  auth.state = { loading: false, token: null };
   for (const fn of [...Object.values(api), auth.signIn, auth.signOut]) fn.mockReset();
   api.thread.mockResolvedValue(thread([comment()]));
   api.me.mockResolvedValue({ displayName: "Sam", suspended: false, comments: [] });
@@ -105,7 +105,7 @@ describe("signed out", () => {
   });
 
   it("waits for sign-in state before loading", () => {
-    auth.state = { loading: true, token: null, isAdmin: false };
+    auth.state = { loading: true, token: null };
     const { container } = renderSection();
     expect(api.thread).not.toHaveBeenCalled();
     expect(container).toBeEmptyDOMElement();
